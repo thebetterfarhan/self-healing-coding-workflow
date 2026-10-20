@@ -1,0 +1,2150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>The Self-Healing / Self-Repairing Workflow — Complete Guide</title>
+<meta name="generator" content="marked 18.1.1">
+<style>
+:root{
+  --bg:#ffffff; --bg-soft:#f6f7f9; --bg-code:#f2f3f5; --fg:#1a1d21; --fg-dim:#5b6470;
+  --fg-faint:#7b838d; --accent:#0b5fbf; --accent-soft:#e8f0fc; --border:#dfe3e8;
+  --mark:#fff3c4; --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.06);
+  --code:#24292f; --focus:#0b5fbf;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#111418; --bg-soft:#171b21; --bg-code:#1b2027; --fg:#dfe3e8; --fg-dim:#a5aeba;
+    --fg-faint:#7c8794; --accent:#79bcff; --accent-soft:#16273d; --border:#2b323b;
+    --mark:#4a3f14; --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.35);
+    --code:#e6edf3; --focus:#8ec5ff;
+  }
+}
+html[data-theme=light]{ color-scheme:light; }
+html[data-theme=dark]{
+  color-scheme:dark;
+  --bg:#111418; --bg-soft:#171b21; --bg-code:#1b2027; --fg:#dfe3e8; --fg-dim:#a5aeba;
+  --fg-faint:#7c8794; --accent:#79bcff; --accent-soft:#16273d; --border:#2b323b;
+  --mark:#4a3f14; --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.35);
+  --code:#e6edf3; --focus:#8ec5ff;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{animation-duration:.01ms!important; transition-duration:.01ms!important}
+}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font:17px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent); text-decoration:underline; text-underline-offset:2px}
+a:hover{text-decoration-thickness:2px}
+code,pre,kbd,samp{font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace}
+
+/* ---- focus: always visible, never removed ---- */
+:focus-visible{outline:3px solid var(--focus); outline-offset:2px; border-radius:4px}
+.skip{
+  position:absolute; left:12px; top:-100px; z-index:200;
+  background:var(--accent); color:#fff; padding:12px 20px; border-radius:0 0 10px 10px;
+  font-weight:650; text-decoration:none; transition:top .15s;
+}
+.skip:focus{top:0}
+
+/* ---- landmarks ---- */
+.topbar{
+  position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:14px;
+  padding:10px 20px; background:var(--bg); border-bottom:1px solid var(--border);
+}
+.topbar .brand{font-weight:650; letter-spacing:-.01em; font-size:15px; color:var(--fg)}
+.topbar .spacer{flex:1}
+.btn{
+  border:1px solid var(--border); background:var(--bg-soft); color:var(--fg-dim);
+  border-radius:8px; padding:6px 12px; font-size:13px; cursor:pointer; font-family:inherit;
+}
+.btn:hover{color:var(--fg); border-color:var(--fg-faint)}
+.wrap{display:grid; grid-template-columns:300px minmax(0,1fr); gap:44px; max-width:1400px; margin:0 auto; padding:0 24px}
+.tocbox{position:sticky; top:56px; align-self:start; max-height:calc(100vh - 76px); display:flex; flex-direction:column}
+.tocbox > summary{
+  cursor:pointer; padding:12px 4px; font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--fg-faint); font-weight:650; list-style:none;
+}
+.tocbox > summary::-webkit-details-marker{display:none}
+.tocbox > summary::before{content:"\25B8 "}
+.tocbox[open] > summary::before{content:"\25BE "}
+nav.toc{
+  overflow-y:auto; padding:0 4px 40px 0; font-size:13.5px; line-height:1.5;
+  border-left:1px solid var(--border); padding-left:0;
+}
+nav.toc ol{list-style:none; margin:0; padding:0}
+nav.toc li{margin:0}
+nav.toc a{
+  display:block; padding:5px 10px 5px 12px; color:var(--fg-dim);
+  border-left:3px solid transparent; margin-left:-1px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+nav.toc a:hover{color:var(--fg); text-decoration:none; background:var(--bg-soft)}
+nav.toc a.active{color:var(--accent); border-left-color:var(--accent); font-weight:600}
+nav.toc .d2{padding-left:26px; font-size:12.8px}
+nav.toc .d3{padding-left:42px; font-size:12.4px; color:var(--fg-faint)}
+nav.toc .d4{padding-left:58px; font-size:12px; color:var(--fg-faint)}
+main{padding:34px 0 100px; min-width:0}
+main > article{max-width:920px}
+
+/* ---- content ---- */
+h1,h2,h3,h4{line-height:1.25; letter-spacing:-.015em; scroll-margin-top:72px}
+h1{font-size:2.1rem; margin:0 0 .5em; padding-bottom:.35em; border-bottom:1px solid var(--border)}
+h2{font-size:1.45rem; margin:2.3em 0 .7em; padding-bottom:.25em; border-bottom:1px solid var(--border)}
+h3{font-size:1.15rem; margin:1.8em 0 .55em}
+h4{font-size:1.02rem; margin:1.5em 0 .5em; color:var(--fg-dim)}
+p{margin:0 0 1.1em}
+ul,ol{margin:0 0 1.1em; padding-left:1.5em}
+li{margin:.3em 0}
+li > ul,li > ol{margin:.3em 0}
+hr{border:0; border-top:1px solid var(--border); margin:2.6em 0}
+blockquote{
+  margin:1.2em 0; padding:.8em 1.15em; border-left:4px solid var(--accent);
+  background:var(--accent-soft); border-radius:0 8px 8px 0;
+}
+blockquote > :last-child{margin-bottom:0}
+.tw{overflow-x:auto; margin:1.3em 0; border:1px solid var(--border); border-radius:10px}
+.tw:focus-visible{outline-offset:-1px}
+table{border-collapse:collapse; width:100%; font-size:.93em; background:var(--bg)}
+caption{caption-side:top; text-align:left; padding:10px 12px; color:var(--fg-dim); font-size:.9em}
+th,td{border-bottom:1px solid var(--border); border-right:1px solid var(--border); padding:9px 12px; text-align:left; vertical-align:top}
+th{background:var(--bg-soft); font-weight:650; white-space:nowrap}
+tr:last-child td{border-bottom:0}
+th:last-child,td:last-child{border-right:0}
+tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--bg-soft) 55%,transparent)}
+img{max-width:100%}
+mark{background:var(--mark); color:inherit; padding:0 .15em; border-radius:3px}
+:not(pre) > code{
+  background:var(--bg-code); padding:.16em .38em; border-radius:5px; font-size:.875em;
+  border:1px solid var(--border); word-break:break-word;
+}
+pre{
+  background:var(--bg-code); border:1px solid var(--border); border-radius:10px;
+  padding:14px 16px; overflow-x:auto; margin:1.25em 0; position:relative; line-height:1.55;
+}
+pre code{background:none; border:0; padding:0; font-size:.845em; color:var(--code)}
+pre[role=img]{white-space:pre}
+.copy{
+  position:absolute; top:8px; right:8px; opacity:.6; transition:opacity .15s;
+  border:1px solid var(--border); background:var(--bg); color:var(--fg-dim);
+  border-radius:6px; padding:4px 10px; font-size:12px; cursor:pointer; font-family:inherit;
+}
+pre:hover .copy,.copy:focus-visible{opacity:1}
+.copy.done{color:#1a7f37; border-color:#1a7f37; opacity:1}
+.subtitle{color:var(--fg-dim); font-size:1.04rem; margin:0 0 2em}
+.meta{color:var(--fg-faint); font-size:13px; margin:0 0 2.4em; padding-bottom:1.2em; border-bottom:1px solid var(--border)}
+.nextlink{margin-top:3.5em; padding-top:1.2em; border-top:1px solid var(--border); font-size:.94rem}
+.sr-only{
+  position:absolute!important; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+/* ---- print ---- */
+@media print{
+  .topbar,nav.toc,.tocbox > summary,.copy,.skip{display:none!important}
+  .wrap{display:block; padding:0}
+  main{padding:0}
+  body{font-size:11pt; background:#fff; color:#000}
+  h2,h3{page-break-after:avoid}
+  pre,.tw,table,blockquote{page-break-inside:avoid}
+  a{color:inherit}
+}
+@media (max-width:920px){
+  .wrap{grid-template-columns:1fr; gap:0; padding:0 18px}
+  .tocbox{position:static; max-height:none}
+  main{padding-top:22px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Skip to main content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">&#8592; Documentation index</a>
+  <span class="spacer"></span>
+  <button class="btn" id="theme" type="button">Theme: auto</button>
+</header>
+<div class="wrap">
+<details class="tocbox" id="tocbox" open>
+  <summary>Contents</summary>
+  <nav class="toc" aria-label="Contents">
+<ol>
+<li class="d3"><a href="#table-of-contents">Table of contents</a></li>
+<li class="d2"><a href="#part-0-the-5-minute-version">Part 0 — The 5-minute version</a></li>
+<li class="d3"><a href="#01-what-self-healing-actually-means-here">0.1 What "self-healing" actually means here</a></li>
+<li class="d3"><a href="#02-the-one-picture">0.2 The one picture</a></li>
+<li class="d3"><a href="#03-the-three-commands-you-will-actually-use">0.3 The three commands you will actually use</a></li>
+<li class="d2"><a href="#part-1-basics">Part 1 — Basics</a></li>
+<li class="d3"><a href="#1-the-four-layers">1. The four layers</a></li>
+<li class="d4"><a href="#layer-1-instructions-what-should-the-agent-do">Layer 1 — Instructions ("what should the agent do?")</a></li>
+<li class="d4"><a href="#layer-2-routing-which-model-should-run-this">Layer 2 — Routing ("which model should run this?")</a></li>
+<li class="d4"><a href="#layer-3-learning-what-did-we-learn">Layer 3 — Learning ("what did we learn?")</a></li>
+<li class="d4"><a href="#layer-4-safety-what-must-never-happen">Layer 4 — Safety ("what must never happen?")</a></li>
+<li class="d3"><a href="#2-where-every-file-lives">2. Where every file lives</a></li>
+<li class="d4"><a href="#the-workspace-documentscodex">The workspace: ~/Documents/Codex/</a></li>
+<li class="d4"><a href="#the-user-directories">The user directories</a></li>
+<li class="d4"><a href="#the-state-files-all-under-tools">The state files (all under tools/)</a></li>
+<li class="d3"><a href="#3-the-nightly-repair-run">3. The nightly repair run</a></li>
+<li class="d4"><a href="#when-it-runs">When it runs</a></li>
+<li class="d4"><a href="#what-one-run-looks-like">What one run looks like</a></li>
+<li class="d4"><a href="#the-five-rules-of-the-run">The five rules of the run</a></li>
+<li class="d4"><a href="#verify-it-is-alive">Verify it is alive</a></li>
+<li class="d4"><a href="#31-the-configuration-repository">3.1 The configuration repository</a></li>
+<li class="d2"><a href="#part-2---the-configuration-repo-and-the-eleven-repair-steps-one-by-one">Part 2 - The configuration repo and the eleven repair steps, one by one</a></li>
+<li class="d3"><a href="#4-step-overview-table">4. Step overview table</a></li>
+<li class="d3"><a href="#5-steps-1-to-3-the-instruction-layer">5. Steps 1 to 3: the instruction layer</a></li>
+<li class="d4"><a href="#step-1-sync-taste">Step 1 — sync-taste</a></li>
+<li class="d4"><a href="#step-2-sync-agents">Step 2 — sync-agents</a></li>
+<li class="d4"><a href="#step-3-sync-agent-instructions">Step 3 — sync-agent-instructions</a></li>
+<li class="d3"><a href="#6-steps-4-to-8-the-skills-catalog-and-memory-layer">6. Steps 4 to 8: the skills, catalog and memory layer</a></li>
+<li class="d4"><a href="#step-4---sync-skills">Step 4 - sync-skills</a></li>
+<li class="d4"><a href="#step-5---refresh-free-models">Step 5 - refresh-free-models</a></li>
+<li class="d4"><a href="#step-6---memory-curate">Step 6 - memory-curate</a></li>
+<li class="d4"><a href="#step-7---memory-consolidate">Step 7 - memory-consolidate</a></li>
+<li class="d3"><a href="#7-steps-9-to-11-the-routing-and-health-layer">7. Steps 9 to 11: the routing and health layer</a></li>
+<li class="d4"><a href="#step-8---tier-adapt">Step 8 - tier-adapt</a></li>
+<li class="d4"><a href="#step-9---taste-promote">Step 9 - taste-promote</a></li>
+<li class="d4"><a href="#step-10---credit-check">Step 10 - credit-check</a></li>
+<li class="d4"><a href="#step-11---verify">Step 11 - verify</a></li>
+<li class="d2"><a href="#part-3-the-safety-machinery">Part 3 — The safety machinery</a></li>
+<li class="d3"><a href="#8-snapshot-hash-manifest-rollback">8. Snapshot, hash, manifest, rollback</a></li>
+<li class="d4"><a href="#the-sequence-per-step">The sequence, per step</a></li>
+<li class="d4"><a href="#why-it-is-trustworthy">Why it is trustworthy</a></li>
+<li class="d4"><a href="#the-file-map-it-uses">The file map it uses</a></li>
+<li class="d4"><a href="#retention">Retention</a></li>
+<li class="d3"><a href="#9-what-is-protected-and-what-is-not">9. What is protected and what is not</a></li>
+<li class="d4"><a href="#protected-by-snapshot-rollback">Protected by snapshot + rollback</a></li>
+<li class="d4"><a href="#protected-by-the-configuration-repository">Protected by the configuration repository</a></li>
+<li class="d4"><a href="#protected-by-the-guard-hook">Protected by the guard hook</a></li>
+<li class="d4"><a href="#protected-by-the-release-gate">Protected by the release gate</a></li>
+<li class="d4"><a href="#not-protected">NOT protected</a></li>
+<li class="d2"><a href="#part-4-runtime-self-healing">Part 4 — Runtime self-healing</a></li>
+<li class="d3"><a href="#10-runtime-1-backend-health-and-cooldown">10. Runtime 1: backend health and cooldown</a></li>
+<li class="d4"><a href="#health-flags-30-minute-ttl">Health flags (30-minute TTL)</a></li>
+<li class="d4"><a href="#a-credit-error-is-a-failure-even-when-the-cli-exits-0">A credit error is a failure even when the CLI exits 0</a></li>
+<li class="d4"><a href="#cooldown-5-hour-window">Cooldown (5-hour window)</a></li>
+<li class="d4"><a href="#reporting">Reporting</a></li>
+<li class="d3"><a href="#11-runtime-2-route-feedback-and-model-demotion">11. Runtime 2: route feedback and model demotion</a></li>
+<li class="d3"><a href="#12-runtime-3-the-fallback-chain">12. Runtime 3: the fallback chain</a></li>
+<li class="d4"><a href="#what-counts-as-an-infrastructure-failure">What counts as an infrastructure failure</a></li>
+<li class="d4"><a href="#the-chain">The chain</a></li>
+<li class="d4"><a href="#rules">Rules</a></li>
+<li class="d4"><a href="#also-in-this-layer">Also in this layer</a></li>
+<li class="d3"><a href="#13-runtime-4-adaptive-tiers">13. Runtime 4: adaptive tiers</a></li>
+<li class="d4"><a href="#layer-a-the-keyword-heuristic">Layer A — the keyword heuristic</a></li>
+<li class="d4"><a href="#layer-b-the-adaptive-length-threshold">Layer B — the adaptive length threshold</a></li>
+<li class="d4"><a href="#the-tier-table">The tier table</a></li>
+<li class="d4"><a href="#overriding">Overriding</a></li>
+<li class="d3"><a href="#14-runtime-5-price-aware-selection">14. Runtime 5: price-aware selection</a></li>
+<li class="d4"><a href="#two-separate-judgments">Two separate judgments</a></li>
+<li class="d4"><a href="#the-candidate-shortlists">The candidate shortlists</a></li>
+<li class="d4"><a href="#the-cost-model">The cost model</a></li>
+<li class="d4"><a href="#the-eligibility-filters">The eligibility filters</a></li>
+<li class="d4"><a href="#effort-is-derived-per-model">Effort is derived per model</a></li>
+<li class="d4"><a href="#free-vs-paid-rule">Free vs paid rule</a></li>
+<li class="d4"><a href="#inspect-without-spending">Inspect without spending</a></li>
+<li class="d2"><a href="#part-5-the-learning-loop">Part 5 — The learning loop</a></li>
+<li class="d3"><a href="#15-the-memory-loop">15. The memory loop</a></li>
+<li class="d4"><a href="#reading-memory">Reading memory</a></li>
+<li class="d3"><a href="#16-the-taste-loop">16. The taste loop</a></li>
+<li class="d4"><a href="#the-taste-file-format">The taste file format</a></li>
+<li class="d4"><a href="#approving-candidates">Approving candidates</a></li>
+<li class="d2"><a href="#part-6-manual-operations">Part 6 — Manual operations</a></li>
+<li class="d3"><a href="#17-complete-command-cheat-sheet">17. Complete command cheat sheet</a></li>
+<li class="d4"><a href="#the-everyday-commands">The everyday commands</a></li>
+<li class="d4"><a href="#the-repair-commands">The repair commands</a></li>
+<li class="d4"><a href="#the-drift-check-commands">The drift-check commands</a></li>
+<li class="d4"><a href="#the-skills-command">The skills command</a></li>
+<li class="d4"><a href="#the-release-gate">The release gate</a></li>
+<li class="d4"><a href="#the-guard-hook-self-test">The guard hook self-test</a></li>
+<li class="d3"><a href="#18-how-to-run-the-repair-by-hand">18. How to run the repair by hand</a></li>
+<li class="d4"><a href="#the-full-run">The full run</a></li>
+<li class="d4"><a href="#one-step-at-a-time">One step at a time</a></li>
+<li class="d4"><a href="#a-safe-dry-run">A safe dry run</a></li>
+<li class="d2"><a href="#part-7-troubleshooting">Part 7 — Troubleshooting</a></li>
+<li class="d3"><a href="#19-symptom-cause-fix">19. Symptom, cause, fix</a></li>
+<li class="d3"><a href="#20-reading-the-logs">20. Reading the logs</a></li>
+<li class="d4"><a href="#toolsself-repairlog">tools/self-repair.log</a></li>
+<li class="d4"><a href="#toolsself-repair-failureslog">tools/self-repair-failures.log</a></li>
+<li class="d4"><a href="#toolsself-repair-backupsrunstampstep">tools/self-repair-backups/&lt;runStamp&gt;/&lt;step&gt;/</a></li>
+<li class="d4"><a href="#useful-log-queries">Useful log queries</a></li>
+<li class="d3"><a href="#21-manual-rollback">21. Manual rollback</a></li>
+<li class="d4"><a href="#step-1-find-the-run-you-want">Step 1 — find the run you want</a></li>
+<li class="d4"><a href="#step-2-inspect-the-manifest">Step 2 — inspect the manifest</a></li>
+<li class="d4"><a href="#step-3-restore-by-hand">Step 3 — restore by hand</a></li>
+<li class="d4"><a href="#step-4-check-the-other-layers">Step 4 — check the other layers</a></li>
+<li class="d2"><a href="#part-8-advanced">Part 8 — Advanced</a></li>
+<li class="d3"><a href="#22-adding-a-repair-step">22. Adding a repair step</a></li>
+<li class="d4"><a href="#step-1-write-the-script">Step 1 — write the script</a></li>
+<li class="d4"><a href="#step-2-register-it-in-stepfiles-if-it-writes-anything">Step 2 — register it in $stepFiles (if it writes anything)</a></li>
+<li class="d4"><a href="#step-3-register-it-in-steps">Step 3 — register it in $steps</a></li>
+<li class="d4"><a href="#step-4-place-it-in-the-order-you-want">Step 4 — place it in the order you want</a></li>
+<li class="d4"><a href="#step-5-test-it-in-isolation-then-in-the-engine">Step 5 — test it in isolation, then in the engine</a></li>
+<li class="d4"><a href="#step-6-verify-the-rollback-path">Step 6 — verify the rollback path</a></li>
+<li class="d3"><a href="#23-changing-the-agent-roster">23. Changing the agent roster</a></li>
+<li class="d4"><a href="#the-roster">The roster</a></li>
+<li class="d4"><a href="#the-four-current-agents">The four current agents</a></li>
+<li class="d4"><a href="#the-rules-the-roster-encodes">The rules the roster encodes</a></li>
+<li class="d4"><a href="#changing-it">Changing it</a></li>
+<li class="d4"><a href="#the-toml-subset-the-parser-understands">The TOML subset the parser understands</a></li>
+<li class="d3"><a href="#24-changing-the-schedule">24. Changing the schedule</a></li>
+<li class="d3"><a href="#25-the-guard-hook">25. The guard hook</a></li>
+<li class="d4"><a href="#what-it-does">What it does</a></li>
+<li class="d4"><a href="#the-two-guards">The two guards</a></li>
+<li class="d4"><a href="#the-deny-shape">The deny shape</a></li>
+<li class="d4"><a href="#the-reason-text-names-the-file-and-the-pattern">The reason text names the file and the pattern</a></li>
+<li class="d4"><a href="#testing-it">Testing it</a></li>
+<li class="d3"><a href="#26-worktree-isolation">26. Worktree isolation</a></li>
+<li class="d4"><a href="#why">Why</a></li>
+<li class="d4"><a href="#usage">Usage</a></li>
+<li class="d4"><a href="#worktreeinclude">.worktreeinclude</a></li>
+<li class="d4"><a href="#the-rules">The rules</a></li>
+<li class="d4"><a href="#best-of-n">Best-of-N</a></li>
+<li class="d3"><a href="#27-the-release-gate">27. The release gate</a></li>
+<li class="d4"><a href="#the-five-steps-fail-fast-with-numbered-evidence">The five steps, fail-fast, with numbered evidence</a></li>
+<li class="d4"><a href="#flags">Flags</a></li>
+<li class="d4"><a href="#output-shape">Output shape</a></li>
+<li class="d3"><a href="#28-cross-cli-handoff">28. Cross-CLI handoff</a></li>
+<li class="d4"><a href="#how">How</a></li>
+<li class="d4"><a href="#rules-1">Rules</a></li>
+<li class="d4"><a href="#opencodes-dedicated-handoff-agents">OpenCode's dedicated handoff agents</a></li>
+<li class="d4"><a href="#checks">Checks</a></li>
+<li class="d2"><a href="#part-9-known-limits-and-drift">Part 9 — Known limits and drift</a></li>
+<li class="d3"><a href="#29-things-that-are-weaker-than-they-look">29. Things that are weaker than they look</a></li>
+<li class="d4"><a href="#approval-policy-is-not-enforced-by-the-runtimes">Approval policy is not enforced by the runtimes</a></li>
+<li class="d4"><a href="#configtoml-is-app-managed">config.toml is app-managed</a></li>
+<li class="d4"><a href="#read-only-is-not-absolute">Read-only is not absolute</a></li>
+<li class="d4"><a href="#the-powershell-allow-is-broad">The powerShell allow is broad</a></li>
+<li class="d4"><a href="#blindpilot-and-work-do-not-compose">BlindPilot and work do not compose</a></li>
+<li class="d4"><a href="#clis-can-exit-0-after-a-failed-write">Clis can exit 0 after a failed write</a></li>
+<li class="d4"><a href="#command-code-credits-are-not-readable-headlessly">Command Code credits are not readable headlessly</a></li>
+<li class="d4"><a href="#rtk-is-an-executable-proxy-not-a-shell-wrapper">RTK is an executable proxy, not a shell wrapper</a></li>
+<li class="d3"><a href="#30-drift-found-and-fixed">30. Drift found and fixed</a></li>
+<li class="d4"><a href="#301-agentsmdbak--files-accumulated-faster-than-they-were-pruned-fixed">30.1 AGENTS.md.bak- files accumulated faster than they were pruned — FIXED</a></li>
+<li class="d4"><a href="#302-taste-promote-wrote-malformed-bullets-fixed">30.2 taste-promote wrote malformed bullets — FIXED</a></li>
+<li class="d4"><a href="#303-sync-taste-and-sync-agent-instructions-overlap-left-as-is">30.3 sync-taste and sync-agent-instructions overlap — LEFT AS IS</a></li>
+<li class="d4"><a href="#304-agent-backend-healthjson-and-agent-usagejson-are-both-empty">30.4 agent-backend-health.json and agent-usage.json are both empty</a></li>
+<li class="d4"><a href="#305-the-memory-notes-directory-contained-a-duplicate-batch-fixed">30.5 The memory notes directory contained a duplicate batch — FIXED</a></li>
+<li class="d4"><a href="#306-the-chain-stopped-at-the-first-credit-wall-and-reported-success-fixed">30.6 The chain stopped at the first credit wall and reported success — FIXED</a></li>
+<li class="d2"><a href="#part-10-reference">Part 10 — Reference</a></li>
+<li class="d3"><a href="#31-exit-codes">31. Exit codes</a></li>
+<li class="d3"><a href="#32-glossary">32. Glossary</a></li>
+<li class="d3"><a href="#the-five-things-to-remember">The five things to remember</a></li>
+</ol>
+  </nav>
+</details>
+<main id="content" tabindex="-1" aria-label="The Self-Healing / Self-Repairing Workflow — Complete Guide">
+<article>
+<h1 id="doc-title">The Self-Healing / Self-Repairing Workflow — Complete Guide</h1>
+
+<p class="meta">Source <code>SELF-HEALING-WORKFLOW.md</code> &middot; 95,109 bytes &middot; updated 2026-10-20</p>
+<p><strong>Author:</strong> Farhan Khan (<a href="https://github.com/thebetterfarhan">@thebetterfarhan</a>)
+<strong>Audience:</strong> you, six months from now, with no memory of how any of this works.
+<strong>Scope:</strong> everything from &quot;what is this thing&quot; to &quot;how do I add a repair step of my own.&quot;
+<strong>Read time:</strong> ~25 minutes. Skip to the section you need; the table of contents is clickable.</p>
+<blockquote>
+<p><strong>Also published as HTML:</strong> <code>html/self-healing-workflow.html</code> — self-contained, with a sidebar contents pane, dark/light theme and print styles. Regenerate from this file with <code>node tools/docgen/convert-docs.mjs</code>.</p>
+</blockquote>
+<hr>
+<h3 id="table-of-contents">Table of contents</h3>
+<p><strong>Part 0 — The 5-minute version</strong></p>
+<ol>
+<li><a href="#01-what-self-healing-actually-means-here">What &quot;self-healing&quot; actually means here</a></li>
+<li><a href="#02-the-one-picture">The one picture</a></li>
+<li><a href="#03-the-three-commands-you-will-actually-use">The three commands you will actually use</a></li>
+</ol>
+<p><strong>Part 1 — Basics</strong>
+4. <a href="#1-the-four-layers">The four layers</a>
+5. <a href="#2-where-every-file-lives">Where every file lives</a>
+6. <a href="#3-the-nightly-repair-run">The nightly repair run</a></p>
+<p><strong>Part 2 - The configuration repo and the eleven repair steps</strong>
+7. <a href="#31-the-configuration-repository">The configuration repository</a>
+8. <a href="#4-step-overview-table">Step overview table</a>
+9. <a href="#5-steps-1-to-3-the-instruction-layer">Steps 1–3: the instruction layer</a>
+10. <a href="#6-steps-4-to-8-the-skills-catalog-and-memory-layer">Steps 4–6: the catalog and memory layer</a>
+11. <a href="#7-steps-9-to-11-the-routing-and-health-layer">Steps 7–10: the routing and health layer</a></p>
+<p><strong>Part 3 — The safety machinery</strong>
+12. <a href="#8-snapshot-hash-manifest-rollback">Snapshot, hash, manifest, rollback</a>
+13. <a href="#9-what-is-protected-and-what-is-not">What is protected and what is not</a></p>
+<p><strong>Part 4 — Runtime self-healing</strong>
+14. <a href="#10-runtime-1-backend-health-and-cooldown">Backend health and cooldown</a>
+15. <a href="#11-runtime-2-route-feedback-and-model-demotion">Route feedback and model demotion</a>
+16. <a href="#12-runtime-3-the-fallback-chain">The fallback chain</a>
+17. <a href="#13-runtime-4-adaptive-tiers">Adaptive tiers</a>
+18. <a href="#14-runtime-5-price-aware-selection">Price-aware selection</a></p>
+<p><strong>Part 5 — The learning loop</strong>
+19. <a href="#15-the-memory-loop">Memory: summaries to notes to MEMORY.md</a>
+20. <a href="#16-the-taste-loop">Taste: learned preferences to agent instructions</a></p>
+<p><strong>Part 6 — Manual operations</strong>
+21. <a href="#17-complete-command-cheat-sheet">Complete command cheat sheet</a>
+22. <a href="#18-how-to-run-the-repair-by-hand">How to run the repair by hand</a></p>
+<p><strong>Part 7 — Troubleshooting</strong>
+23. <a href="#19-symptom-cause-fix">Symptom → cause → fix</a>
+24. <a href="#20-reading-the-logs">Reading the logs</a>
+25. <a href="#21-manual-rollback">Manual rollback</a></p>
+<p><strong>Part 8 — Advanced</strong>
+26. <a href="#22-adding-a-repair-step">Adding a repair step</a>
+27. <a href="#23-changing-the-agent-roster">Changing the agent roster</a>
+28. <a href="#24-changing-the-schedule">Changing the schedule</a>
+29. <a href="#25-the-guard-hook">The guard hook</a>
+30. <a href="#26-worktree-isolation">Worktree isolation</a>
+31. <a href="#27-the-release-gate">The release gate</a>
+32. <a href="#28-cross-cli-handoff">Cross-CLI handoff</a></p>
+<p><strong>Part 9 — Known limits and drift</strong>
+33. <a href="#29-things-that-are-weaker-than-they-look">Things that are weaker than they look</a>
+34. <a href="#30-drift-found-and-fixed">Drift found and fixed</a></p>
+<p><strong>Part 10 — Reference</strong>
+35. <a href="#31-exit-codes">Exit codes</a>
+36. <a href="#32-glossary">Glossary</a>
+37. <a href="#the-five-things-to-remember">The five things to remember</a></p>
+<hr>
+<h2 id="part-0-the-5-minute-version">Part 0 — The 5-minute version</h2>
+<h3 id="01-what-self-healing-actually-means-here">0.1 What &quot;self-healing&quot; actually means here</h3>
+<p>You have three AI coding CLIs on this machine — <strong>Codex</strong>, <strong>Command Code</strong>, and <strong>OpenCode</strong>. They are separate programs. Each one has its own instruction file, its own agent definitions, its own model catalog. If you edit one, the others don&#39;t know. If a model gets retired upstream, a route that worked yesterday 404s today. If a file gets truncated, the CLI silently misbehaves.</p>
+<p>Left alone, this configuration <strong>rots</strong>. Definitions drift apart, catalogs go stale, backups pile up, a retired model keeps getting selected for a week.</p>
+<p>This system is the answer to that. It has two halves:</p>
+<div class="tw"><table><caption class="sr-only">0.1 What "self-healing" actually means here</caption><thead><tr><th scope="col">Half</th>
+<th scope="col">When it runs</th>
+<th scope="col">What it fixes</th>
+</tr></thead><tbody><tr><td><strong>Self-repair</strong> (the nightly job)</td>
+<td>03:00, unattended</td>
+<td>The <em>configuration</em> rots: instruction files diverge, agent files drift, catalogs go stale, memory stops consolidating, thresholds stop adapting.</td>
+</tr><tr><td><strong>Self-healing</strong> (at run time)</td>
+<td>Every time you dispatch a task</td>
+<td>The <em>environment</em> rots: a backend is rate-limited, a model is retired, credits ran out. The router reroutes instead of failing.</td>
+</tr></tbody></table></div>
+<p>Both halves share one idea: <strong>every change is snapshotted and hashed before it happens, and rolled back automatically if it goes wrong.</strong> Nothing here can silently corrupt your setup.</p>
+<p>A third, smaller piece is the <strong>guard hook</strong>: a deny-list in front of Codex that refuses to let a patch touch your keystores or commit secret-shaped text.</p>
+<h3 id="02-the-one-picture">0.2 The one picture</h3>
+<pre role="img" aria-label="Architecture diagram. A task enters at the top and goes into a router, which classifies it as quick, standard or deep, picks a backend — Codex, Command Code or OpenCode — and picks a model, then runs it. If the run fails, the router falls back to a free model, then to another backend, and records the outcome. Below the router sit three instruction sources: Codex, Command Code and OpenCode, plus a memory and taste learning layer. A nightly self-repair job at 03:00 runs eleven steps, snapshots and rolls back, and regenerates the inputs the router consumes."><code>   YOUR TASKS
+       │
+       │  work '&lt;task&gt;'          ← one command, routes and runs
+       ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │  ROUTER  (tools/agent-route.ps1 + tools/agent-task.ps1)    │
+ │                                                             │
+ │  1. classify task  → quick / standard / deep                │
+ │  2. pick backend   → codex / commandcode / opencode         │
+ │  3. pick model     → cheapest eligible, plan-filtered      │
+ │  4. run it                                             ┐    │
+ │  5. failed? free model → other backend → give up     │    │
+ │  6. record outcome  → health flags, feedback, tiers   │    │
+ └──────────────────────────────────────────────────────────┼────┘
+                                                            │
+   ┌────────────────────────┐   ┌─────────────────────────┼───┐
+   ▼                        ▼   ▼                         │   │
+┌────────┐            ┌─────────┐                    ┌───────▼───────┐
+│ Codex  │            │Command  │                    │  MEMORY +     │
+│        │            │ Code    │                    │  TASTE        │
+│AGENTS.md│            │AGENTS.md│                    │  (learning)   │
+│agents/ │            │agents/  │                    └───────────────┘
+│config  │            │settings │                           │
+└────────┘            └─────────┘                    ┌──────▼───────┐
+                                                     │ NIGHTLY JOB  │
+   ┌─────────────┐   ┌──────────────┐                │ self-repair  │
+   │ OpenCode    │   │ ~/.agents/   │                │  03:00       │
+   │ AGENTS.md   │   │  skills/     │                │ 11 steps     │
+   │ agents/     │   │ (canonical)  │                │ snapshot +   │
+   └─────────────┘   └──────────────┘                │ rollback     │
+                                                     └──────────────┘</code></pre>
+<p>Read the arrows as: <strong>the nightly job regenerates the inputs; the router consumes them at task time.</strong></p>
+<h3 id="03-the-three-commands-you-will-actually-use">0.3 The three commands you will actually use</h3>
+<pre><code class="language-powershell"># 1. Run a task. The router picks everything and runs it.
+work 'Fix the broken focus return after Back'
+
+# 2. See what the router WOULD pick, without spending anything.
+work 'Fix the broken focus return after Back' -Preview
+
+# 3. Run the whole nightly repair right now, by hand.
+powershell -NoProfile -ExecutionPolicy Bypass -File ~/Documents/Codex/tools/self-repair.ps1</code></pre>
+<p>That is genuinely it for day-to-day use. Everything else in this document is for
+when something breaks or you want to change something.</p>
+<hr>
+<h2 id="part-1-basics">Part 1 — Basics</h2>
+<h3 id="1-the-four-layers">1. The four layers</h3>
+<p>Your whole setup is four stacked layers. Each layer has <strong>one canonical source</strong> and <strong>N copies</strong> that are regenerated from it. Self-repair is the thing that keeps the copies equal to the source.</p>
+<h4 id="layer-1-instructions-what-should-the-agent-do">Layer 1 — Instructions (&quot;what should the agent do?&quot;)</h4>
+<div class="tw"><table><caption class="sr-only">Layer 1 — Instructions ("what should the agent do?")</caption><thead><tr><th scope="col">Canonical source</th>
+<th scope="col">Copies it renders to</th>
+</tr></thead><tbody><tr><td><code>~/.codex/AGENTS.md</code></td>
+<td><code>~/.config/opencode/AGENTS.md</code>, <code>~/.commandcode/AGENTS.md</code></td>
+</tr><tr><td><code>~/.commandcode/taste/</code></td>
+<td>a generated <code>TASTE:BEGIN</code>/<code>TASTE:END</code> block inside each <code>AGENTS.md</code></td>
+</tr><tr><td><code>~/.agents/skills/</code></td>
+<td><code>~/.codex/skills/</code>, <code>~/.config/opencode/skills/</code>, <code>~/.commandcode/skills/</code></td>
+</tr><tr><td><code>workflows/agents.toml</code></td>
+<td><code>~/.codex/agents/*.toml</code>, <code>~/.config/opencode/agents/*.md</code>, <code>~/.commandcode/agents/*.md</code></td>
+</tr></tbody></table></div>
+<p><strong>Never hand-edit a copy.</strong> Edit the canonical file, then run the sync script. This is the single most important rule in this document. Two hand-edited copies are how they diverged in the first place.</p>
+<h4 id="layer-2-routing-which-model-should-run-this">Layer 2 — Routing (&quot;which model should run this?&quot;)</h4>
+<p><code>tools/agent-route.ps1</code> holds the tier table, the price picker, the health flags, and the cooldown logic. <code>tools/agent-task.ps1</code> executes it. Data files it reads:</p>
+<ul>
+<li><code>tools/model-prices.json</code> — the price catalog, regenerated from the CLI&#39;s own catalog</li>
+<li><code>tools/free-models.json</code> — the free-model fallback list, regenerated daily</li>
+<li><code>tools/agent-backend-health.json</code> — live health flags (empty = all healthy)</li>
+<li><code>tools/agent-usage.json</code> — cooldown state (empty = no cooldown)</li>
+<li><code>tools/agent-tier-thresholds.json</code> — adaptive tier thresholds</li>
+<li><code>tools/agent-route-feedback.jsonl</code> — append-only record of every attempt</li>
+</ul>
+<h4 id="layer-3-learning-what-did-we-learn">Layer 3 — Learning (&quot;what did we learn?&quot;)</h4>
+<p><code>~/.codex/memories/</code> holds rollout summaries. Two scripts distill them into notes and then into <code>MEMORY.md</code>. A third script scans notes for repeated preferences and proposes taste entries.</p>
+<h4 id="layer-4-safety-what-must-never-happen">Layer 4 — Safety (&quot;what must never happen?&quot;)</h4>
+<ul>
+<li><code>tools/guard-hook.ps1</code> — deny-list for secret-bearing patches</li>
+<li><code>tools/release-gate.ps1</code> — pre-push check: clean tree, no unpushed commits, no secrets, gate commands pass</li>
+<li><code>tools/self-repair.ps1</code>&#39;s own snapshot/rollback — every nightly change is reversible</li>
+<li><code>tools/new-worktree.ps1</code> — isolation, so a broken attempt cannot damage your checkout</li>
+</ul>
+<hr>
+<h3 id="2-where-every-file-lives">2. Where every file lives</h3>
+<h4 id="the-workspace-documentscodex">The workspace: <code>~/Documents/Codex/</code></h4>
+<pre><code>Documents/Codex/
+├── AGENTS.md                  Workspace-level instructions (adds to global)
+├── AGENTS-compat.md           Compatibility notes — read before compat work
+├── WORKFLOW-USAGE.md          The operator's quick reference (terse)
+├── SELF-HEALING-WORKFLOW.md   ← THIS FILE
+├── WORKFLOW-AUDIT-*.md        Periodic audits of this configuration
+├── .gitignore                 What the configuration repo tracks, and what it ignores
+├── .git/                      ★ THE CONFIGURATION REPOSITORY — history = recovery points
+│
+├── workflows/                 THE CANONICAL CONFIG
+│   ├── agents.toml            Single source of truth for the agent roster
+│   ├── workflow.toml          Machine-readable workflow settings
+│   └── workflow.md            Human-readable workflow settings
+│
+└── tools/                     THE ENGINE
+    ├── self-repair.ps1        ★ The nightly job — runs everything below
+    ├── self-repair.log        One line per step per run
+    ├── self-repair-failures.log   Full output of failed steps
+    ├── self-repair-backups/   Snapshots, newest 5 runs kept
+    │
+    ├── repair-config.ps1      Validates the configuration repo, restores what is broken
+    ├── config_check.py        Reports Python/TOML/JSON files that do not parse
+    │
+    ├── sync-taste.ps1           Layer 1: learned preferences → AGENTS.md files
+    ├── sync-agents.ps1          Layer 1: agents.toml → each CLI's agent format
+    ├── sync-agent-instructions.ps1  Layer 1: canonical AGENTS.md → copies
+    ├── sync-skills.ps1          Layer 1: ~/.agents/skills → each CLI
+    │
+    ├── refresh-free-models.ps1  Layer 2: free-model catalog
+    ├── refresh-model-prices.ps1 Layer 2: price catalog
+    ├── agent-route.ps1          Layer 2: the router (dot-source this)
+    ├── agent-task.ps1           Layer 2: the runner (`work`)
+    ├── agent-usage.ps1          Layer 2: usage/spend reporting
+    ├── credit-check.ps1         Layer 2: backend health probe
+    │
+    ├── memory-curate.ps1        Layer 3: rollout summaries → notes
+    ├── memory-consolidate.ps1   Layer 3: notes → MEMORY.md
+    ├── taste-promote.ps1        Layer 3: notes → taste candidates
+    │
+    ├── tier-adapt.ps1           Layer 4: adaptive thresholds
+    ├── verify.ps1               Layer 4: smoke checks
+    ├── guard-hook.ps1           Layer 4: secret deny-list
+    ├── release-gate.ps1         Layer 4: pre-push gate
+    ├── new-worktree.ps1         Layer 4: task isolation
+    └── profile.ps1              The PowerShell profile (defines `work`, `wt`)</code></pre>
+<h4 id="the-user-directories">The user directories</h4>
+<pre><code>~/.codex/                    Codex home
+├── AGENTS.md                ★ CANONICAL global instructions
+├── AGENTS.md.bak-*          Timestamped safety backups (pruned to 5)
+├── config.toml              Codex settings (APP-MANAGED — see §29)
+├── hooks.json               Lifecycle hook wiring
+├── agents/                  Rendered agent definitions (generated)
+├── skills/                  Rendered skills (generated)
+├── rules/                   Approval rules
+└── memories/                Layer 3
+    ├── MEMORY.md            ★ Consolidated long-term memory
+    ├── rollout_summaries/   Raw session summaries (71 files)
+    └── extensions/ad_hoc/notes/  Distilled notes
+
+~/.config/opencode/         OpenCode home
+├── AGENTS.md                Copy of canonical
+├── agents/                  Rendered agent definitions (generated)
+└── skills/                  Rendered skills (generated)
+
+~/.commandcode/             Command Code home
+├── AGENTS.md                Copy of canonical
+├── agents/                  Rendered agent definitions (generated)
+├── skills/                  Rendered skills (generated)
+├── taste/                   ★ CANONICAL learned preferences
+└── settings.json            Permissions (deny/ask rules)
+
+~/.agents/skills/           ★ CANONICAL skill set
+~/.claude/CLAUDE.md         Claude Code — receives the taste block
+~/.gemini/GEMINI.md         Gemini CLI — receives the taste block</code></pre>
+<h4 id="the-state-files-all-under-tools">The state files (all under <code>tools/</code>)</h4>
+<div class="tw"><table><caption class="sr-only">The state files (all under tools/)</caption><thead><tr><th scope="col">File</th>
+<th scope="col">Written by</th>
+<th scope="col">Meaning</th>
+</tr></thead><tbody><tr><td><code>agent-backend-health.json</code></td>
+<td><code>credit-check.ps1</code>, <code>agent-task.ps1</code></td>
+<td>Per-backend unhealthy flags, 30-minute TTL</td>
+</tr><tr><td><code>agent-usage.json</code></td>
+<td><code>agent-task.ps1</code></td>
+<td>Cooldown state (5-hour window reset time)</td>
+</tr><tr><td><code>agent-tier-thresholds.json</code></td>
+<td><code>tier-adapt.ps1</code></td>
+<td><code>maxQuickLength</code>, <code>quickSuccessRate</code>, <code>sampleCount</code></td>
+</tr><tr><td><code>agent-route-feedback.jsonl</code></td>
+<td><code>agent-task.ps1</code></td>
+<td>Append-only attempt log (drives demotion)</td>
+</tr><tr><td><code>agent-tier-outcomes.jsonl</code></td>
+<td><code>agent-task.ps1</code></td>
+<td>Append-only per-tier outcome log</td>
+</tr><tr><td><code>free-models.json</code></td>
+<td><code>refresh-free-models.ps1</code></td>
+<td>Free fallback catalog, per backend</td>
+</tr><tr><td><code>model-prices.json</code></td>
+<td><code>refresh-model-prices.ps1</code></td>
+<td>Full price catalog</td>
+</tr><tr><td><code>taste-candidates.md</code></td>
+<td><code>taste-promote.ps1</code></td>
+<td>Proposed taste entries for review</td>
+</tr></tbody></table></div>
+<hr>
+<h3 id="3-the-nightly-repair-run">3. The nightly repair run</h3>
+<h4 id="when-it-runs">When it runs</h4>
+<div class="tw"><table><caption class="sr-only">When it runs</caption><thead><tr><th scope="col">Property</th>
+<th scope="col">Value</th>
+</tr></thead><tbody><tr><td>Task name</td>
+<td><code>CodexWorkflowSelfHeal</code></td>
+</tr><tr><td>Schedule</td>
+<td>Daily at <strong>03:00</strong> local time</td>
+</tr><tr><td>Runs as</td>
+<td>your user account, <strong>Limited</strong> (not elevated), <strong>Interactive</strong> (only while signed in)</td>
+</tr><tr><td>Action</td>
+<td><code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File &quot;...\tools\self-repair.ps1&quot;</code></td>
+</tr><tr><td>Missed run</td>
+<td><code>StartWhenAvailable = True</code> → runs at next available time after sign-in</td>
+</tr><tr><td>Overlap</td>
+<td><code>MultipleInstances = IgnoreNew</code> → a second trigger while one runs is skipped</td>
+</tr><tr><td>Time limit</td>
+<td>30 minutes (<code>PT30M</code>)</td>
+</tr><tr><td>On battery</td>
+<td>Allowed (does not stop)</td>
+</tr><tr><td>Wakes machine</td>
+<td>No</td>
+</tr></tbody></table></div>
+<blockquote>
+<p><strong>Practical consequence:</strong> because the task is <code>Interactive</code>, it will <strong>not</strong> run while you are signed out. If your machine is off at 03:00, the repair happens the next time you sign in — that is the intended behavior, not a fault.</p>
+</blockquote>
+<h4 id="what-one-run-looks-like">What one run looks like</h4>
+<pre><code>2026-10-20 13:21:23 repair-config                config healthy: 75 tracked file(s), committed 5 change(s)
+2026-10-20 13:21:25 sync-taste                   canonical hash: E512CC4FCA018D73EB400F58CD7397DD
+2026-10-20 13:21:26 sync-agents                  roster: 4 agents -&gt; ...\.codex\agents, ...\.config\opencode\agents, ...\.commandcode\agents
+2026-10-20 13:21:27 sync-agent-instructions      canonical hash: E512CC4FCA018D73EB400F58CD7397DD
+2026-10-20 13:21:31 sync-skills                  sync-skills: done
+2026-10-20 13:21:46 refresh-free-models          wrote ...\free-models.json : commandcode=3 opencode=10
+2026-10-20 13:21:52 memory-curate                curated 1 rollout summary(ies) -&gt; ...\notes
+2026-10-20 13:21:54 memory-consolidate           consolidated 6 novel learning(s) across 1 topic(s)
+2026-10-20 13:21:55 tier-adapt                   tier-adapt: quick success=100% (3 samples), maxQuickLength=180, changed=False
+2026-10-20 13:21:57 taste-promote                wrote 2 repeated taste candidate(s) to ...\taste-candidates.md
+2026-10-20 13:22:04 credit-check                 Backend health file: ...\agent-backend-health.json
+2026-10-20 13:22:08 verify                       verify OK
+2026-10-20 13:22:08 self-repair                  run complete ok=12 failed=0</code></pre>
+<h4 id="the-five-rules-of-the-run">The five rules of the run</h4>
+<ol>
+<li><strong>Each step is independent.</strong> One failure never stops the others. A broken <code>refresh-free-models</code> cannot prevent <code>verify</code> from running.</li>
+<li><strong>Each step is guarded by its own snapshot.</strong> Before a step runs, every file or directory it will write is copied and hashed.</li>
+<li><strong>A failure rolls back that step only.</strong> The rest of the run&#39;s work stays.</li>
+<li><strong>The script always exits.</strong> Exit <code>0</code> if every step passed, exit <code>1</code> if any failed or rolled back.</li>
+<li><strong>The log is trimmed.</strong> <code>self-repair.log</code> keeps the last 400 lines (max 500). <code>self-repair-failures.log</code> keeps the last 200 (max 250).</li>
+</ol>
+<h4 id="verify-it-is-alive">Verify it is alive</h4>
+<pre><code class="language-powershell">Get-ScheduledTask -TaskName CodexWorkflowSelfHeal | Select TaskName, State
+Get-ScheduledTaskInfo -TaskName CodexWorkflowSelfHeal | Format-List LastRunTime, LastTaskResult, NextRunTime</code></pre>
+<p><code>LastTaskResult: 0</code> means the last run passed everything.</p>
+<h4 id="31-the-configuration-repository">3.1 The configuration repository</h4>
+<p>The workspace itself is a git repository, and it holds <strong>the workflow configuration
+only</strong>: the policy, the docs, the canonical config in <code>workflows/</code>, the install
+payload in <code>workflow/</code>, the scripts in <code>tools/</code> and the published HTML. The
+project repositories in the same folder are ignored — each one keeps its own
+history. <code>.gitignore</code> is the boundary.</p>
+<p>That makes the configuration recoverable. <code>tools/repair-config.ps1</code> is the first
+step of the nightly run:</p>
+<div class="tw"><table><caption class="sr-only">3.1 The configuration repository</caption><thead><tr><th scope="col">Phase</th>
+<th scope="col">What it does</th>
+</tr></thead><tbody><tr><td>Validate</td>
+<td>Every tracked file is parsed by its type: PowerShell parse, Python syntax, TOML parse, JSON parse, <code>node --check</code>. A missing file counts as broken.</td>
+</tr><tr><td>Restore</td>
+<td>A broken file is copied aside as <code>&lt;name&gt;.broken-&lt;stamp&gt;</code> and restored from the last good commit. If the commit is broken too, the step fails and says so.</td>
+</tr><tr><td>Record</td>
+<td>The validated files are committed, so the next run has something to restore from.</td>
+</tr></tbody></table></div>
+<pre><code>2026-10-20 13:21:23 repair-config                config healthy: 75 tracked file(s), committed 5 change(s)</code></pre>
+<p>The commit is local only — there is no remote, so nothing is pushed and nothing
+leaves the machine. New files are not picked up automatically; add them with
+<code>git add</code> when you create them.</p>
+<pre><code class="language-powershell">~/Documents/Codex/tools/repair-config.ps1 -Check   # validate only, write nothing
+~/Documents/Codex/tools/repair-config.ps1          # validate, restore, commit</code></pre>
+<hr>
+<h2 id="part-2---the-configuration-repo-and-the-eleven-repair-steps-one-by-one">Part 2 - The configuration repo and the eleven repair steps, one by one</h2>
+<h3 id="4-step-overview-table">4. Step overview table</h3>
+<div class="tw"><table><caption class="sr-only">4. Step overview table</caption><thead><tr><th scope="col">#</th>
+<th scope="col">Step</th>
+<th scope="col">Reads</th>
+<th scope="col">Writes</th>
+<th scope="col">Heals</th>
+</tr></thead><tbody><tr><td>0</td>
+<td><code>repair-config</code></td>
+<td>the configuration repo</td>
+<td>the configuration repo (git commit)</td>
+<td>A broken config file that nothing else could restore</td>
+</tr><tr><td>1</td>
+<td><code>sync-taste</code></td>
+<td><code>~/.commandcode/taste/</code></td>
+<td><code>~/.codex/AGENTS.md</code>, <code>~/.claude/CLAUDE.md</code>, <code>~/.gemini/GEMINI.md</code> (+ propagates to OpenCode/CommandCode)</td>
+<td>Learned preferences not reaching other agents</td>
+</tr><tr><td>2</td>
+<td><code>sync-agents</code></td>
+<td><code>workflows/agents.toml</code></td>
+<td><code>~/.codex/agents/</code>, <code>~/.config/opencode/agents/</code>, <code>~/.commandcode/agents/</code></td>
+<td>Agent definitions diverging from the roster</td>
+</tr><tr><td>3</td>
+<td><code>sync-agent-instructions</code></td>
+<td><code>~/.codex/AGENTS.md</code></td>
+<td><code>~/.config/opencode/AGENTS.md</code>, <code>~/.commandcode/AGENTS.md</code></td>
+<td>Instruction files drifting apart</td>
+</tr><tr><td>4</td>
+<td><code>sync-skills</code></td>
+<td><code>~/.agents/skills/</code></td>
+<td><code>~/.codex/skills/</code>, <code>~/.config/opencode/skills/</code>, <code>~/.commandcode/skills/</code></td>
+<td>A skill edited or added in one CLI only</td>
+</tr><tr><td>5</td>
+<td><code>refresh-free-models</code></td>
+<td>CLI catalogs</td>
+<td><code>tools/free-models.json</code></td>
+<td>Retired free models still being offered</td>
+</tr><tr><td>6</td>
+<td><code>memory-curate</code></td>
+<td><code>~/.codex/memories/rollout_summaries/</code></td>
+<td><code>~/.codex/memories/extensions/ad_hoc/notes/</code></td>
+<td>Raw summaries never becoming structured notes</td>
+</tr><tr><td>7</td>
+<td><code>memory-consolidate</code></td>
+<td>notes + <code>MEMORY.md</code></td>
+<td><code>MEMORY.md</code>, <code>.consolidated</code></td>
+<td>Notes never merging into long-term memory</td>
+</tr><tr><td>8</td>
+<td><code>tier-adapt</code></td>
+<td><code>agent-tier-outcomes.jsonl</code></td>
+<td><code>tools/agent-tier-thresholds.json</code></td>
+<td>Tier thresholds frozen at their defaults</td>
+</tr><tr><td>9</td>
+<td><code>taste-promote</code></td>
+<td>notes</td>
+<td><code>tools/taste-candidates.md</code></td>
+<td>Repeated preferences never becoming taste</td>
+</tr><tr><td>10</td>
+<td><code>credit-check</code></td>
+<td>live backends</td>
+<td><code>tools/agent-backend-health.json</code></td>
+<td>Dead backends still being selected</td>
+</tr><tr><td>11</td>
+<td><code>verify</code></td>
+<td>all tools</td>
+<td><em>(nothing — read-only)</em></td>
+<td>Broken scripts shipping undetected</td>
+</tr></tbody></table></div>
+<hr>
+<h3 id="5-steps-1-to-3-the-instruction-layer">5. Steps 1 to 3: the instruction layer</h3>
+<h4 id="step-1-sync-taste">Step 1 — <code>sync-taste</code></h4>
+<p><strong>The problem it solves.</strong> Command Code learns your preferences into <code>~/.commandcode/taste/</code>. No other agent reads that folder. So a preference Command Code learned (&quot;always fix same-pattern bugs in sibling files&quot;) is invisible to Codex, OpenCode, Claude, and Gemini.</p>
+<p><strong>The fix.</strong> Render the taste files into a fenced, generated block and inject it where each agent actually looks:</p>
+<pre><code>&lt;!-- TASTE:BEGIN - generated by tools/sync-taste.ps1; edit .commandcode/taste/ instead --&gt;
+...learned preferences, one bullet per line, with a confidence score...
+&lt;!-- TASTE:END --&gt;</code></pre>
+<p><strong>Key properties</strong></p>
+<ul>
+<li><strong>Idempotent.</strong> Re-running produces a byte-identical file. The script finds the existing block with a regex and replaces it in place.</li>
+<li><strong>The block is generated.</strong> Edit <code>~/.commandcode/taste/taste.md</code>, never the block. A hand-edit inside the block is destroyed on the next run.</li>
+<li><strong>UTF-8 without BOM</strong>, LF-preserving, so the file hash stays stable.</li>
+<li><strong><code>-Check</code> mode</strong> reports <code>DRIFT &lt;path&gt;</code> / <code>ok &lt;path&gt;</code> and exits <code>2</code> if anything drifted.</li>
+<li><strong>Per-project mode:</strong> <code>sync-taste.ps1 -Project &lt;dir&gt;</code> renders <code>&lt;dir&gt;/.commandcode/taste/</code> into <code>&lt;dir&gt;/AGENTS.md</code>.</li>
+</ul>
+<p><strong>What it writes in the nightly run:</strong> <code>~/.codex/AGENTS.md</code>, <code>~/.claude/CLAUDE.md</code>, <code>~/.gemini/GEMINI.md</code>. It then calls <code>sync-agent-instructions.ps1</code> itself to propagate the canonical file to OpenCode and Command Code.</p>
+<p><strong>Manual use</strong></p>
+<pre><code class="language-powershell">~/Documents/Codex/tools/sync-taste.ps1            # apply
+~/Documents/Codex/tools/sync-taste.ps1 -Check     # report drift, exit 2 if any
+~/Documents/Codex/tools/sync-taste.ps1 -Project C:\path\to\repo
+taste-sync                                       # profile shortcut, same thing</code></pre>
+<blockquote>
+<p>The PowerShell profile runs the global taste sync <strong>at most once per day</strong>, triggered by a stamp file at <code>~/.commandcode/.taste-sync-stamp</code>. So the taste block can be up to 24 hours stale after Command Code learns something new.</p>
+</blockquote>
+<hr>
+<h4 id="step-2-sync-agents">Step 2 — <code>sync-agents</code></h4>
+<p><strong>The problem it solves.</strong> Three CLIs, three agent-file formats, one roster. Hand-maintaining all three means they drift.</p>
+<p><strong>The fix.</strong> <code>workflows/agents.toml</code> is the single source of truth. This script renders it into each CLI&#39;s native format:</p>
+<div class="tw"><table><caption class="sr-only">Step 2 — sync-agents</caption><thead><tr><th scope="col">CLI</th>
+<th scope="col">Output format</th>
+<th scope="col">Location</th>
+</tr></thead><tbody><tr><td>Codex</td>
+<td>TOML</td>
+<td><code>~/.codex/agents/&lt;name&gt;.toml</code></td>
+</tr><tr><td>OpenCode</td>
+<td>Markdown + YAML frontmatter</td>
+<td><code>~/.config/opencode/agents/&lt;name&gt;.md</code></td>
+</tr><tr><td>CommandCode</td>
+<td>Markdown + YAML frontmatter</td>
+<td><code>~/.commandcode/agents/&lt;name&gt;.md</code></td>
+</tr></tbody></table></div>
+<p><strong>How read-only is enforced:</strong></p>
+<ul>
+<li><strong>Codex</strong> — <code>sandbox_mode = &quot;read-only&quot;</code> is set in the agent TOML. (But: Codex custom agents inherit the <em>parent</em> sandbox, so the agent&#39;s own read-only <em>instructions</em> do not create a read-only sandbox on their own.)</li>
+<li><strong>OpenCode</strong> — frontmatter <code>permission: edit: deny</code>. This blocks the edit tool but <strong>not</strong> Bash.</li>
+<li><strong>CommandCode</strong> — <code>tools: read_file, read_directory, grep, glob, shell_command</code> and <code>disallowedTools: edit_file, write_file</code>. <code>shell_command</code> stays because read-only agents need <code>rg</code> and <code>git</code>; the residual risk is a write routed through the shell.</li>
+</ul>
+<p><strong>Superseded cleanup.</strong> Seven legacy agent files (the old Codex <code>accessibility_explorer</code>/<code>implementer</code>/<code>reviewer</code>/<code>tester</code> set, and the OpenCode <code>cavecrew-*</code> set) are <strong>renamed</strong>, not deleted, to <code>&lt;name&gt;.superseded-&lt;timestamp&gt;</code>. Renaming a roster entry therefore cleans up after itself.</p>
+<p><strong><code>-Check</code> mode</strong> prints <code>in sync</code> / <code>DRIFTED</code> / <code>STALE</code> per file and exits <code>2</code> if anything needs attention.</p>
+<p><strong>Manual use</strong></p>
+<pre><code class="language-powershell">~/Documents/Codex/tools/sync-agents.ps1          # render to all three CLIs
+~/Documents/Codex/tools/sync-agents.ps1 -Check   # report drift, exit 2 if any</code></pre>
+<hr>
+<h4 id="step-3-sync-agent-instructions">Step 3 — <code>sync-agent-instructions</code></h4>
+<p><strong>The problem it solves.</strong> Each CLI reads its own <code>AGENTS.md</code>. Edit one, the other two are now wrong.</p>
+<p><strong>The fix.</strong> <code>~/.codex/AGENTS.md</code> is canonical. This script copies it byte-for-byte to:</p>
+<ul>
+<li><code>~/.config/opencode/AGENTS.md</code></li>
+<li><code>~/.commandcode/AGENTS.md</code></li>
+</ul>
+<p>Comparison is by <strong>MD5 hash</strong>. UTF-8 without BOM on write.</p>
+<p><strong>Backup policy.</strong> A timestamped <code>AGENTS.md.bak-&lt;timestamp&gt;</code> copy is taken <strong>only when the target&#39;s content actually changes</strong> — an already-in-sync target is left alone and produces no backup. After each run the script keeps the <strong>5 latest</strong> backups per target directory and prunes older copies, but only after confirming those 5 are non-empty. (Before 2026-10-19 it backed up unconditionally and never pruned; see §30.1.)</p>
+<p><strong><code>-Check</code> mode</strong> prints the hash of each file and <code>DRIFTED</code> / <code>MISSING</code> / <code>in sync</code>, exit <code>2</code> if drifted.</p>
+<p><strong>Manual use</strong></p>
+<pre><code class="language-powershell">~/Documents/Codex/tools/sync-agent-instructions.ps1
+~/Documents/Codex/tools/sync-agent-instructions.ps1 -Check</code></pre>
+<blockquote>
+<p><strong>Step order matters.</strong> <code>sync-taste</code> (step 1) writes the canonical <code>~/.codex/AGENTS.md</code>, then propagates it. Step 3 runs the same propagation again. That is harmless — the script is idempotent — but it does mean the canonical file must be written <em>before</em> step 3, which is why the order is fixed in <code>self-repair.ps1</code>.</p>
+</blockquote>
+<hr>
+<h3 id="6-steps-4-to-8-the-skills-catalog-and-memory-layer">6. Steps 4 to 8: the skills, catalog and memory layer</h3>
+<h4 id="step-4---sync-skills">Step 4 - <code>sync-skills</code></h4>
+<p><strong>The problem it solves.</strong> <code>~/.agents/skills</code> is the canonical skill set. <code>tools/sync-skills.ps1</code> pushes it into <code>~/.codex/skills</code>, <code>~/.config/opencode/skills</code> and <code>~/.commandcode/skills</code>. Before 2026-10-19 nothing ran that push on a schedule, so a skill edited or added in one CLI stayed wrong in the other two until you ran the script by hand.</p>
+<p><strong>The fix.</strong> A nightly step that re-renders the canonical set into all three CLIs.</p>
+<p><strong>Key properties</strong></p>
+<ul>
+<li><strong>Idempotent.</strong> A skill is only copied when its <code>SKILL.md</code> content or its file count differs.</li>
+<li><strong>Runs with <code>-NoPrune</code>.</strong> The nightly job never deletes a skill. <code>sync-skills.ps1</code> <em>can</em> prune a destination skill that is no longer in the canonical set, but that is a deletion, so it stays a manual, attended action.</li>
+<li><strong>No snapshot.</strong> This is the one step with no entry in <code>$stepFiles</code>, and it is deliberate: the canonical set is never written by the step, the step is idempotent, and re-running it repairs a partial copy. The canonical set <em>is</em> the backup for this layer.</li>
+<li><strong>No plugin wiring needed.</strong> Skills in the canonical set reach all three CLIs. The Codex plugin copy of Superpowers is cached but unregistered, and does not need to be.</li>
+</ul>
+<p><strong>Output:</strong> <code>sync-skills: done</code></p>
+<p><strong>Manual use</strong></p>
+<pre><code class="language-powershell">~/Documents/Codex/tools/sync-skills.ps1            # apply
+~/Documents/Codex/tools/sync-skills.ps1 -Check     # drift report, exit 2 if pending
+~/Documents/Codex/tools/sync-skills.ps1 -NoPrune   # apply without deleting dest-only skills</code></pre>
+<hr>
+<h4 id="step-5---refresh-free-models">Step 5 - <code>refresh-free-models</code></h4>
+<p><strong>The problem it solves.</strong> A free model gets retired upstream. Your fallback list still names it. The router picks it. It 404s. And this repeats daily until someone notices.</p>
+<p><strong>The fix.</strong> Never hand-maintain the free list. Read it from each CLI&#39;s own catalog:</p>
+<div class="tw"><table><caption class="sr-only">Step 5 - refresh-free-models</caption><thead><tr><th scope="col">Backend</th>
+<th scope="col">Source</th>
+<th scope="col">Filter</th>
+</tr></thead><tbody><tr><td>Command Code</td>
+<td>live <code>--list-models</code> output from the installed CLI</td>
+<td>lines tagged with an uppercase <code>FREE</code> tag</td>
+</tr><tr><td>OpenCode</td>
+<td><code>~/.cache/opencode/models.json</code>, provider <code>opencode</code></td>
+<td><code>cost.input == 0</code> and <code>cost.output == 0</code> and <code>status != &#39;deprecated&#39;</code></td>
+</tr></tbody></table></div>
+<p>If the Command Code CLI is unavailable, it falls back to <code>tools/model-prices.json</code> entries with <code>free = true</code>.</p>
+<p><strong>Ordering:</strong> newest free model first, per backend (OpenCode sorts by <code>release_date</code> descending).</p>
+<p><strong>Privacy guard:</strong> any model whose upstream may train on your prompts is <strong>always excluded</strong> — currently <code>glyph-cluster:free</code>, matched as a substring so a provider prefix (<code>stealth/glyph-cluster:free</code>) is still caught.</p>
+<p><strong>Staleness guard:</strong> the router refuses to use a catalog older than <strong>3 days</strong> — a stale catalog is worse than none, because it still offers retired models. The nightly job keeps it fresh.</p>
+<p><strong>Output shape</strong></p>
+<pre><code class="language-json">{
+  "generatedAt": "2026-10-19T08:00:06Z",
+  "commandcode": ["reflection/beam:free", "poolside/laguna-s-2.1-free", "stealth/cat-jam:free"],
+  "opencode":    ["opencode/nemotron-3.5-super-vl-free", "..."]
+}</code></pre>
+<p><strong>Manual use</strong></p>
+<pre><code class="language-powershell">~/Documents/Codex/tools/refresh-free-models.ps1</code></pre>
+<hr>
+<h4 id="step-6---memory-curate">Step 6 - <code>memory-curate</code></h4>
+<p><strong>The problem it solves.</strong> Codex only updates <code>MEMORY.md</code> when you explicitly ask. Raw rollout summaries pile up faster than curation happens, so most of what was learned never makes it into memory.</p>
+<p><strong>The fix.</strong> This script does the <strong>mechanical half</strong>, deterministically, with <strong>no model calls</strong> — so nothing can be hallucinated. Bullets are verbatim extractions.</p>
+<p><strong>How it works</strong></p>
+<ol>
+<li>Read every <code>*.md</code> in <code>~/.codex/memories/rollout_summaries/</code>, oldest first.</li>
+<li>Skip anything already processed — tracked by <code>filename:MD5:v2</code> in <code>notes/.processed</code>.</li>
+<li>Extract the <code># Title</code>, the <code>Outcome:</code> line, the <code>thread_id</code> (for provenance), and the bullets under the two high-value sections:<ul>
+<li><code>Failures and how to do differently:</code></li>
+<li><code>Reusable knowledge:</code></li>
+</ul>
+</li>
+<li>Write one note per summary to <code>notes/&lt;timestamp&gt;-&lt;slug&gt;.md</code>.</li>
+<li>Record the key in <code>.processed</code>.</li>
+</ol>
+<p><strong>The note format it produces</strong></p>
+<pre><code class="language-markdown">Proposed memory update distilled from rollout summary 20261019T030102-beluga-tv-log-anr.md
+    (title: beluga-tv-log-anr-diagnosed-and-patched-with-automated-valid)
+    (outcome: patched)
+
+Rollout ids to cite:
+3f9c1e2a-...
+
+Learnings to consider adding:
+- &lt;verbatim bullet&gt;
+- &lt;verbatim bullet&gt;</code></pre>
+<p><strong>Output:</strong> <code>curated 5 rollout summary(ies) -&gt; ~/.codex/memories/extensions/ad_hoc/notes</code></p>
+<hr>
+<h4 id="step-7---memory-consolidate">Step 7 - <code>memory-consolidate</code></h4>
+<p><strong>The problem it solves.</strong> Step 5 creates notes, but nobody merges them into <code>MEMORY.md</code>. So notes accumulate and memory stays stale.</p>
+<p><strong>The fix.</strong> Also deterministic, no model calls.</p>
+<p><strong>How it works</strong></p>
+<ol>
+<li>Read every note that contains a <code>Learnings to consider adding:</code> section.</li>
+<li>Skip notes already consolidated — tracked by <code>filename:MD5</code> in <code>notes/.consolidated</code>.</li>
+<li>For each <code>- </code> bullet: normalize (strip punctuation, lowercase, first 40 chars) and <strong>skip it if that normalized key already appears anywhere in <code>MEMORY.md</code></strong>. That is the dedupe.</li>
+<li>Group the surviving bullets by the note&#39;s title.</li>
+<li><strong>Back up <code>MEMORY.md</code></strong> to <code>~/.codex/memories/backups/MEMORY.md.&lt;timestamp&gt;.bak</code>.</li>
+<li>Append a dated section:</li>
+</ol>
+<pre><code class="language-markdown"># Consolidated learnings (auto, 2026-10-19)
+
+## &lt;topic&gt;
+
+- &lt;bullet&gt;
+- &lt;bullet&gt;</code></pre>
+<ol start="7">
+<li>Record the keys in <code>.consolidated</code>.</li>
+</ol>
+<p><strong>Dedupe key detail:</strong> the key is the first 40 normalized characters. A bullet that differs only in its tail will be considered a duplicate. That is intentional — it prevents near-identical lines from accumulating — but it means genuinely distinct learnings that share a 40-character prefix will be dropped.</p>
+<p><strong>Output:</strong> <code>consolidated 45 novel learning(s) across 5 topic(s)</code></p>
+<hr>
+<h3 id="7-steps-9-to-11-the-routing-and-health-layer">7. Steps 9 to 11: the routing and health layer</h3>
+<h4 id="step-8---tier-adapt">Step 8 - <code>tier-adapt</code></h4>
+<p><strong>The problem it solves.</strong> The <code>quick</code> tier is chosen by a length + keyword heuristic. If quick tasks keep failing, the heuristic is too loose — and it will keep failing forever unless the threshold adapts.</p>
+<p><strong>The fix.</strong> Analyze recorded tier outcomes and tighten (or cautiously loosen) the quick threshold.</p>
+<p><strong>The math</strong></p>
+<pre><code>quickSuccessRate = quickSuccesses / quickTotal</code></pre>
+<div class="tw"><table><caption class="sr-only">Step 8 - tier-adapt</caption><thead><tr><th scope="col">Condition</th>
+<th scope="col">Action</th>
+</tr></thead><tbody><tr><td><code>quickSuccessRate &lt; 0.70</code> <strong>and</strong> <code>quickTotal &gt;= 5</code></td>
+<td><code>maxQuickLength -= 20</code>, floor <strong>80</strong></td>
+</tr><tr><td><code>quickSuccessRate &gt; 0.90</code> <strong>and</strong> <code>quickTotal &gt;= 20</code></td>
+<td><code>maxQuickLength += 10</code>, ceiling <strong>250</strong></td>
+</tr><tr><td>fewer than 10 total records</td>
+<td>no change, <code>only N samples, need 10+</code></td>
+</tr></tbody></table></div>
+<p><strong>Deliberately conservative.</strong> It only tightens when the data says quick is failing. It never touches the keyword lists — only the length.</p>
+<p><strong>Output file</strong></p>
+<pre><code class="language-json">{ "maxQuickLength": 180, "quickSuccessRate": 1, "sampleCount": 23 }</code></pre>
+<p><strong>Output line:</strong> <code>tier-adapt: quick success=100% (1 samples), maxQuickLength=180, changed=False</code></p>
+<blockquote>
+<p><code>changed=False</code> on most runs is normal and healthy. The system should mostly <em>observe</em>.</p>
+</blockquote>
+<hr>
+<h4 id="step-9---taste-promote">Step 9 - <code>taste-promote</code></h4>
+<p><strong>The problem it solves.</strong> A preference that shows up twice in your notes is probably a real preference — but nothing notices.</p>
+<p><strong>The fix.</strong> Scan all note bullets, keep the ones that look preference-shaped, and propose the ones that appear <strong>2+ times</strong>.</p>
+<p><strong>Preference-shaped patterns:</strong> <code>always</code>, <code>prefer</code>, <code>never</code>, <code>instead of</code>, <code>use X over</code>, <code>do not</code>, <code>must</code>.</p>
+<p><strong>Dedupe</strong> is on the first 60 normalized characters. <strong>Repeat counting</strong> is done on the <em>raw</em> pre-dedupe list, keyed by the first five words after the dash — so the same learning recorded in two different note files still counts as a repeat.</p>
+<p><strong>It never writes taste directly.</strong> It writes <code>tools/taste-candidates.md</code> for a human (or the <code>taste</code> tool) to approve:</p>
+<pre><code class="language-markdown"># Taste candidates (auto-generated 2026-10-19)
+
+Review these and apply via the `taste` tool if appropriate.
+Total learning bullets scanned: 534
+Preference-like candidates: 146
+Repeated 2+ times (proposed below): 2
+
+- - Do not treat automated tests, lint, release packaging, or ADB hierarchy inspection as proof of spoken accessibility ...</code></pre>
+<blockquote>
+<p>Note the doubled <code>- -</code>. The script prefixes the bullet, and the extracted bullet already began with <code>- </code>. Cosmetic, but it means the file is not clean Markdown bullet syntax. Worth knowing before you paste from it.</p>
+</blockquote>
+<p><strong>Current state:</strong> 534 bullets scanned → 146 preference-like → 2 repeated. Both current candidates say the same thing in different words: <em>automated tests are not proof of accessibility</em>. That is exactly the behavior you want — the noise floor is high and the signal is real.</p>
+<hr>
+<h4 id="step-10---credit-check">Step 10 - <code>credit-check</code></h4>
+<p><strong>The problem it solves.</strong> Backends die. Credits run out. The router keeps picking a dead backend until every task fails.</p>
+<p><strong>The fix.</strong> Probe each backend and write health flags to <code>tools/agent-backend-health.json</code>.</p>
+<div class="tw"><table><caption class="sr-only">Step 10 - credit-check</caption><thead><tr><th scope="col">Backend</th>
+<th scope="col">How it&#39;s checked</th>
+<th scope="col">Result</th>
+</tr></thead><tbody><tr><td><strong>Codex</strong></td>
+<td><strong>Not probed.</strong> The old 365-day subscription lockout is gone. Health comes from <em>real run results</em> — <code>agent-task.ps1</code> sets/clears the flag on success or infrastructure failure.</td>
+<td><code>tracked by run results</code></td>
+</tr><tr><td><strong>Command Code</strong></td>
+<td>Runs a tiny paid-model request: <code>Reply with exactly: OK</code>, 90s timeout. If the output matches <code>insufficient credits</code> → paid exhausted for 120 minutes. Exit code 0 → paid available, flag cleared.</td>
+<td><code>paid available</code> / <code>paid credits exhausted -&gt; free models only</code> / <code>probe timeout</code></td>
+</tr><tr><td><strong>OpenCode</strong></td>
+<td>Reads its local SQLite DB (<code>~/.local/share/opencode/opencode.db</code>) for assistant-message cost in the last 24h. Needs <code>sqlite3</code> on PATH; skipped gracefully if absent.</td>
+<td><code>12 requests, $0.0431 in 24h</code></td>
+</tr></tbody></table></div>
+<p><strong>Cooldown skip:</strong> if Command Code is already in a 5-hour cooldown, the probe is skipped entirely (<code>cooldown active -&gt; probe skipped</code>) — probing would burn a free model for no information.</p>
+<hr>
+<h4 id="step-11---verify">Step 11 - <code>verify</code></h4>
+<p><strong>The problem it solves.</strong> A typo in any script means that script silently stops working. Every step above would then fail forever, and you would only find out when you needed the thing.</p>
+<p><strong>The fix.</strong> Three smoke checks. Exit <code>0</code> = all good, exit <code>1</code> = something is broken.</p>
+<p><strong>Check 1 — Parse every <code>.ps1</code> in <code>tools/</code>.</strong>
+Uses the PowerShell AST parser (<code>[System.Management.Automation.Language.Parser]::ParseFile</code>) and reports every syntax error. Catches broken scripts before they are needed.</p>
+<p><strong>Check 2 — Load the router and exercise it.</strong>
+Dot-sources <code>agent-route.ps1</code> (which must define functions without <em>doing</em> work on load), then calls <code>Get-RoutePenalties</code>, <code>Select-CheapModel -Tier quick</code>, and <code>Get-BackendRanking</code>. Asserts a model was returned. Output looks like:</p>
+<pre><code>route smoke OK: quick=deepseek/deepseek-v4-flash
+backend ranking: codex &gt; commandcode &gt; opencode</code></pre>
+<p><strong>Check 3 — Codex shim drift.</strong>
+Verifies the npm shim at <code>%LOCALAPPDATA%\BlindPilot\npm\codex.cmd</code> exists and responds to <code>--version</code>, and that any prefix copy of <code>codex.cmd</code> reports the <strong>same version</strong>. This matters because <code>agent-task.ps1</code> uses the npm copy; a stale prefix copy is what a bare <code>codex</code> may resolve to. The desktop <code>codex.exe</code> 0.162.x ships a broken Windows sandbox helper (openai/codex#51634 — read-only exec dies with <code>setup refresh had errors</code>), which is why only the npm shim is used.</p>
+<p><strong>Output:</strong> <code>verify OK</code></p>
+<hr>
+<h2 id="part-3-the-safety-machinery">Part 3 — The safety machinery</h2>
+<h3 id="8-snapshot-hash-manifest-rollback">8. Snapshot, hash, manifest, rollback</h3>
+<p>This is the part that makes unattended repair safe. Read it once and you will trust the system.</p>
+<h4 id="the-sequence-per-step">The sequence, per step</h4>
+<pre role="img" aria-label="Flow diagram of the snapshot and rollback sequence for one repair step. Before the step runs: read the list of files the step will write; for each file, compute a SHA-256 hash over the whole tree — path, directory flag and file hash, sorted and serialised — copy it into the backup directory, re-hash the copy, and abort if the copy hash differs from the source hash; write that hash alongside the copy; then write a manifest listing each entry with its backup directory, whether the file existed beforehand, and its target path, plus a hash of the manifest itself. Then the step runs. If it exits zero, the run continues. If it exits non-zero: append its full output to the failure log, then restore — re-hash the manifest and abort if it changed, check the entry count matches, check every entry path, existed flag and target against the expected list, re-hash each snapshot and abort if it changed, and only then write the snapshots back. Files the step created are deleted rather than restored, so a rolled-back step leaves no trace."><code>   ┌─ BEFORE ────────────────────────────────────────────┐
+   │ 1. Read the step's file list from $stepFiles        │
+   │ 2. For each file:                                   │
+   │      a. Compute a SHA256 over the whole tree        │
+   │         (path + is-directory + hash, sorted, JSON)  │
+   │      b. Copy it to backups\&lt;run&gt;\&lt;step&gt;\&lt;NN&gt;\        │
+   │      c. Re-hash the COPY                           │
+   │      d. If copy hash != source hash → THROW          │
+   │         "snapshot incomplete"                       │
+   │      e. Write the hash to &lt;NN&gt;.sha256               │
+   │ 3. Write manifest.txt (entry dir, existed?, target) │
+   │ 4. Write manifest.sha256 (hash of the manifest)     │
+   └──────────────────────────────────────────────────────┘
+              │
+              ▼  run the step
+              │
+   ┌─ AFTER ─────────────────────────────────────────────┐
+   │ exit 0 → keep going, log the last output line       │
+   │ exit != 0 →                                           │
+   │      1. Append full output to self-repair-failures.log│
+   │      2. Restore-Files:                               │
+   │         a. Re-hash manifest.txt, compare to          │
+   │            manifest.sha256 → mismatch = THROW        │
+   │         b. Check entry count matches expected        │
+   │         c. Check each entry path/existed-flag/target │
+   │            matches the expected list                 │
+   │         d. Re-hash each snapshot, compare to its     │
+   │            .sha256 → mismatch = THROW                │
+   │         e. Only now: write the snapshots back        │
+   │      3. Log "ROLLED BACK"                            │
+   └──────────────────────────────────────────────────────┘</code></pre>
+<h4 id="why-it-is-trustworthy">Why it is trustworthy</h4>
+<ul>
+<li><strong>The snapshot is verified at copy time.</strong> A truncated or partial copy is detected immediately and the step never runs.</li>
+<li><strong>The manifest is verified at restore time.</strong> If someone edited the manifest, the restore aborts instead of restoring garbage.</li>
+<li><strong>The restore re-verifies every snapshot hash before writing anything.</strong> A corrupted snapshot aborts the whole restore rather than writing a corrupted file.</li>
+<li><strong>Files the step created are removed.</strong> If the target did not exist before the step, the rollback <strong>deletes</strong> it. This is the <code>exists = False</code> branch.</li>
+<li><strong>The whole restore is all-or-nothing.</strong> Validation completes before the first write.</li>
+</ul>
+<h4 id="the-file-map-it-uses">The file map it uses</h4>
+<p>This is the contract between the step and the safety system. <strong>If you add a step that writes a file, you MUST add that file to <code>$stepFiles</code> - otherwise it will not be rolled back.</strong></p>
+<p>The one exception is <code>sync-skills</code>: its canonical source (<code>~/.agents/skills/</code>) is never written by the step, the step is idempotent, and re-running it repairs a partial copy - so the canonical set <em>is</em> its backup.</p>
+<pre><code class="language-powershell">$stepFiles = @{
+    'sync-taste'              = @(
+        ~/.codex/AGENTS.md, ~/.config/opencode/AGENTS.md,
+        ~/.commandcode/AGENTS.md, ~/.claude/CLAUDE.md, ~/.gemini/GEMINI.md )
+    'sync-agents'             = @(
+        ~/.codex/agents, ~/.config/opencode/agents, ~/.commandcode/agents )
+    'sync-agent-instructions' = @(
+        ~/.config/opencode/AGENTS.md, ~/.commandcode/AGENTS.md )
+    'refresh-free-models'     = @( tools/free-models.json )
+    'memory-curate'           = @( ~/.codex/memories/extensions/ad_hoc/notes )
+    'memory-consolidate'      = @(
+        ~/.codex/memories/MEMORY.md,
+        ~/.codex/memories/extensions/ad_hoc/notes/.consolidated )
+    'tier-adapt'              = @( tools/agent-tier-thresholds.json )
+    'taste-promote'           = @( tools/taste-candidates.md )
+    'credit-check'            = @( tools/agent-backend-health.json )
+    # 'sync-skills' is deliberately absent: its canonical source is never
+    # written by the step and re-running it repairs a partial copy. See step 4.
+}</code></pre>
+<p><code>verify</code> is deliberately absent — it writes nothing.</p>
+<h4 id="retention">Retention</h4>
+<ul>
+<li><strong>5 latest runs</strong> kept under <code>tools/self-repair-backups/</code>.</li>
+<li>Pruning happens <strong>before and after</strong> the run, so a run that crashes mid-way still leaves the previous 5 intact.</li>
+<li><code>AGENTS.md.bak-*</code> safety backups from <code>sync-agent-instructions.ps1</code> are <strong>pruned to the 5 latest</strong> by that script — see §30.</li>
+</ul>
+<hr>
+<h3 id="9-what-is-protected-and-what-is-not">9. What is protected and what is not</h3>
+<h4 id="protected-by-snapshot-rollback">Protected by snapshot + rollback</h4>
+<p>Everything in <code>$stepFiles</code> above. If any of those steps corrupts its output, the run rolls it back.</p>
+<p><code>sync-skills</code> is the one exception, and it is deliberate: its source of truth
+(<code>~/.agents/skills/</code>) is never written by the step, the step is idempotent, and
+re-running it repairs a partial copy - so the canonical set <em>is</em> the backup for
+that layer. The step also runs with <code>-NoPrune</code>, so it never deletes a skill
+unattended; pruning stays a manual, attended action.</p>
+<h4 id="protected-by-the-configuration-repository">Protected by the configuration repository</h4>
+<p>Everything the repository tracks: the policy, the docs, <code>workflows/</code>, <code>workflow/</code>,
+<code>tools/</code> and the published HTML. A file that no longer parses is restored from
+the last good commit by <code>repair-config.ps1</code> (see §3.1), and the broken copy is
+kept next to it. The repository is local — there is no remote.</p>
+<h4 id="protected-by-the-guard-hook">Protected by the guard hook</h4>
+<p>See §25. Secret-shaped patches and patches touching signing keys are denied outright.</p>
+<h4 id="protected-by-the-release-gate">Protected by the release gate</h4>
+<p>See §27. Clean tree, upstream parity, secret scan, gate commands, optional APK signer check.</p>
+<h4 id="not-protected">NOT protected</h4>
+<div class="tw"><table><caption class="sr-only">NOT protected</caption><thead><tr><th scope="col">Thing</th>
+<th scope="col">Why it isn&#39;t</th>
+<th scope="col">Mitigation</th>
+</tr></thead><tbody><tr><td><code>~/.codex/config.toml</code></td>
+<td>Codex rewrites it itself; hand edits may be reverted</td>
+<td>Back it up before editing; close Codex first</td>
+</tr><tr><td><code>~/.commandcode/settings.json</code></td>
+<td>Not in the nightly job&#39;s scope</td>
+<td>Back up before editing</td>
+</tr><tr><td><code>~/.codex/hooks.json</code></td>
+<td>Not in the nightly job&#39;s scope</td>
+<td>Back up before editing</td>
+</tr><tr><td><code>~/.agents/skills/</code></td>
+<td>Canonical; the sync only pushes <em>out</em> of it</td>
+<td>It&#39;s the source — edits there are intentional</td>
+</tr><tr><td><code>tools/agent-route.ps1</code>, <code>agent-task.ps1</code></td>
+<td>Engine code, not managed state</td>
+<td>Version-controlled in the configuration repo (see §3.1)</td>
+</tr><tr><td>Your project repos</td>
+<td>Out of scope entirely</td>
+<td>Worktrees + release gate</td>
+</tr></tbody></table></div>
+<hr>
+<h2 id="part-4-runtime-self-healing">Part 4 — Runtime self-healing</h2>
+<p>The nightly job fixes the configuration. <strong>Runtime self-healing</strong> fixes the environment, live, during a task.</p>
+<h3 id="10-runtime-1-backend-health-and-cooldown">10. Runtime 1: backend health and cooldown</h3>
+<h4 id="health-flags-30-minute-ttl">Health flags (30-minute TTL)</h4>
+<p><code>tools/agent-backend-health.json</code> records a backend as unhealthy for <strong>30 minutes</strong>.</p>
+<div class="tw"><table><caption class="sr-only">Health flags (30-minute TTL)</caption><thead><tr><th scope="col">Backend</th>
+<th scope="col">Set unhealthy when</th>
+<th scope="col">Cleared when</th>
+</tr></thead><tbody><tr><td>Codex</td>
+<td>a run exits with an infrastructure signature</td>
+<td>a run succeeds</td>
+</tr><tr><td>Command Code</td>
+<td>a run fails with an infrastructure signature, or the free-model retry fails</td>
+<td>a run succeeds</td>
+</tr><tr><td>OpenCode</td>
+<td>a run fails with an infrastructure signature</td>
+<td>a run succeeds</td>
+</tr></tbody></table></div>
+<p><code>Test-BackendHealthy</code> is consulted by <code>Get-BackendRanking</code> and <code>Get-AutoBackend</code>. A dead backend is skipped <strong>before</strong> a task is dispatched, so you usually never see the failure at all.</p>
+<h4 id="a-credit-error-is-a-failure-even-when-the-cli-exits-0">A credit error is a failure even when the CLI exits 0</h4>
+<p>Command Code v1.84.0 aborts a run with <code>Insufficient credits for Command Code.</code> and <strong>exits 0</strong>. Trusting the exit code alone made the router report a success that never ran the task, and the chain stopped there.</p>
+<p><code>Test-CreditFailure</code> (<code>tools/agent-route.ps1</code>) therefore reads the <strong>tail</strong> of a run&#39;s output and treats these provider phrases as a failure:</p>
+<pre><code>Insufficient credits for Command Code | insufficient credits to make this request | hit your usage limit</code></pre>
+<p>Only the last 1500 characters are read, so a long transcript that mentions credits in passing is not misread as a provider failure. <code>tools/verify.ps1</code> check 5 keeps this honest.</p>
+<h4 id="cooldown-5-hour-window">Cooldown (5-hour window)</h4>
+<p><code>tools/agent-usage.json</code> records the reset time of a Command Code 5-hour usage window.</p>
+<p>When the window is exhausted:</p>
+<ul>
+<li><strong>Paid Command Code models are withheld</strong> until the reset time passes.</li>
+<li>A <strong>free</strong> model is selected instead.</li>
+<li>Only if no free model fits does the task reroute to another backend.</li>
+</ul>
+<p>OpenCode has its own cooldown flag, checked the same way.</p>
+<p>Codex has no separate cooldown store. When its subscription runs out, the message says when it resets (<code>try again at 5:11 AM</code>); the router parses that and holds the backend unhealthy, so the router skips it instead of burning a failed run on every task. The printed time is not reliable — on 2026-10-20 Codex said <code>try again at 5:11 AM</code> and worked 35 minutes later — so the hold is capped at <strong>one hour</strong>.</p>
+<h4 id="reporting">Reporting</h4>
+<pre><code class="language-powershell">~/Documents/Codex/tools/agent-usage.ps1            # human-readable
+~/Documents/Codex/tools/agent-usage.ps1 -Json      # machine-readable
+~/Documents/Codex/tools/agent-usage.ps1 -ClearCooldown</code></pre>
+<p><code>-Refresh</code> is a documented no-op — cooldowns self-update from real run results.</p>
+<blockquote>
+<p>Command Code and Codex subscription usage are <strong>not readable headlessly</strong>. Read the live number with <code>/usage</code> inside a Command Code session, or at <a href="https://commandcode.ai/usage">https://commandcode.ai/usage</a>.</p>
+</blockquote>
+<hr>
+<h3 id="11-runtime-2-route-feedback-and-model-demotion">11. Runtime 2: route feedback and model demotion</h3>
+<p><strong>The problem.</strong> A free model gets retired. The catalog refresh hasn&#39;t happened yet. The router picks it. It 404s. Every task for the next day fails the same way — a repeated accident instead of a rule.</p>
+<p><strong>The fix.</strong> Every attempt is recorded to <code>tools/agent-route-feedback.jsonl</code>:</p>
+<pre><code class="language-json">{"time":"2026-10-19T14:22:01","backend":"commandcode","model":"reflection/beam:free","tier":"quick","exitCode":1,"infraFailure":"404 model not found"}</code></pre>
+<p><strong>The rule.</strong> A model that collects <strong>2 or more infrastructure failures within 7 days</strong> is <strong>demoted</strong> — skipped by <code>Select-FreeModel</code> and by the price picker.</p>
+<p><strong>The forgiveness rule.</strong> A single <strong>success</strong> clears the model&#39;s failure record entirely. So a flaky day never permanently demotes a good model. The window is 7 days; older records are ignored.</p>
+<pre><code>model X:  fail, fail        → demoted
+model X:  fail, fail, pass  → cleared, eligible again</code></pre>
+<p>This is what turns &quot;the catalog is stale&quot; into &quot;the router learned&quot;, without waiting for a refresh cycle.</p>
+<hr>
+<h3 id="12-runtime-3-the-fallback-chain">12. Runtime 3: the fallback chain</h3>
+<p>When a run fails with an <strong>infrastructure signature</strong>, the router falls back in a fixed order.</p>
+<h4 id="what-counts-as-an-infrastructure-failure">What counts as an infrastructure failure</h4>
+<p>The matcher is a case-insensitive regex covering:</p>
+<pre><code>usage limit | rate limit | quota | insufficient credits | too many requests
+429 | 401 | 403 | MODEL_NOT_IN_PLAN
+no longer available | model not available | no longer supported
+not signed in | unauthorized | forbidden
+ECONNREFUSED | ETIMEDOUT | ENOTFOUND | EAI_AGAIN
+unexpected server error | cannot find the file | is not recognized
+requires a TTY | TTY terminal | interactive mode
+npm codex shim missing | helper_unknown_error | setup refresh had errors</code></pre>
+<p>A <strong>task-level</strong> failure (the model said &quot;I can&#39;t do that&quot;) is <strong>not</strong> an infrastructure failure. It is not retried.</p>
+<p>A <strong>provider credit/limit error</strong> counts as a failure whatever the exit code says — see §10.</p>
+<h4 id="the-chain">The chain</h4>
+<pre role="img" aria-label="Flow diagram of the fallback chain. The primary run is attempted first. If it fails with an infrastructure signature — a rate limit, plan restriction, auth failure, or unreachable host — the same backend is retried once on a free model. If that also fails, the same task is re-run once on a different command-line interface, using that backend’s model for the tier. If that fails too, the script throws and reports the log paths."><code>  primary run
+      │  fails with infra signature
+      ▼
+  retry SAME backend on a FREE model          (disable: -NoFreeFallback)
+      │  fails
+      ▼
+  for each remaining backend, in health-aware order:
+      run that backend's tier model
+          │  fails with infra signature
+          ▼
+      retry THAT backend on a FREE model
+          │  fails
+          ▼
+      next backend
+      ▼
+  throw, and report every log path</code></pre>
+<h4 id="rules">Rules</h4>
+<ul>
+<li>An explicit <code>-Model</code> / <code>-Effort</code> applies <strong>only to the primary agent</strong>, never to a fallback.</li>
+<li>The fallback backends come from <code>Get-BackendRanking</code> (health-aware), not hardcoded. Unhealthy backends are skipped; if every backend is unhealthy, each is tried anyway.</li>
+<li>Every attempt — primary, free, alternate — is recorded via <code>Add-RouteOutcome</code>, so all of them feed the demotion logic.</li>
+<li>A backend whose paid model died on credits is marked <strong>paid exhausted</strong> (120 min) and <strong>unhealthy</strong> (30 min), so the next run starts on a free model instead of repeating the failure.</li>
+</ul>
+<h4 id="also-in-this-layer">Also in this layer</h4>
+<p><strong>No-TTY guard.</strong> Command Code&#39;s interactive mode needs a TTY. If output is redirected and the task is not <code>quick</code> and not <code>-ReadOnly</code>, the router switches to OpenCode (or Codex) instead of failing.</p>
+<p><strong>Read-only inference.</strong> If a <code>quick</code> task matches the lookup pattern (<code>explain</code>, <code>find</code>, <code>show</code>, <code>where</code>, <code>what</code>, …), <code>-ReadOnly</code> is turned on automatically, which selects a read-only agent and a read-only sandbox.</p>
+<hr>
+<h3 id="13-runtime-4-adaptive-tiers">13. Runtime 4: adaptive tiers</h3>
+<p>Every task is classified into one of three tiers. The classification has two layers.</p>
+<h4 id="layer-a-the-keyword-heuristic">Layer A — the keyword heuristic</h4>
+<pre><code>DEEP  if the task text matches:
+       security | auth(entication|orization) | permission | privacy
+     | accessibility | screen.?reader | migration | architecture
+     | release | deploy | payment | data.?loss
+     | race.?condition | concurren | multi.?agent | multiple repos
+     | cross.?repo | refactor
+
+QUICK if (length &lt;= maxQuickLength) AND
+       ( matches lookup pattern   : ^\s*(explain|summari[sz]e|find|locate|list|show|
+                                     what|where|check|how|why|which|who|whose|is|are|
+                                     does|do|did|can|could|will|would|should|may|might)\b
+       OR matches small-edit pattern: ^\s*(fix|change|rename|update|remove|add)\b
+                                     .*\b(typo|label|wording|text|string|comment|
+                                          one file|single file|small)\b )
+
+STANDARD  everything else</code></pre>
+<h4 id="layer-b-the-adaptive-length-threshold">Layer B — the adaptive length threshold</h4>
+<p><code>maxQuickLength</code> comes from <code>tools/agent-tier-thresholds.json</code> (default <strong>180</strong>), and is adjusted by <code>tier-adapt.ps1</code> as described in §7. So &quot;quick&quot; means <em>short AND simple AND recently successful</em>.</p>
+<h4 id="the-tier-table">The tier table</h4>
+<div class="tw"><table><caption class="sr-only">The tier table</caption><thead><tr><th scope="col">Tier</th>
+<th scope="col">Command Code</th>
+<th scope="col">Codex</th>
+<th scope="col">OpenCode</th>
+</tr></thead><tbody><tr><td><code>quick</code></td>
+<td><code>deepseek/deepseek-v4-flash</code></td>
+<td><code>gpt-6-luna</code></td>
+<td><code>opencode/deepseek-v4.1-flash-free</code></td>
+</tr><tr><td><code>standard</code></td>
+<td><code>deepseek/deepseek-v4-pro</code></td>
+<td><code>gpt-6.1-sol</code></td>
+<td><code>opencode/deepseek-v4.1-flash</code></td>
+</tr><tr><td><code>deep</code></td>
+<td><code>deepseek/deepseek-v4-pro</code> (effort <code>max</code>)</td>
+<td><code>gpt-6-astra</code></td>
+<td><code>opencode/deepseek-v4-pro</code></td>
+</tr></tbody></table></div>
+<p><strong>This is the static fallback.</strong> In practice the <em>price picker</em> chooses within the tier — see §14.</p>
+<h4 id="overriding">Overriding</h4>
+<pre><code class="language-powershell">work '&lt;task&gt;' -Complexity deep      # force a tier
+work '&lt;task&gt;' -Agent commandcode    # force a backend
+work '&lt;task&gt;' -ReadOnly             # force read-only</code></pre>
+<hr>
+<h3 id="14-runtime-5-price-aware-selection">14. Runtime 5: price-aware selection</h3>
+<p>For the Command Code backend, the model is <strong>not</strong> hardcoded. It is the cheapest <em>eligible</em> model from a curated candidate list.</p>
+<h4 id="two-separate-judgments">Two separate judgments</h4>
+<ol>
+<li><strong>Capability</strong> — the candidate shortlist per tier is a <strong>human judgment</strong>, made once and hand-maintained.</li>
+<li><strong>Price</strong> — the <em>only</em> automatic decision. Among eligible candidates, the cheapest wins.</li>
+</ol>
+<h4 id="the-candidate-shortlists">The candidate shortlists</h4>
+<pre><code class="language-powershell">quick    = poolside/laguna-s-2.1-free, stealth/cat-jam:free,
+           meta/muse-spark-1.3-contributor, xiaomi/mimo-v2.5,
+           qwen/qwen3.7-flash, qwen/qwen3.8-flash,
+           deepseek/deepseek-v4-flash, deepseek/deepseek-v4.1-flash,
+           z-ai/glm-5.3-flash
+
+standard = deepseek/deepseek-v4-pro, minimaxai/minimax-m3,
+           moonshotai/kimi-k2.7-code, zai-org/glm-5.3, xai/grok-4.5
+
+deep     = moonshotai/kimi-k3, qwen/qwen3.8-max, zai-org/glm-5.3,
+           minimaxai/minimax-m3, xai/grok-4.5, deepseek/deepseek-v4-pro</code></pre>
+<h4 id="the-cost-model">The cost model</h4>
+<p>Cost is <strong>blended over a typical request</strong>, not per-token:</p>
+<pre><code class="language-powershell">$CostProfile = @{ Input = 800; Output = 160; CacheRead = 50000 }</code></pre>
+<p><strong>Cache reads dominate</strong> — 50,000 cached tokens against 800 fresh input tokens. This is deliberate: in a real long session, every turn re-reads the context, so cache-read price is what actually determines cost. A model that is cheap per input token but expensive per cache-read token can lose on blended cost, which is correct.</p>
+<h4 id="the-eligibility-filters">The eligibility filters</h4>
+<p>A candidate is skipped if it:</p>
+<ul>
+<li><strong>is not in your plan</strong> — this account is Go-tier, so <code>gpt-6.1-sol</code>, <code>gpt-6-astra</code>, Claude, and Gemini are all filtered out. Plan rank: <code>go=1 &lt; goat=2 &lt; pro=3 &lt; max=4</code>.</li>
+<li><strong>may train on your prompts</strong> — always excluded, regardless of price.</li>
+<li><strong>is demoted</strong> — 2+ infra failures in 7 days.</li>
+<li><strong>is excluded by flags</strong> — <code>-NoFree</code> removes free models; <code>-Static</code> bypasses the price picker entirely and uses the hand-picked table.</li>
+<li><strong>is in a DeepSeek peak window at a bad price</strong> — the peak/off-peak window (Mon–Fri 01–04 and 06–10 UTC) is applied when in effect.</li>
+</ul>
+<h4 id="effort-is-derived-per-model">Effort is derived per model</h4>
+<p>Effort is <strong>not</strong> assumed. It comes from the catalog, because several cheap models accept no reasoning effort at all (their column reads <code>—</code>). Setting effort on such a model fails.</p>
+<h4 id="free-vs-paid-rule">Free vs paid rule</h4>
+<div class="tw"><table><caption class="sr-only">Free vs paid rule</caption><thead><tr><th scope="col">Tier</th>
+<th scope="col">Free allowed?</th>
+</tr></thead><tbody><tr><td><code>quick</code></td>
+<td><strong>Yes</strong> — the cheapest eligible model may well be free</td>
+</tr><tr><td><code>standard</code>, <code>deep</code></td>
+<td><strong>No</strong> — cheapest eligible <strong>paid</strong> model</td>
+</tr><tr><td><em>fallback</em></td>
+<td>Yes, when no paid model is available</td>
+</tr></tbody></table></div>
+<p>Free is never selected from an upstream that may train on your prompts.</p>
+<h4 id="inspect-without-spending">Inspect without spending</h4>
+<pre><code class="language-powershell">work '&lt;task&gt;' -Preview</code></pre>
+<p>Prints the backend, model, effort, mode, and an estimated cost. It contacts no model.</p>
+<hr>
+<h2 id="part-5-the-learning-loop">Part 5 — The learning loop</h2>
+<h3 id="15-the-memory-loop">15. The memory loop</h3>
+<pre role="img" aria-label="Flow diagram of the memory pipeline. A Codex session produces a raw rollout summary. The curate step extracts the title, the outcome and the learning bullets verbatim — no model is called, so nothing can be invented — and writes one structured note. The consolidate step deduplicates those bullets against the existing long-term memory file and appends the novel ones, grouped by topic under a dated heading. The next session reads the consolidated memory, which makes the following session better."><code>   Codex session
+        │
+        ▼
+  rollout_summaries/*.md          ← raw, one per session
+        │
+        │  memory-curate.ps1  (verbatim extraction, no model)
+        ▼
+  notes/&lt;timestamp&gt;-&lt;slug&gt;.md     ← structured, one per summary
+        │
+        │  memory-consolidate.ps1  (dedupe against MEMORY.md, no model)
+        ▼
+  MEMORY.md                       ← consolidated, appended under dated sections
+        │
+        │  (you read this at session start)
+        ▼
+  better next session</code></pre>
+<p><strong>Why no model calls?</strong> Because a deterministic script cannot hallucinate. Every bullet in <code>MEMORY.md</code> came from a real session summary, verbatim. A model-written curator could invent a plausible-sounding lesson that never happened.</p>
+<p><strong>The two index files</strong> live in <code>notes/</code>:</p>
+<div class="tw"><table><caption class="sr-only">15. The memory loop</caption><thead><tr><th scope="col">File</th>
+<th scope="col">Written by</th>
+<th scope="col">Purpose</th>
+</tr></thead><tbody><tr><td><code>.processed</code></td>
+<td><code>memory-curate.ps1</code></td>
+<td><code>filename:MD5:v2</code> of summaries already curated</td>
+</tr><tr><td><code>.consolidated</code></td>
+<td><code>memory-consolidate.ps1</code></td>
+<td><code>filename:MD5</code> of notes already merged</td>
+</tr></tbody></table></div>
+<p>Both are append-only. Delete them and the corresponding work is redone from scratch (and the bullets will be deduped against <code>MEMORY.md</code> anyway, so it is safe).</p>
+<p><strong><code>MEMORY.md</code> is backed up</strong> before every append to <code>~/.codex/memories/backups/MEMORY.md.&lt;timestamp&gt;.bak</code>.</p>
+<h4 id="reading-memory">Reading memory</h4>
+<pre><code class="language-powershell">Get-Content ~/.codex/memories/MEMORY.md -Tail 40
+Get-ChildItem ~/.codex/memories/extensions/ad_hoc/notes/*.md | Measure-Object</code></pre>
+<hr>
+<h3 id="16-the-taste-loop">16. The taste loop</h3>
+<pre role="img" aria-label="Flow diagram of the taste pipeline. Working with Command Code causes preferences to be learned into the taste file. The sync step renders that file into a generated block delimited by taste begin and taste end markers and injects it into the instruction file of every agent, so Codex, OpenCode, Command Code, Claude and Gemini all behave consistently. A separate promotion step scans the notes for preferences that repeat at least twice and proposes them in the taste candidates file for human approval. Once approved they re-enter the taste file and the cycle repeats."><code>   You work with Command Code
+        │
+        ▼
+  ~/.commandcode/taste/taste.md     ← learned preferences + confidence scores
+        │
+        │  sync-taste.ps1
+        ▼
+  TASTE:BEGIN ... TASTE:END block   ← injected into each agent's AGENTS.md
+        │
+        ▼
+  Codex / OpenCode / CommandCode / Claude / Gemini all behave consistently
+        │
+        │  taste-promote.ps1 scans notes for repeats
+        ▼
+  tools/taste-candidates.md         ← proposals, human-approve via `taste`</code></pre>
+<h4 id="the-taste-file-format">The taste file format</h4>
+<p><code>~/.commandcode/taste/taste.md</code> holds markdown with a confidence score per entry. The current file is ~5.5 KB and has 7 timestamped backups alongside it (<code>taste.md.pre-*.bak</code>), so you can see how preferences accumulated.</p>
+<h4 id="approving-candidates">Approving candidates</h4>
+<p><code>tools/taste-candidates.md</code> is a <strong>proposal file</strong>. Nothing auto-applies it. To promote a candidate:</p>
+<ol>
+<li>Read <code>tools/taste-candidates.md</code>.</li>
+<li>Move the wording you like into <code>~/.commandcode/taste/taste.md</code> (or use Command Code&#39;s <code>taste</code> tool to record the preference).</li>
+<li>Run <code>sync-taste.ps1</code> to propagate.</li>
+</ol>
+<p>The loop closes: notes → candidates → taste → agent instructions → better behavior → better notes.</p>
+<hr>
+<h2 id="part-6-manual-operations">Part 6 — Manual operations</h2>
+<h3 id="17-complete-command-cheat-sheet">17. Complete command cheat sheet</h3>
+<h4 id="the-everyday-commands">The everyday commands</h4>
+<pre><code class="language-powershell">work '&lt;task&gt;'                          # route and run a task
+work '&lt;task&gt;' -Preview                 # show the route, spend nothing
+work '&lt;task&gt;' -Complexity deep         # force a tier
+work '&lt;task&gt;' -Agent commandcode       # force a backend
+work '&lt;task&gt;' -ReadOnly                # read-only agent + sandbox
+work '&lt;task&gt;' -N 2                     # best-of-2: two attempts in parallel worktrees
+work '&lt;task&gt;' -WorkDir C:\path         # run in a different directory
+
+wt -Repo tv-launcher -Name fix-focus -Base master   # new worktree for a task
+wt -Repo tv-launcher -Name spike -Preview            # show the plan first
+
+reload                                # re-source the PowerShell profile
+workflow-status                       # one-screen health check (exit 0 = healthy)</code></pre>
+<h4 id="the-repair-commands">The repair commands</h4>
+<pre><code class="language-powershell"># Everything (what the nightly job runs)
+powershell -NoProfile -ExecutionPolicy Bypass -File ~/Documents/Codex/tools/self-repair.ps1
+
+# Individual steps
+~/Documents/Codex/tools/sync-taste.ps1
+~/Documents/Codex/tools/sync-agents.ps1
+~/Documents/Codex/tools/sync-agent-instructions.ps1
+~/Documents/Codex/tools/sync-skills.ps1
+~/Documents/Codex/tools/refresh-free-models.ps1
+~/Documents/Codex/tools/refresh-model-prices.ps1
+~/Documents/Codex/tools/memory-curate.ps1
+~/Documents/Codex/tools/memory-consolidate.ps1
+~/Documents/Codex/tools/tier-adapt.ps1
+~/Documents/Codex/tools/taste-promote.ps1
+~/Documents/Codex/tools/credit-check.ps1
+~/Documents/Codex/tools/verify.ps1</code></pre>
+<h4 id="the-drift-check-commands">The drift-check commands</h4>
+<p>All of these print what <em>would</em> change, change nothing, and exit <code>2</code> if drift exists:</p>
+<pre><code class="language-powershell">~/Documents/Codex/tools/sync-taste.ps1 -Check
+~/Documents/Codex/tools/sync-agents.ps1 -Check
+~/Documents/Codex/tools/sync-agent-instructions.ps1 -Check
+~/Documents/Codex/tools/sync-skills.ps1 -Check</code></pre>
+<h4 id="the-skills-command">The skills command</h4>
+<pre><code class="language-powershell">~/Documents/Codex/tools/sync-skills.ps1            # push ~/.agents/skills to all three CLIs
+~/Documents/Codex/tools/sync-skills.ps1 -Check     # drift report
+~/Documents/Codex/tools/sync-skills.ps1 -NoPrune   # apply without deleting dest-only skills</code></pre>
+<p><code>.system</code> is never shipped. A skill you <em>move out</em> of <code>~/.agents/skills</code> is <strong>pruned</strong> from all three destinations — that is the point of a canonical source, but it deletes files, so use <code>-NoPrune</code> if you are unsure.</p>
+<h4 id="the-release-gate">The release gate</h4>
+<pre><code class="language-powershell">~/Documents/Codex/tools/release-gate.ps1 -Repo C:\path\to\repo `
+    -GateCommands "uv run ruff check src tests"
+
+~/Documents/Codex/tools/release-gate.ps1 -Repo C:\path\to\repo -DryRun
+~/Documents/Codex/tools/release-gate.ps1 -Repo C:\path\to\repo -AllowUnpushed
+~/Documents/Codex/tools/release-gate.ps1 -Repo C:\path\to\repo -Apk C:\path\app.apk</code></pre>
+<h4 id="the-guard-hook-self-test">The guard hook self-test</h4>
+<pre><code class="language-powershell">~/Documents/Codex/tools/guard-hook.ps1 -SelfTest
+# self-test: 5/5 pass (protected path denied, secret denied, clean allowed, Bash untouched, deny carries path)</code></pre>
+<hr>
+<h3 id="18-how-to-run-the-repair-by-hand">18. How to run the repair by hand</h3>
+<h4 id="the-full-run">The full run</h4>
+<pre><code class="language-powershell">powershell -NoProfile -ExecutionPolicy Bypass -File ~/Documents/Codex/tools/self-repair.ps1</code></pre>
+<p>Watch the log:</p>
+<pre><code class="language-powershell">Get-Content ~/Documents/Codex/tools/self-repair.log -Tail 15</code></pre>
+<p>Check the exit code:</p>
+<pre><code class="language-powershell">$LASTEXITCODE</code></pre>
+<p><code>0</code> = everything passed. <code>1</code> = at least one step failed or rolled back.</p>
+<h4 id="one-step-at-a-time">One step at a time</h4>
+<p>Each step is a standalone script that prints <code>ok</code> / <code>updated</code> / <code>DRIFT</code> and exits <code>0</code> on success. Run the one you are interested in:</p>
+<pre><code class="language-powershell">~/Documents/Codex/tools/verify.ps1
+~/Documents/Codex/tools/sync-agents.ps1 -Check</code></pre>
+<h4 id="a-safe-dry-run">A safe dry run</h4>
+<p>The engine has no built-in <code>-DryRun</code>. To see what <em>would</em> change without changing anything, use the <code>-Check</code> flags on the individual sync scripts. For the nightly job itself, the closest safe equivalent is:</p>
+<pre><code class="language-powershell"># Confirm every layer is currently in sync, without writing.
+~/Documents/Codex/tools/sync-taste.ps1 -Check
+~/Documents/Codex/tools/sync-agents.ps1 -Check
+~/Documents/Codex/tools/sync-agent-instructions.ps1 -Check
+~/Documents/Codex/tools/sync-skills.ps1 -Check
+~/Documents/Codex/tools/verify.ps1</code></pre>
+<hr>
+<h2 id="part-7-troubleshooting">Part 7 — Troubleshooting</h2>
+<h3 id="19-symptom-cause-fix">19. Symptom, cause, fix</h3>
+<div class="tw"><table><caption class="sr-only">19. Symptom, cause, fix</caption><thead><tr><th scope="col">Symptom</th>
+<th scope="col">Likely cause</th>
+<th scope="col">Fix</th>
+</tr></thead><tbody><tr><td>Agent ignores a preference you taught it</td>
+<td>The taste block is stale</td>
+<td><code>sync-taste.ps1</code></td>
+</tr><tr><td>OpenCode behaves differently from Codex</td>
+<td>Instruction copies diverged</td>
+<td><code>sync-agent-instructions.ps1</code></td>
+</tr><tr><td>A roster agent is missing in one CLI</td>
+<td>Agent render drifted</td>
+<td><code>sync-agents.ps1</code></td>
+</tr><tr><td>An old agent file reappears</td>
+<td>It is in the superseded list but was renamed back</td>
+<td><code>sync-agents.ps1</code> (it renames it again)</td>
+</tr><tr><td>Tasks fail with &quot;model not found&quot;</td>
+<td>Free catalog stale, or the model was retired</td>
+<td><code>refresh-free-models.ps1</code>; the demotion logic will also skip it</td>
+</tr><tr><td>The same model is picked and keeps failing</td>
+<td>It has 2+ infra failures — it should be demoted</td>
+<td>Check <code>agent-route-feedback.jsonl</code>; a success clears it</td>
+</tr><tr><td>Everything routes to OpenCode</td>
+<td>Codex and Command Code both unhealthy</td>
+<td><code>agent-usage.ps1</code>; wait 30 min or <code>ClearCooldown</code></td>
+</tr><tr><td><code>verify</code> fails with PARSE FAIL</td>
+<td>A <code>.ps1</code> has a syntax error</td>
+<td>The message names the file and line — fix it, re-run <code>verify.ps1</code></td>
+</tr><tr><td><code>verify</code> fails with CODEX SHIM FAIL</td>
+<td>The npm codex shim is missing or version-drifted</td>
+<td><code>npm install -g --prefix %LOCALAPPDATA%\BlindPilot\npm @openai/codex@0.163.0</code></td>
+</tr><tr><td><code>verify</code> fails with ROUTE SMOKE FAIL</td>
+<td><code>agent-route.ps1</code> threw on load</td>
+<td>Run it manually to see the real error</td>
+</tr><tr><td>No taste block appears</td>
+<td>No taste file exists yet</td>
+<td>Learn a preference in Command Code; check <code>~/.commandcode/taste/taste.md</code></td>
+</tr><tr><td><code>memory-consolidate</code> says &quot;0 novel learning(s)&quot;</td>
+<td>Everything was already deduped, or there are no notes</td>
+<td>Normal. Run <code>memory-curate.ps1</code> first</td>
+</tr><tr><td><code>tier-adapt</code> says &quot;only N samples, need 10+&quot;</td>
+<td>Not enough recorded outcomes yet</td>
+<td>Normal. It needs 10+ tier outcomes</td>
+</tr><tr><td>The nightly job did not run</td>
+<td>You were signed out at 03:00, or the machine was off</td>
+<td>It runs at next sign-in (<code>StartWhenAvailable</code>). Check <code>LastRunTime</code>.</td>
+</tr><tr><td>A nightly step shows <code>ROLLED BACK</code></td>
+<td>That step failed; its changes were reverted</td>
+<td>Read <code>self-repair-failures.log</code> for the full output</td>
+</tr><tr><td><code>sync-agent-instructions</code> creates a new <code>.bak</code> every run</td>
+<td>Fixed 2026-10-19: it backs up only on an actual change</td>
+<td>—</td>
+</tr></tbody></table></div>
+<hr>
+<h3 id="20-reading-the-logs">20. Reading the logs</h3>
+<h4 id="toolsself-repairlog"><code>tools/self-repair.log</code></h4>
+<p>One line per step per run:</p>
+<pre><code>2026-10-19 03:00:04 sync-taste                   canonical hash: DE8A9FF9A48E4C0C157042E589B21BCA
+2026-10-19 03:01:07 memory-consolidate           consolidated 45 novel learning(s) across 5 topic(s)
+2026-10-19 03:01:21 verify                       verify OK</code></pre>
+<p>Column 1: timestamp. Column 2: step name (padded to 28). Column 3: the <strong>last output line</strong> of that step.</p>
+<p><strong>Status vocabulary</strong></p>
+<div class="tw"><table><caption class="sr-only">tools/self-repair.log</caption><thead><tr><th scope="col">Pattern</th>
+<th scope="col">Meaning</th>
+</tr></thead><tbody><tr><td><code>ok</code> / <code>updated</code> / <code>in sync</code></td>
+<td>Step succeeded, nothing to do or a write happened</td>
+</tr><tr><td><code>FAILED (exit N): &lt;last line&gt;</code></td>
+<td>Step failed; details in the failures log; state rolled back</td>
+</tr><tr><td><code>ROLLED BACK</code></td>
+<td>The restore succeeded</td>
+</tr><tr><td><code>ROLLBACK FAILED: &lt;msg&gt;</code></td>
+<td><strong>The restore itself failed — the machine may now be in a mixed state. Act immediately.</strong></td>
+</tr><tr><td><code>BACKUP FAILED: &lt;msg&gt;</code></td>
+<td>The snapshot could not be taken; the step was <strong>skipped</strong>, not run. Nothing was changed.</td>
+</tr><tr><td><code>MISSING</code></td>
+<td>The step&#39;s script file does not exist</td>
+</tr><tr><td><code>run complete ok=11 failed=0</code></td>
+<td>The summary line for the whole run</td>
+</tr></tbody></table></div>
+<h4 id="toolsself-repair-failureslog"><code>tools/self-repair-failures.log</code></h4>
+<p>Full output of failed steps:</p>
+<pre><code>==== 20261019-030102 memory-consolidate exit=1 ====
+&lt;full stdout+stderr, truncated at 4000 chars&gt;
+</code></pre>
+<h4 id="toolsself-repair-backupsrunstampstep"><code>tools/self-repair-backups/&lt;runStamp&gt;/&lt;step&gt;/</code></h4>
+<pre><code>20261019030002/
+├── manifest.txt            ← entry dir, existed?, target path
+├── manifest.sha256         ← integrity hash of the manifest
+├── 01/
+│   └── AGENTS.md           ← the snapshot
+├── 01.sha256               ← integrity hash of the snapshot
+├── 02/
+└── 02.sha256</code></pre>
+<h4 id="useful-log-queries">Useful log queries</h4>
+<pre><code class="language-powershell"># Failures in the last week
+Get-Content ~/Documents/Codex/tools/self-repair.log |
+  Where-Object { $_ -match 'FAILED|ROLLBACK' -and $_ -match '2026-10-1[3-9]' }
+
+# How many runs passed fully
+Get-Content ~/Documents/Codex/tools/self-repair.log |
+  Where-Object { $_ -match 'run complete' } | Select-Object -Last 10</code></pre>
+<hr>
+<h3 id="21-manual-rollback">21. Manual rollback</h3>
+<p>If a step&#39;s <code>ROLLBACK FAILED</code> fired, or you want to undo a run by hand:</p>
+<h4 id="step-1-find-the-run-you-want">Step 1 — find the run you want</h4>
+<pre><code class="language-powershell">Get-ChildItem ~/Documents/Codex/tools/self-repair-backups -Directory |
+  Sort-Object Name -Descending | Select-Object Name</code></pre>
+<h4 id="step-2-inspect-the-manifest">Step 2 — inspect the manifest</h4>
+<pre><code class="language-powershell">$run = '20261019030002'
+Get-Content "$HOME/Documents/Codex/tools/self-repair-backups/$run/memory-consolidate/manifest.txt"</code></pre>
+<p>Format is <code>entry_dir \t existed(True|False) \t target_path</code>.</p>
+<h4 id="step-3-restore-by-hand">Step 3 — restore by hand</h4>
+<pre><code class="language-powershell">$root = "$HOME/Documents/Codex/tools/self-repair-backups/$run/memory-consolidate"
+Get-Content "$root/manifest.txt" | ForEach-Object {
+    $entry, $exists, $target = $_ -split "`t", 3
+    $src = Join-Path $entry (Split-Path -Leaf $target)
+    if ($exists -eq 'True') {
+        Copy-Item $src $target -Recurse -Force
+        "restored $target"
+    } else {
+        if (Test-Path $target) { Remove-Item $target -Recurse -Force }
+        "removed (did not exist before) $target"
+    }
+}</code></pre>
+<p><strong>Verify the snapshot integrity first</strong> if you care:</p>
+<pre><code class="language-powershell">Get-Content "$root/01.sha256"   # expected
+(Get-FileHash "$root/01/MEMORY.md" -Algorithm SHA256).Hash   # actual</code></pre>
+<h4 id="step-4-check-the-other-layers">Step 4 — check the other layers</h4>
+<pre><code class="language-powershell">~/Documents/Codex/tools/sync-agent-instructions.ps1 -Check
+~/Documents/Codex/tools/sync-agents.ps1 -Check
+~/Documents/Codex/tools/sync-taste.ps1 -Check</code></pre>
+<hr>
+<h2 id="part-8-advanced">Part 8 — Advanced</h2>
+<h3 id="22-adding-a-repair-step">22. Adding a repair step</h3>
+<p>This is the most useful thing you can learn to do here. The pattern is: <strong>write the step as a standalone script, then register it in two places.</strong></p>
+<h4 id="step-1-write-the-script">Step 1 — write the script</h4>
+<p>Requirements, so the engine can guard it:</p>
+<ul>
+<li>It must <strong>exit <code>0</code> on success</strong> and <strong>non-zero on failure</strong>. Use <code>exit 0</code> explicitly.</li>
+<li>It must be <strong>idempotent</strong> — running it twice must not change anything the second time. The nightly job runs it every day.</li>
+<li>It must print a <strong>single useful final line</strong>; that is what lands in the log.</li>
+<li>It must not depend on interactive input or a TTY.</li>
+<li>It must not write outside the paths you declare in <code>$stepFiles</code>.</li>
+</ul>
+<p>A good template:</p>
+<pre><code class="language-powershell">#Requires -Version 5
+&lt;#
+  my-check.ps1 — one-line description.
+
+  Reads:  ...
+  Writes: ...
+  Exit 0 on success, 1 on failure.
+#&gt;
+$ErrorActionPreference = 'Stop'
+
+# ... work ...
+
+if ($problems.Count -gt 0) {
+    foreach ($p in $problems) { Write-Output "PROBLEM: $p" }
+    Write-Output "my-check: $($problems.Count) problem(s) found"
+    exit 1
+}
+Write-Output 'my-check: OK'
+exit 0</code></pre>
+<h4 id="step-2-register-it-in-stepfiles-if-it-writes-anything">Step 2 — register it in <code>$stepFiles</code> (if it writes anything)</h4>
+<p>Open <code>tools/self-repair.ps1</code> and add an entry to the <code>$stepFiles</code> hashtable:</p>
+<pre><code class="language-powershell">'my-check' = @(
+    (Join-Path $env:USERPROFILE '.codex\memories\MEMORY.md'),
+    (Join-Path $PSScriptRoot 'my-output.json')
+)</code></pre>
+<p><strong>This entry is mandatory.</strong> Without it, the step&#39;s writes are <strong>not</strong> rolled back on failure. The engine reads the file list from here when it snapshots and when it restores.</p>
+<p>Two steps are deliberately absent from <code>$stepFiles</code>: <code>sync-skills</code> (its canonical
+set is never written by the step, so it is its own backup) and <code>repair-config</code>
+(the configuration repository is its own backup — see §3.1). A step that writes
+a file <em>tracked by the configuration repository</em> is still covered by the repo,
+but the snapshot still wins, because it restores the exact bytes the step found.</p>
+<h4 id="step-3-register-it-in-steps">Step 3 — register it in <code>$steps</code></h4>
+<p>In the same file, add to the array:</p>
+<pre><code class="language-powershell">$steps = @(
+    @{ Name = 'sync-taste';              Script = 'sync-taste.ps1' },
+    ...
+    @{ Name = 'my-check';                Script = 'my-check.ps1' }
+)</code></pre>
+<h4 id="step-4-place-it-in-the-order-you-want">Step 4 — place it in the order you want</h4>
+<p>Order matters:</p>
+<ul>
+<li>Anything that reads <code>agents.toml</code> must come <strong>after</strong> <code>sync-agents</code> if it should see the rendered output.</li>
+<li>Anything that reads the canonical <code>AGENTS.md</code> must come <strong>after</strong> <code>sync-taste</code>.</li>
+<li><code>verify</code> should stay <strong>last</strong> — it is the gate for the whole run.</li>
+</ul>
+<h4 id="step-5-test-it-in-isolation-then-in-the-engine">Step 5 — test it in isolation, then in the engine</h4>
+<pre><code class="language-powershell"># In isolation
+powershell -NoProfile -ExecutionPolicy Bypass -File ~/Documents/Codex/tools/my-check.ps1
+echo "exit=$LASTEXITCODE"
+
+# Then run it twice to prove idempotency
+powershell -NoProfile -ExecutionPolicy Bypass -File ~/Documents/Codex/tools/my-check.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File ~/Documents/Codex/tools/my-check.ps1
+
+# Then the full engine
+powershell -NoProfile -ExecutionPolicy Bypass -File ~/Documents/Codex/tools/self-repair.ps1
+echo "exit=$LASTEXITCODE"</code></pre>
+<h4 id="step-6-verify-the-rollback-path">Step 6 — verify the rollback path</h4>
+<p>Temporarily make the step fail (exit 1) and confirm the engine rolls it back:</p>
+<pre><code class="language-powershell">Get-Content ~/Documents/Codex/tools/self-repair.log -Tail 15
+# look for: my-check  FAILED (exit 1): ...  then  my-check  ROLLED BACK</code></pre>
+<p>Then <strong>restore the step&#39;s script</strong> and run the engine once more.</p>
+<hr>
+<h3 id="23-changing-the-agent-roster">23. Changing the agent roster</h3>
+<h4 id="the-roster">The roster</h4>
+<p><code>workflows/agents.toml</code> is the single source of truth:</p>
+<pre><code class="language-toml">[roster]
+codex_default_model = "gpt-6-luna"
+codex_default_effort = "low"
+
+[agents.scout]
+description = "Read-only researcher and code locator. ..."
+kind = "read-only"          # "read-only" | "writer"
+codex_model = "gpt-6-luna"
+codex_effort = "low"
+opencode_model = "opencode/deepseek-v4.1-flash-free"
+instructions = """
+...multi-line text...
+"""</code></pre>
+<h4 id="the-four-current-agents">The four current agents</h4>
+<div class="tw"><table><caption class="sr-only">The four current agents</caption><thead><tr><th scope="col">Agent</th>
+<th scope="col">Kind</th>
+<th scope="col">Role</th>
+<th scope="col">Codex model</th>
+<th scope="col">OpenCode model</th>
+</tr></thead><tbody><tr><td><strong>scout</strong></td>
+<td>read-only</td>
+<td>Locate code, map subsystems, gather evidence. Returns <code>file:line</code> findings.</td>
+<td><code>gpt-6-luna</code> (low)</td>
+<td><code>opencode/deepseek-v4.1-flash-free</code></td>
+</tr><tr><td><strong>builder</strong></td>
+<td>writer</td>
+<td>The <strong>sole writer</strong>. Implements one bounded change.</td>
+<td><code>gpt-6-sol</code> (high)</td>
+<td><code>opencode/deepseek-v4-pro</code></td>
+</tr><tr><td><strong>verifier</strong></td>
+<td>read-only</td>
+<td>Reviews a diff, runs the project&#39;s checks.</td>
+<td><code>gpt-5.6-terra</code> (medium)</td>
+<td><code>opencode/deepseek-v4.1-flash</code></td>
+</tr><tr><td><strong>debugger</strong></td>
+<td>writer</td>
+<td>Reproduce → root cause → smallest fix → regression check.</td>
+<td><code>gpt-6-astra</code> (high)</td>
+<td><code>opencode/gpt-5.3-codex</code></td>
+</tr></tbody></table></div>
+<h4 id="the-rules-the-roster-encodes">The rules the roster encodes</h4>
+<ul>
+<li><strong>One writer per file.</strong> Parallel agents may read freely; only one may edit a given file.</li>
+<li><strong>A read-only agent names the agent it needs</strong> instead of editing.</li>
+<li><strong>The verifier checks model families, not CLI names.</strong> &quot;A different CLI alone does not prove a different family.&quot; If a cross-family reviewer is unavailable, it must <strong>report the review gap</strong> rather than claim cross-model review.</li>
+<li><strong>The debugger must reproduce first</strong>, and must never silence a failure by weakening tests or adding retries without a cause.</li>
+<li><strong>The scout must distinguish observed behavior from inference</strong>, and must never claim device verification from code inspection.</li>
+</ul>
+<h4 id="changing-it">Changing it</h4>
+<ol>
+<li>Edit <code>workflows/agents.toml</code>.</li>
+<li>Render:<pre><code class="language-powershell">~/Documents/Codex/tools/sync-agents.ps1</code></pre>
+</li>
+<li>Verify:<pre><code class="language-powershell">~/Documents/Codex/tools/sync-agents.ps1 -Check   # exit 0, no DRIFTED
+~/Documents/Codex/tools/verify.ps1</code></pre>
+</li>
+<li>Restart any running CLI sessions — they read their agent files at session start.</li>
+</ol>
+<p><strong>Adding an agent</strong> = add an <code>[agents.&lt;name&gt;]</code> block. <strong>Renaming</strong> = rename the block; the old rendered file is renamed to <code>.superseded-&lt;timestamp&gt;</code>, not deleted. <strong>Removing</strong> = delete the block; the old file is renamed aside.</p>
+<h4 id="the-toml-subset-the-parser-understands">The TOML subset the parser understands</h4>
+<p><code>sync-agents.ps1</code> uses its own minimal TOML reader, not a real TOML library. It handles:</p>
+<ul>
+<li><code>[table]</code> and <code>[table.subtable]</code> headers</li>
+<li><code>key = &quot;string&quot;</code> (with <code>\&quot;</code> escapes)</li>
+<li><code>key = &quot;&quot;&quot;multi-line&quot;&quot;&quot;</code> (triple-quoted, no escapes)</li>
+<li><code># comments</code> (whole-line and trailing on unquoted values)</li>
+<li>Bare values (<code>true</code>, numbers) — kept as strings</li>
+</ul>
+<p><strong>It does not handle</strong> arrays, inline tables, single-quoted strings, or date literals. Do not use them in <code>agents.toml</code>.</p>
+<hr>
+<h3 id="24-changing-the-schedule">24. Changing the schedule</h3>
+<pre><code class="language-powershell"># See the current trigger
+Get-ScheduledTask -TaskName CodexWorkflowSelfHeal | Select -Expand Triggers
+
+# Change the time (e.g. to 04:30)
+$action = (Get-ScheduledTask -TaskName CodexWorkflowSelfHeal).Actions
+$trigger = New-ScheduledTaskTrigger -Daily -At 4:30AM
+Set-ScheduledTask -TaskName CodexWorkflowSelfHeal -Trigger $trigger -Action $action
+
+# Disable entirely (without deleting the definition)
+Disable-ScheduledTask -TaskName CodexWorkflowSelfHeal
+
+# Re-enable
+Enable-ScheduledTask -TaskName CodexWorkflowSelfHeal
+
+# Delete the task
+Unregister-ScheduledTask CodexWorkflowSelfHeal -Confirm:$false</code></pre>
+<p><strong>After changing the trigger, run it once by hand</strong> to confirm it still works:</p>
+<pre><code class="language-powershell">Start-ScheduledTask -TaskName CodexWorkflowSelfHeal
+Start-Sleep -Seconds 60
+Get-ScheduledTaskInfo -TaskName CodexWorkflowSelfHeal | Format-List LastRunTime, LastTaskResult</code></pre>
+<p><code>LastTaskResult: 0</code> = success.</p>
+<blockquote>
+<p>The task runs <code>Limited</code> (not elevated) as your user, <code>Interactive</code> (only while signed in). If you want it to run whether or not you are signed in, you would need to change the principal to <code>S4U</code> or store a password — but that changes where the CLIs&#39; credentials come from, so think before you do it.</p>
+</blockquote>
+<hr>
+<h3 id="25-the-guard-hook">25. The guard hook</h3>
+<h4 id="what-it-does">What it does</h4>
+<p><code>~/.codex/hooks.json</code> wires <code>tools/guard-hook.ps1</code> as a <strong><code>PreToolUse</code></strong> hook. Codex pipes a JSON object on stdin; the hook inspects it and either stays silent (allow) or prints a deny decision.</p>
+<p><strong>Every <code>PreToolUse</code> event runs Claudio first, then the guard hook.</strong> The guard hook only ever denies. All other lifecycle events (<code>Stop</code>, <code>SessionStart</code>, <code>PostToolUse</code>, …) stay with Claudio.</p>
+<h4 id="the-two-guards">The two guards</h4>
+<p><strong>Guard 1 — protected paths.</strong> Denies an <code>apply_patch</code> that touches:</p>
+<pre><code>*.keystore   *.jks   keystore.properties   local.properties   *.pem   *.key   .env*</code></pre>
+<p><strong>Guard 2 — secret scanning.</strong> Denies an <code>apply_patch</code> whose <strong>added</strong> lines (lines starting with <code>+</code>, excluding <code>+++</code>) match:</p>
+<pre><code>-----BEGIN [A-Z ]*PRIVATE KEY-----
+AKIA[0-9A-Z]{16}
+ghp_[A-Za-z0-9]{20,}
+github_pat_[A-Za-z0-9_]{20,}
+sk-ant-[A-Za-z0-9-]{20,}
+xox[bpoa]-[A-Za-z0-9-]{10,}
+AIza[0-9A-Za-z_-]{35}</code></pre>
+<h4 id="the-deny-shape">The deny shape</h4>
+<pre><code class="language-json">{"hookSpecificOutput":{"hookEventName":"PreToolUse",
+ "permissionDecision":"deny","permissionDecisionReason":"..."}}</code></pre>
+<p>The exit code stays <code>0</code> even on deny — the decision travels in the JSON, per the Codex hooks contract.</p>
+<h4 id="the-reason-text-names-the-file-and-the-pattern">The reason text names the file and the pattern</h4>
+<pre><code>Protected file 'app/keystore.properties' - guard-hook blocks patches matching
+keystore\.properties$. Move secrets out of band or ask the user to make this
+change by hand.</code></pre>
+<p>For secrets, only the first 60 characters of the offending line are echoed — enough to find it, not enough to leak it.</p>
+<h4 id="testing-it">Testing it</h4>
+<pre><code class="language-powershell">~/Documents/Codex/tools/guard-hook.ps1 -SelfTest
+# self-test: 5/5 pass (protected path denied, secret denied, clean allowed, Bash untouched, deny carries path)</code></pre>
+<p>The self-test feeds the hook four synthetic payloads (protected path, secret, clean patch, a <code>Bash</code> call) and asserts each outcome.</p>
+<blockquote>
+<p><strong>Scope limit:</strong> the guard only covers <code>apply_patch</code>. A <code>Bash</code> command that writes a secret to a file is not caught by this hook. The <code>release-gate.ps1</code> secret scan (§27) covers the committed-file case.</p>
+</blockquote>
+<hr>
+<h3 id="26-worktree-isolation">26. Worktree isolation</h3>
+<h4 id="why">Why</h4>
+<p>A fresh worktree does not carry your repo&#39;s gitignored local files — and without them (SDK paths, signing config, <code>.env</code>) a build fails before it starts.</p>
+<p><code>new-worktree.ps1</code> fixes that by copying the files the repo declares in <code>.worktreeinclude</code>.</p>
+<h4 id="usage">Usage</h4>
+<pre><code class="language-powershell">wt -Repo tv-launcher -Name fix-focus -Base master
+wt -Repo tv-launcher -Name spike -Preview</code></pre>
+<p>Worktrees land in <code>&lt;workspace&gt;\.worktrees\&lt;repo&gt;-&lt;name&gt;</code> — never inside the repo, so they are never untracked files in your checkout.</p>
+<h4 id="worktreeinclude"><code>.worktreeinclude</code></h4>
+<p>Gitignore-style, one pattern per line, <code>#</code> for comments:</p>
+<pre><code>local.properties
+keystore.properties
+*.keystore
+*.jks
+.env</code></pre>
+<p>Without the file, the built-in default list is used:
+<code>local.properties</code>, <code>keystore.properties</code>, <code>*.keystore</code>, <code>*.jks</code>, <code>.env</code>, <code>.env.*</code>.</p>
+<p><strong>Supported patterns:</strong> plain paths and simple globs. <code>!</code> negation and leading-<code>/</code> anchoring are <strong>not</strong> supported.</p>
+<h4 id="the-rules">The rules</h4>
+<ul>
+<li><strong>Cap 2–3 in flight.</strong> Review capacity is the limit, not compute.</li>
+<li><strong>Give each worktree its own dev-server ports and scratch database.</strong></li>
+<li><strong>Put the worktree name in the first message</strong> when dispatching an agent: <em>&quot;work only in this worktree.&quot;</em></li>
+<li><strong>Clean up after merging:</strong><pre><code class="language-powershell">git worktree remove --force &lt;path&gt;
+git branch -D &lt;name&gt;</code></pre>
+</li>
+</ul>
+<h4 id="best-of-n">Best-of-N</h4>
+<p><code>agent-task.ps1 -N 2</code> runs the same task as <strong>two independent attempts in two parallel worktrees</strong>, then shows both reports and the diff summary for you to pick. Files never collide because each attempt has its own sandbox.</p>
+<pre><code class="language-powershell">work '&lt;task&gt;' -N 2</code></pre>
+<hr>
+<h3 id="27-the-release-gate">27. The release gate</h3>
+<p>One command before any push of a release.</p>
+<pre><code class="language-powershell">~/Documents/Codex/tools/release-gate.ps1 -Repo C:\path\to\repo `
+    -GateCommands ".\gradlew.bat :app:testFullDebugUnitTest"</code></pre>
+<h4 id="the-five-steps-fail-fast-with-numbered-evidence">The five steps, fail-fast, with numbered evidence</h4>
+<div class="tw"><table><caption class="sr-only">The five steps, fail-fast, with numbered evidence</caption><thead><tr><th scope="col">#</th>
+<th scope="col">Check</th>
+<th scope="col">Fails when</th>
+</tr></thead><tbody><tr><td>1</td>
+<td><strong>Clean working tree</strong></td>
+<td><code>git status --porcelain</code> is non-empty</td>
+</tr><tr><td>2</td>
+<td><strong>Unpushed commits</strong></td>
+<td>There is no upstream branch, or HEAD is ahead of it</td>
+</tr><tr><td>3</td>
+<td><strong>Secret scan</strong></td>
+<td><code>git grep -I -n -E</code> finds a secret-shaped line in <strong>tracked</strong> files</td>
+</tr><tr><td>4</td>
+<td><strong>Gate commands</strong></td>
+<td>Any <code>-GateCommands</code> command exits non-zero</td>
+</tr><tr><td>5</td>
+<td><strong>APK signer</strong> (optional, <code>-Apk</code>)</td>
+<td><code>apksigner verify --print-certs</code> fails, or <code>apksigner</code> is not at the expected path</td>
+</tr></tbody></table></div>
+<p>Step 3 uses the <strong>same patterns</strong> as the guard hook — one definition of &quot;secret-shaped&quot;, used in two places.</p>
+<h4 id="flags">Flags</h4>
+<div class="tw"><table><caption class="sr-only">Flags</caption><thead><tr><th scope="col">Flag</th>
+<th scope="col">Effect</th>
+</tr></thead><tbody><tr><td><code>-AllowUnpushed</code></td>
+<td>Skip step 2 (for local-only releases)</td>
+</tr><tr><td><code>-DryRun</code></td>
+<td>Print the step list without running anything</td>
+</tr><tr><td><code>-Apk &lt;path&gt;</code></td>
+<td>Add the signer check</td>
+</tr></tbody></table></div>
+<h4 id="output-shape">Output shape</h4>
+<pre><code>release-gate: ~/Documents/Codex/beluga
+------------------------------------------------------------
+[1] PASS clean working tree
+[2] PASS unpushed commits check
+[3] PASS secret scan (tracked content)
+[4] PASS gate command
+------------------------------------------------------------
+release-gate PASS</code></pre>
+<p>On failure: <code>[3] FAIL secret scan (tracked content) : &lt;detail&gt;</code> and exit <code>1</code>.</p>
+<hr>
+<h3 id="28-cross-cli-handoff">28. Cross-CLI handoff</h3>
+<p>The <code>agent_interop</code> MCP server (<code>tools/agent-interop/server.mjs</code>) lets one CLI hand a task to another.</p>
+<h4 id="how">How</h4>
+<pre><code>preview  → agent_route_preview    (what would the target CLI pick?)
+start    → agent_handoff_start     (returns a job ID)
+poll    → agent_handoff_status    (returns the result)</code></pre>
+<p>Parameters: target CLI, task, working directory, complexity (<code>auto</code>/<code>quick</code>/<code>standard</code>/<code>deep</code>), mode (<code>read</code>/<code>edit</code>). Model and effort are selected through <code>agent-task.ps1</code>, so the target uses the same routing rules.</p>
+<p>Starting returns a job ID; you poll for the result. This keeps nested CLI runs <strong>out of the parent turn&#39;s synchronous call</strong>.</p>
+<h4 id="rules-1">Rules</h4>
+<ul>
+<li><strong>Same-CLI handoffs are rejected.</strong> Recursive handoffs are rejected.</li>
+<li><strong>At most 2 jobs per MCP server process.</strong></li>
+<li><strong>A job ends after 30 minutes.</strong></li>
+<li><strong>Closing the MCP server stops its active jobs.</strong> Job IDs exist only for that server session.</li>
+<li><strong>An edit handoff creates a detached worktree</strong> from <code>HEAD</code> and leaves it for you to inspect and integrate. Uncommitted and ignored files from the source checkout are absent.</li>
+<li><strong>A read handoff runs in the supplied directory</strong> (no worktree).</li>
+</ul>
+<h4 id="opencodes-dedicated-handoff-agents">OpenCode&#39;s dedicated handoff agents</h4>
+<div class="tw"><table><caption class="sr-only">OpenCode's dedicated handoff agents</caption><thead><tr><th scope="col">Agent</th>
+<th scope="col">Allowed</th>
+<th scope="col">Denied</th>
+</tr></thead><tbody><tr><td><code>interop_read</code></td>
+<td>file reading, search, LSP inspection</td>
+<td>shell, edits, subagents, MCP tools</td>
+</tr><tr><td><code>interop_edit</code></td>
+<td>worktree edits, commands</td>
+<td><code>external_directory</code>, subagents, MCP tools</td>
+</tr></tbody></table></div>
+<p>This is a <strong>CLI permission boundary, not an OS sandbox.</strong> Shell commands in <code>interop_edit</code> are not OS-isolated. The worktree gives isolation from the source checkout — review the result before integrating.</p>
+<h4 id="checks">Checks</h4>
+<pre><code class="language-powershell">npm test --prefix tools/agent-interop                          # inner check
+codex mcp list; opencode mcp list; cmd mcp list                 # gate</code></pre>
+<p>Restart existing CLI sessions to load new MCP settings.</p>
+<hr>
+<h2 id="part-9-known-limits-and-drift">Part 9 — Known limits and drift</h2>
+<h3 id="29-things-that-are-weaker-than-they-look">29. Things that are weaker than they look</h3>
+<h4 id="approval-policy-is-not-enforced-by-the-runtimes">Approval policy is not enforced by the runtimes</h4>
+<p>The global policy asks for approval before commits, pushes, releases, and destructive actions. The runtimes <strong>do not fully enforce it</strong>:</p>
+<div class="tw"><table><caption class="sr-only">Approval policy is not enforced by the runtimes</caption><thead><tr><th scope="col">Runtime</th>
+<th scope="col">Actual state</th>
+</tr></thead><tbody><tr><td><strong>Codex</strong></td>
+<td><code>approval_policy = &quot;never&quot;</code>, <code>sandbox_mode = &quot;danger-full-access&quot;</code>, network on</td>
+</tr><tr><td><strong>CommandCode</strong></td>
+<td><code>defaultMode = &quot;default&quot;</code>, broad allow-list. Explicit ask and deny rules survive yolo/bypass mode, but the engine documents aggressive matching through some process wrappers</td>
+</tr><tr><td><strong>OpenCode v1</strong></td>
+<td>Global <code>permission</code> allows every tool, including Bash and <code>external_directory</code></td>
+</tr></tbody></table></div>
+<p><strong>This means the approval rules in <code>AGENTS.md</code> are required agent <em>behavior</em>, not a technical control.</strong> A model that ignores the rule can act. State plainly when approval was assumed.</p>
+<h4 id="configtoml-is-app-managed"><code>config.toml</code> is app-managed</h4>
+<p>Codex rewrites <code>~/.codex/config.toml</code>. Hand edits are safe only while Codex is closed, and may be rewritten on the next launch. Back it up first.</p>
+<h4 id="read-only-is-not-absolute">Read-only is not absolute</h4>
+<ul>
+<li><strong>Codex agents inherit the parent sandbox.</strong> An agent&#39;s own read-only <em>instructions</em> do not create a read-only sandbox.</li>
+<li><strong>OpenCode&#39;s <code>edit: deny</code> does not block Bash.</strong></li>
+<li><strong>CommandCode&#39;s <code>shell_command</code> stays enabled</strong> for read-only agents (they need <code>rg</code> and <code>git</code>), so a shell write is the residual risk.</li>
+</ul>
+<h4 id="the-powershell-allow-is-broad">The <code>powerShell</code> allow is broad</h4>
+<p>CommandCode&#39;s bare <code>&quot;powershell&quot;</code> allow grants the whole PowerShell tool with no argument constraint, so it can carry a denied operation past the deny rules. It is load-bearing (adb, <code>$</code>-heavy commands, file edits), so it was left alone. Tighten it only after deciding which PowerShell verbs must stay reachable.</p>
+<h4 id="blindpilot-and-work-do-not-compose">BlindPilot and <code>work</code> do not compose</h4>
+<p><code>work</code>/<code>agent-task</code> is a <strong>terminal launcher that starts another CLI</strong>. Inside a BlindPilot turn that nests CLIs, and a nested turn can outlive BlindPilot&#39;s one-shot process. The result is the misleading message:</p>
+<blockquote>
+<p>&quot;Command Code stopped before the turn completed (exit code 1).&quot;</p>
+</blockquote>
+<p>That string is BlindPilot&#39;s, not the model&#39;s. <strong>Never run <code>work</code>/<code>agent-task</code> or a dev server inside a BlindPilot turn.</strong> Run them from a normal PowerShell window. BlindPilot and <code>work</code> are two entry points that replace each other.</p>
+<h4 id="clis-can-exit-0-after-a-failed-write">Clis can exit 0 after a failed write</h4>
+<p>Both CLIs can exit successfully after reporting that an attempted write failed. <strong>Always verify the requested result and the Git diff</strong> — do not trust the exit code alone.</p>
+<h4 id="command-code-credits-are-not-readable-headlessly">Command Code credits are not readable headlessly</h4>
+<p>The docs say the plan cannot be read from disk and <code>/usage</code> is interactive-only. Read the live number with <code>/usage</code> in a session, or at <a href="https://commandcode.ai/usage">https://commandcode.ai/usage</a>.</p>
+<h4 id="rtk-is-an-executable-proxy-not-a-shell-wrapper">RTK is an executable proxy, not a shell wrapper</h4>
+<p><code>rtk git status</code> is safe. <code>rtk echo hi</code> is <strong>not</strong> — builtins are not on PATH, so RTK fails with <code>program not found</code>. It is also unsafe when a later step parses the output, because condensed text can be misread by a pipe or regex. Use <code>rtk proxy &lt;cmd&gt;</code> to run one command unfiltered.</p>
+<hr>
+<h3 id="30-drift-found-and-fixed">30. Drift found and fixed</h3>
+<p>Three issues were found while writing this guide. All three were fixed on 2026-10-19, and a fourth was found and fixed on 2026-10-20. They are recorded here so you know what changed and why.</p>
+<h4 id="301-agentsmdbak--files-accumulated-faster-than-they-were-pruned-fixed">30.1 <code>AGENTS.md.bak-*</code> files accumulated faster than they were pruned — FIXED</h4>
+<p><strong>Was:</strong> 39 <code>AGENTS.md.bak-*</code> files in <code>~/.config/opencode/</code> and 39 in <code>~/.commandcode/</code>, growing by <strong>two per nightly run</strong>.</p>
+<ol>
+<li><code>sync-taste.ps1</code> calls <code>sync-agent-instructions.ps1</code> internally, which backed up both targets.</li>
+<li>The standalone <code>sync-agent-instructions</code> step (step 3) ran the same script again, backing them up <strong>again</strong>.</li>
+</ol>
+<p>The cause was that the backup <code>Copy-Item</code> ran <strong>before</strong> the &quot;already in sync&quot; check, so a run where nothing changed still produced two backup copies per target. Nothing pruned them — <code>Prune-Backups</code> in <code>self-repair.ps1</code> only prunes <code>self-repair-backups/</code>.</p>
+<p><strong>Now:</strong> <code>sync-agent-instructions.ps1</code> backs up <strong>only when the content actually changes</strong>, and prunes each target directory to the <strong>5 latest</strong> backups, after confirming those 5 are non-empty. Both directories now hold exactly 5.</p>
+<h4 id="302-taste-promote-wrote-malformed-bullets-fixed">30.2 <code>taste-promote</code> wrote malformed bullets — FIXED</h4>
+<p><strong>Was:</strong> the script prefixed extracted bullets with <code>- </code>, but the extracted bullet already started with <code>- </code>. Result: <code>- - Do not treat automated tests...</code>.</p>
+<p><strong>Now:</strong> the bullet is written as-is, so the file reads <code>- Do not treat automated tests...</code>. Cosmetic either way — the file is a proposal list, not consumed programmatically — but it no longer breaks Markdown list syntax.</p>
+<h4 id="303-sync-taste-and-sync-agent-instructions-overlap-left-as-is">30.3 <code>sync-taste</code> and <code>sync-agent-instructions</code> overlap — LEFT AS IS</h4>
+<p>Step 1 already propagates the canonical file; step 3 repeats it. Harmless (idempotent), and it costs one extra script run per night. It was also the direct cause of 30.1, which is now fixed, so the overlap no longer has a cost beyond one script invocation. Leaving it also gives step 3 a second chance to propagate a canonical file that step 1 wrote. The order stays fixed in <code>self-repair.ps1</code>.</p>
+<h4 id="304-agent-backend-healthjson-and-agent-usagejson-are-both-empty">30.4 <code>agent-backend-health.json</code> and <code>agent-usage.json</code> are both empty</h4>
+<p><code>{}</code> means <strong>no flags set</strong> — all backends healthy, no cooldown active. That is the healthy steady state, not a missing file.</p>
+<h4 id="305-the-memory-notes-directory-contained-a-duplicate-batch-fixed">30.5 The memory notes directory contained a duplicate batch — FIXED</h4>
+<p><strong>Was:</strong> 135 note files for only <strong>71 rollout summaries</strong>. The <code>.processed</code> index held two key formats:</p>
+<div class="tw"><table><caption class="sr-only">30.5 The memory notes directory contained a duplicate batch — FIXED</caption><thead><tr><th scope="col">Key format</th>
+<th scope="col">Count</th>
+</tr></thead><tbody><tr><td><code>filename:MD5</code> (v1)</td>
+<td>65</td>
+</tr><tr><td><code>filename:MD5:v2</code> (current)</td>
+<td>70</td>
+</tr></tbody></table></div>
+<p>The <code>v2</code> suffix existed because the key format had been changed once. Changing it meant every already-processed summary stopped matching its index entry and <strong>was curated a second time</strong>, producing a second batch of notes with the same slugs.</p>
+<p><strong>Now:</strong> <code>memory-curate.ps1</code> honours the legacy key as well as the current one, so bumping the key format again can never re-curate a summary. The 65 orphaned v1-era notes were removed — every one had an exact-slug v2 twin, contained <strong>zero</strong> extracted learnings (&quot;No structured learnings found&quot;), and was cited <strong>zero</strong> times in <code>MEMORY.md</code>. The notes directory now holds 70 files, one per curated summary.</p>
+<p><strong>Why it was never a memory-quality problem:</strong> <code>memory-consolidate.ps1</code> dedupes against <code>MEMORY.md</code> by normalized key before appending, so the duplicate notes never produced duplicated learnings. The cost was disk and clutter, not wrong memory.</p>
+<h4 id="306-the-chain-stopped-at-the-first-credit-wall-and-reported-success-fixed">30.6 The chain stopped at the first credit wall and reported success — FIXED</h4>
+<p><strong>Was (2026-10-20):</strong> two <code>work</code> runs failed in a row — Codex ran out of subscription credits, the router fell back to Command Code, and Command Code answered <code>Insufficient credits for Command Code.</code> <strong>with exit code 0</strong>. The router read exit 0 as success: it cleared the backend&#39;s health flag, recorded a success in the route feedback, never marked the paid credits exhausted, never tried a free model, never tried the third backend, and printed <code>Done via fallback (Command Code)</code> for a task that never ran.</p>
+<p><strong>Now:</strong> <code>Test-CreditFailure</code> turns a provider credit/limit error into a failure whatever the exit code says (§10), and the chain now walks <strong>every</strong> remaining backend, retrying each on a free model before moving on (§12). The failing backend is marked unhealthy and paid-exhausted, so the next run starts on a free model. Codex&#39;s <code>try again at 5:11 AM</code> is parsed and the backend is held until then.</p>
+<hr>
+<h2 id="part-10-reference">Part 10 — Reference</h2>
+<h3 id="31-exit-codes">31. Exit codes</h3>
+<div class="tw"><table><caption class="sr-only">31. Exit codes</caption><thead><tr><th scope="col">Script</th>
+<th scope="col">0</th>
+<th scope="col">2</th>
+<th scope="col">1</th>
+</tr></thead><tbody><tr><td><code>self-repair.ps1</code></td>
+<td>all steps passed</td>
+<td>—</td>
+<td>a step failed or rolled back</td>
+</tr><tr><td><code>verify.ps1</code></td>
+<td>all smoke checks passed</td>
+<td>—</td>
+<td>a smoke check failed</td>
+</tr><tr><td><code>sync-taste.ps1 -Check</code></td>
+<td>in sync</td>
+<td>drift found</td>
+<td>—</td>
+</tr><tr><td><code>sync-agents.ps1 -Check</code></td>
+<td>in sync</td>
+<td>drift or stale files found</td>
+<td>—</td>
+</tr><tr><td><code>sync-agent-instructions.ps1 -Check</code></td>
+<td>in sync</td>
+<td>drift found</td>
+<td>canonical missing</td>
+</tr><tr><td><code>sync-skills.ps1 -Check</code></td>
+<td>in sync</td>
+<td>pending changes</td>
+<td>—</td>
+</tr><tr><td><code>release-gate.ps1</code></td>
+<td>all checks passed</td>
+<td>—</td>
+<td>a check failed</td>
+</tr><tr><td><code>guard-hook.ps1 -SelfTest</code></td>
+<td>5/5 pass</td>
+<td>—</td>
+<td>a self-test assertion failed</td>
+</tr></tbody></table></div>
+<p><strong>The <code>2</code> convention is consistent</strong>: <code>-Check</code> means &quot;report, don&#39;t change,&quot; and exit <code>2</code> means &quot;there is work pending.&quot; Any CI wrapper can use that.</p>
+<hr>
+<h3 id="32-glossary">32. Glossary</h3>
+<div class="tw"><table><caption class="sr-only">32. Glossary</caption><thead><tr><th scope="col">Term</th>
+<th scope="col">Meaning</th>
+</tr></thead><tbody><tr><td><strong>Backend</strong></td>
+<td>One of the three CLIs: <code>codex</code>, <code>commandcode</code>, <code>opencode</code></td>
+</tr><tr><td><strong>Tier</strong></td>
+<td>The difficulty classification of a task: <code>quick</code>, <code>standard</code>, <code>deep</code></td>
+</tr><tr><td><strong>Route</strong></td>
+<td>The full decision — backend + model + effort + mode</td>
+</tr><tr><td><strong>Roster</strong></td>
+<td>The four named agents: scout, builder, verifier, debugger</td>
+</tr><tr><td><strong>Canonical</strong></td>
+<td>The one file that is edited by hand; everything else is generated from it</td>
+</tr><tr><td><strong>Render</strong></td>
+<td>To generate a native-format copy from the canonical file</td>
+</tr><tr><td><strong>Drift</strong></td>
+<td>Two copies of the same thing that no longer match</td>
+</tr><tr><td><strong>Snapshot</strong></td>
+<td>A hash-verified copy of a file/dir taken before a step runs</td>
+</tr><tr><td><strong>Rollback</strong></td>
+<td>Restoring a snapshot after a step fails</td>
+</tr><tr><td><strong>Manifest</strong></td>
+<td>The list of what a snapshot contains, plus its own integrity hash</td>
+</tr><tr><td><strong>Infra failure</strong></td>
+<td>A failure caused by the environment (rate limit, auth, network), not by the task</td>
+</tr><tr><td><strong>Demotion</strong></td>
+<td>Temporarily skipping a model that has failed with infra errors</td>
+</tr><tr><td><strong>Cooldown</strong></td>
+<td>A window during which a backend&#39;s paid models are withheld</td>
+</tr><tr><td><strong>Tier outcome</strong></td>
+<td>A recorded attempt at a given tier, with its exit code</td>
+</tr><tr><td><strong>Taste</strong></td>
+<td>Preferences learned by Command Code from how you work</td>
+</tr><tr><td><strong>Rollout summary</strong></td>
+<td>The raw record of one Codex session</td>
+</tr><tr><td><strong>Note</strong></td>
+<td>A structured, one-per-rollout extraction of the learnings</td>
+</tr><tr><td><strong>Inner loop</strong></td>
+<td>The fast check you run after each edit</td>
+</tr><tr><td><strong>Gate</strong></td>
+<td>The full check you run before done, and in CI</td>
+</tr><tr><td><strong>Worktree</strong></td>
+<td>An isolated checkout of a repo on its own branch</td>
+</tr><tr><td><strong>Best-of-N</strong></td>
+<td>N parallel attempts of one task, each in its own worktree</td>
+</tr><tr><td><strong>CLI permission boundary</strong></td>
+<td>A rule enforced by the CLI&#39;s tool permissions, not by the OS</td>
+</tr></tbody></table></div>
+<hr>
+<h3 id="the-five-things-to-remember">The five things to remember</h3>
+<ol>
+<li><strong>Edit the canonical file, never a copy.</strong> Then run the sync script.</li>
+<li><strong>The nightly job at 03:00 keeps the configuration from rotting.</strong> It snapshots, hashes, and rolls back automatically.</li>
+<li><strong>At run time, the router reroutes instead of failing.</strong> Paid → free on the same backend → another backend.</li>
+<li><strong><code>-Preview</code> shows the route without spending anything.</strong> Use it before any expensive task.</li>
+<li><strong>The approval policy is behavior, not a control.</strong> Say out loud when you assumed an approval.</li>
+</ol>
+<hr>
+<p><em>Documented against the live configuration on 2026-10-19. The nightly job last passed fully at 2026-10-19 03:01:21 (<code>verify OK</code>, exit 0), with <code>LastTaskResult: 0</code> and <code>NextRunTime: 2026-10-20 03:00</code>.</em></p>
+<p><em>If this document and the configuration ever disagree, <strong>the configuration wins</strong> — but then fix this document in the same change.</em></p>
+
+<p class="nextlink">Generated from the Markdown source. Edit the <code>.md</code> file and re-run the converter.</p>
+</article>
+</main>
+</div>
+<div id="sr-status" class="sr-only" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  var root=document.documentElement;
+  var status=document.getElementById('sr-status');
+  function say(msg){ if(status){ status.textContent=''; setTimeout(function(){ status.textContent=msg; },40); } }
+
+  /* ---- theme: auto -> light -> dark ---- */
+  var MODES=['auto','light','dark'];
+  var btn=document.getElementById('theme');
+  function current(){ return localStorage.getItem('doc-theme')||'auto'; }
+  function apply(m){
+    if(m==='auto'){ root.removeAttribute('data-theme'); }
+    else { root.setAttribute('data-theme',m); }
+    localStorage.setItem('doc-theme',m);
+    if(btn){
+      btn.textContent='Theme: '+m;
+      btn.setAttribute('aria-label','Colour theme: '+m+'. Activate to change.');
+    }
+  }
+  apply(current());
+  if(btn){
+    btn.addEventListener('click',function(){
+      var next=MODES[(MODES.indexOf(current())+1)%MODES.length];
+      apply(next);
+      say('Colour theme set to '+next);
+    });
+  }
+
+  /* ---- copy buttons ---- */
+  document.querySelectorAll('pre').forEach(function(pre){
+    if(pre.getAttribute('role')==='img') return;
+    var b=document.createElement('button');
+    b.className='copy'; b.type='button'; b.textContent='copy';
+    b.setAttribute('aria-label','Copy code block to clipboard');
+    b.addEventListener('click',function(){
+      var code=pre.querySelector('code');
+      var text=code?code.innerText:pre.innerText;
+      var done=function(){ b.textContent='copied'; b.classList.add('done'); say('Code copied to clipboard');
+        setTimeout(function(){ b.textContent='copy'; b.classList.remove('done'); },1800); };
+      if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done).catch(function(){}); }
+      else { say('Copy failed: clipboard unavailable'); }
+    });
+    pre.appendChild(b);
+  });
+
+  /* ---- scrollable tables become focusable regions only when they overflow ---- */
+  function markOverflow(){
+    document.querySelectorAll('.tw').forEach(function(w){
+      if(w.scrollWidth>w.clientWidth+2){
+        w.setAttribute('tabindex','0');
+        w.setAttribute('role','region');
+        if(!w.getAttribute('aria-label')) w.setAttribute('aria-label','Scrollable table');
+      } else {
+        w.removeAttribute('tabindex'); w.removeAttribute('role');
+      }
+    });
+  }
+  markOverflow();
+  window.addEventListener('resize',markOverflow);
+
+  /* ---- toc: collapsible on narrow screens, open on wide ---- */
+  var box=document.getElementById('tocbox');
+  function sizeToc(){ if(box) box.open = window.innerWidth>=920; }
+  sizeToc(); window.addEventListener('resize',sizeToc);
+
+  /* ---- scroll spy ---- */
+  var links={};
+  document.querySelectorAll('nav.toc a').forEach(function(a){ links[a.getAttribute('href').slice(1)]=a; });
+  var heads=Array.prototype.slice.call(document.querySelectorAll('main h2[id],main h3[id]'));
+  if(heads.length && 'IntersectionObserver' in window){
+    var visible={};
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ visible[e.target.id]=e.isIntersecting; });
+      var active=null;
+      for(var i=0;i<heads.length;i++){ if(visible[heads[i].id]){ active=heads[i].id; break; } }
+      if(!active){
+        for(var j=heads.length-1;j>=0;j--){
+          if(heads[j].getBoundingClientRect().top<130){ active=heads[j].id; break; }
+        }
+      }
+      Object.keys(links).forEach(function(k){ links[k].classList.remove('active'); });
+      if(active&&links[active]) links[active].classList.add('active');
+    },{rootMargin:'0px 0px -70% 0px',threshold:0});
+    heads.forEach(function(h){ io.observe(h); });
+  }
+})();
+</script>
+</body>
+</html>

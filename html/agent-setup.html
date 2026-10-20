@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Agent setup — workflow reference</title>
+<meta name="generator" content="marked 18.1.1">
+<style>
+:root{
+  --bg:#ffffff; --bg-soft:#f6f7f9; --bg-code:#f2f3f5; --fg:#1a1d21; --fg-dim:#5b6470;
+  --fg-faint:#7b838d; --accent:#0b5fbf; --accent-soft:#e8f0fc; --border:#dfe3e8;
+  --mark:#fff3c4; --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.06);
+  --code:#24292f; --focus:#0b5fbf;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#111418; --bg-soft:#171b21; --bg-code:#1b2027; --fg:#dfe3e8; --fg-dim:#a5aeba;
+    --fg-faint:#7c8794; --accent:#79bcff; --accent-soft:#16273d; --border:#2b323b;
+    --mark:#4a3f14; --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.35);
+    --code:#e6edf3; --focus:#8ec5ff;
+  }
+}
+html[data-theme=light]{ color-scheme:light; }
+html[data-theme=dark]{
+  color-scheme:dark;
+  --bg:#111418; --bg-soft:#171b21; --bg-code:#1b2027; --fg:#dfe3e8; --fg-dim:#a5aeba;
+  --fg-faint:#7c8794; --accent:#79bcff; --accent-soft:#16273d; --border:#2b323b;
+  --mark:#4a3f14; --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.35);
+  --code:#e6edf3; --focus:#8ec5ff;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{animation-duration:.01ms!important; transition-duration:.01ms!important}
+}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font:17px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent); text-decoration:underline; text-underline-offset:2px}
+a:hover{text-decoration-thickness:2px}
+code,pre,kbd,samp{font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace}
+
+/* ---- focus: always visible, never removed ---- */
+:focus-visible{outline:3px solid var(--focus); outline-offset:2px; border-radius:4px}
+.skip{
+  position:absolute; left:12px; top:-100px; z-index:200;
+  background:var(--accent); color:#fff; padding:12px 20px; border-radius:0 0 10px 10px;
+  font-weight:650; text-decoration:none; transition:top .15s;
+}
+.skip:focus{top:0}
+
+/* ---- landmarks ---- */
+.topbar{
+  position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:14px;
+  padding:10px 20px; background:var(--bg); border-bottom:1px solid var(--border);
+}
+.topbar .brand{font-weight:650; letter-spacing:-.01em; font-size:15px; color:var(--fg)}
+.topbar .spacer{flex:1}
+.btn{
+  border:1px solid var(--border); background:var(--bg-soft); color:var(--fg-dim);
+  border-radius:8px; padding:6px 12px; font-size:13px; cursor:pointer; font-family:inherit;
+}
+.btn:hover{color:var(--fg); border-color:var(--fg-faint)}
+.wrap{display:grid; grid-template-columns:300px minmax(0,1fr); gap:44px; max-width:1400px; margin:0 auto; padding:0 24px}
+.tocbox{position:sticky; top:56px; align-self:start; max-height:calc(100vh - 76px); display:flex; flex-direction:column}
+.tocbox > summary{
+  cursor:pointer; padding:12px 4px; font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--fg-faint); font-weight:650; list-style:none;
+}
+.tocbox > summary::-webkit-details-marker{display:none}
+.tocbox > summary::before{content:"\25B8 "}
+.tocbox[open] > summary::before{content:"\25BE "}
+nav.toc{
+  overflow-y:auto; padding:0 4px 40px 0; font-size:13.5px; line-height:1.5;
+  border-left:1px solid var(--border); padding-left:0;
+}
+nav.toc ol{list-style:none; margin:0; padding:0}
+nav.toc li{margin:0}
+nav.toc a{
+  display:block; padding:5px 10px 5px 12px; color:var(--fg-dim);
+  border-left:3px solid transparent; margin-left:-1px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+nav.toc a:hover{color:var(--fg); text-decoration:none; background:var(--bg-soft)}
+nav.toc a.active{color:var(--accent); border-left-color:var(--accent); font-weight:600}
+nav.toc .d2{padding-left:26px; font-size:12.8px}
+nav.toc .d3{padding-left:42px; font-size:12.4px; color:var(--fg-faint)}
+nav.toc .d4{padding-left:58px; font-size:12px; color:var(--fg-faint)}
+main{padding:34px 0 100px; min-width:0}
+main > article{max-width:920px}
+
+/* ---- content ---- */
+h1,h2,h3,h4{line-height:1.25; letter-spacing:-.015em; scroll-margin-top:72px}
+h1{font-size:2.1rem; margin:0 0 .5em; padding-bottom:.35em; border-bottom:1px solid var(--border)}
+h2{font-size:1.45rem; margin:2.3em 0 .7em; padding-bottom:.25em; border-bottom:1px solid var(--border)}
+h3{font-size:1.15rem; margin:1.8em 0 .55em}
+h4{font-size:1.02rem; margin:1.5em 0 .5em; color:var(--fg-dim)}
+p{margin:0 0 1.1em}
+ul,ol{margin:0 0 1.1em; padding-left:1.5em}
+li{margin:.3em 0}
+li > ul,li > ol{margin:.3em 0}
+hr{border:0; border-top:1px solid var(--border); margin:2.6em 0}
+blockquote{
+  margin:1.2em 0; padding:.8em 1.15em; border-left:4px solid var(--accent);
+  background:var(--accent-soft); border-radius:0 8px 8px 0;
+}
+blockquote > :last-child{margin-bottom:0}
+.tw{overflow-x:auto; margin:1.3em 0; border:1px solid var(--border); border-radius:10px}
+.tw:focus-visible{outline-offset:-1px}
+table{border-collapse:collapse; width:100%; font-size:.93em; background:var(--bg)}
+caption{caption-side:top; text-align:left; padding:10px 12px; color:var(--fg-dim); font-size:.9em}
+th,td{border-bottom:1px solid var(--border); border-right:1px solid var(--border); padding:9px 12px; text-align:left; vertical-align:top}
+th{background:var(--bg-soft); font-weight:650; white-space:nowrap}
+tr:last-child td{border-bottom:0}
+th:last-child,td:last-child{border-right:0}
+tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--bg-soft) 55%,transparent)}
+img{max-width:100%}
+mark{background:var(--mark); color:inherit; padding:0 .15em; border-radius:3px}
+:not(pre) > code{
+  background:var(--bg-code); padding:.16em .38em; border-radius:5px; font-size:.875em;
+  border:1px solid var(--border); word-break:break-word;
+}
+pre{
+  background:var(--bg-code); border:1px solid var(--border); border-radius:10px;
+  padding:14px 16px; overflow-x:auto; margin:1.25em 0; position:relative; line-height:1.55;
+}
+pre code{background:none; border:0; padding:0; font-size:.845em; color:var(--code)}
+pre[role=img]{white-space:pre}
+.copy{
+  position:absolute; top:8px; right:8px; opacity:.6; transition:opacity .15s;
+  border:1px solid var(--border); background:var(--bg); color:var(--fg-dim);
+  border-radius:6px; padding:4px 10px; font-size:12px; cursor:pointer; font-family:inherit;
+}
+pre:hover .copy,.copy:focus-visible{opacity:1}
+.copy.done{color:#1a7f37; border-color:#1a7f37; opacity:1}
+.subtitle{color:var(--fg-dim); font-size:1.04rem; margin:0 0 2em}
+.meta{color:var(--fg-faint); font-size:13px; margin:0 0 2.4em; padding-bottom:1.2em; border-bottom:1px solid var(--border)}
+.nextlink{margin-top:3.5em; padding-top:1.2em; border-top:1px solid var(--border); font-size:.94rem}
+.sr-only{
+  position:absolute!important; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+/* ---- print ---- */
+@media print{
+  .topbar,nav.toc,.tocbox > summary,.copy,.skip{display:none!important}
+  .wrap{display:block; padding:0}
+  main{padding:0}
+  body{font-size:11pt; background:#fff; color:#000}
+  h2,h3{page-break-after:avoid}
+  pre,.tw,table,blockquote{page-break-inside:avoid}
+  a{color:inherit}
+}
+@media (max-width:920px){
+  .wrap{grid-template-columns:1fr; gap:0; padding:0 18px}
+  .tocbox{position:static; max-height:none}
+  main{padding-top:22px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Skip to main content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">&#8592; Documentation index</a>
+  <span class="spacer"></span>
+  <button class="btn" id="theme" type="button">Theme: auto</button>
+</header>
+<div class="wrap">
+<details class="tocbox" id="tocbox" open>
+  <summary>Contents</summary>
+  <nav class="toc" aria-label="Contents">
+<ol>
+<li class="d2"><a href="#start-here">Start here</a></li>
+<li class="d2"><a href="#cross-cli-handoffs">Cross-CLI handoffs</a></li>
+<li class="d2"><a href="#tools-and-where-their-config-lives">Tools and where their config lives</a></li>
+<li class="d2"><a href="#scaffolding-a-project">Scaffolding a project</a></li>
+<li class="d2"><a href="#one-command-to-route-a-task">One command to route a task</a></li>
+<li class="d2"><a href="#agents-the-roster">Agents (the roster)</a></li>
+<li class="d2"><a href="#superpowers-in-the-routed-agents">Superpowers in the routed agents</a></li>
+<li class="d2"><a href="#running-without-superpowers-or-rtk">Running without Superpowers or RTK</a></li>
+<li class="d3"><a href="#what-keeps-working">What keeps working</a></li>
+<li class="d3"><a href="#what-degrades">What degrades</a></li>
+<li class="d3"><a href="#installing-on-a-new-machine">Installing on a new machine</a></li>
+<li class="d2"><a href="#one-canonical-instruction-file">One canonical instruction file</a></li>
+<li class="d2"><a href="#rtk-rust-token-killer">RTK (Rust Token Killer)</a></li>
+<li class="d2"><a href="#approval-and-sandbox-reality">Approval and sandbox reality</a></li>
+<li class="d2"><a href="#feedback-loop-the-rule-that-bit-us">Feedback loop (the rule that bit us)</a></li>
+<li class="d2"><a href="#configtoml-is-app-managed">config.toml is app-managed</a></li>
+<li class="d2"><a href="#taste-learned-preferences">Taste (learned preferences)</a></li>
+<li class="d2"><a href="#blindpilot-the-screen-reader-gui-front-end">BlindPilot (the screen-reader GUI front-end)</a></li>
+</ol>
+  </nav>
+</details>
+<main id="content" tabindex="-1" aria-label="Agent setup — workflow reference">
+<article>
+<h1 id="doc-title">Agent setup — workflow reference</h1>
+
+<p class="meta">Source <code>tools/AGENT-SETUP.md</code> &middot; 28,049 bytes &middot; updated 2026-10-20</p>
+<p>How the three coding CLIs on this machine are wired. Read this before changing
+any of their config, so the three stay coherent.</p>
+<p>The whole configuration - the policy, the docs, <code>workflows/</code>, <code>workflow/</code>,
+<code>tools/</code> and the published HTML - lives in a git repository at the workspace
+root. <code>tools/repair-config.ps1</code> validates every tracked file, restores a broken
+one from the last good commit and records the validated state; it is the first
+step of the nightly job. The project repositories in the same folder are
+ignored. See <code>WORKFLOW-USAGE.md</code> for the operator view.</p>
+<h2 id="start-here">Start here</h2>
+<p><code>tools/status.ps1</code> is the one-screen health check: install state, the nightly
+job and its last result, drift per layer, backend health, and spend. The shell
+alias is <code>workflow-status</code> (short form <code>wf-status</code>).</p>
+<p>In BlindPilot, describe the task normally. You do not need to choose an agent,
+model, or Superpowers skill first. In a new PowerShell window, change to
+the repository and run one command:</p>
+<pre><code class="language-powershell">work 'Fix the broken focus return after Back'</code></pre>
+<p><code>work</code> announces its route in one line, then runs the task. Superpowers guides
+the selected agent through applicable workflows. Use <code>work &#39;&lt;task&gt;&#39; -Preview</code> only when you want to inspect
+the route. The rest of this document is reference material.</p>
+<p>For automatic follow-up turns on one task, run the separate Python 3.11+ CLI
+runner from a PowerShell terminal:</p>
+<pre><code class="language-powershell">python tools/auto-next.py --backend codex --workdir C:\path\to\repo "Fix the broken focus return after Back"</code></pre>
+<p>Choose <code>codex</code>, <code>opencode</code>, or <code>commandcode</code> explicitly. The runner reads
+<code>workflows/workflow.toml</code> <code>[continuation].max_turns</code>, keeps the returned CLI
+session, and continues only after the final <code>AUTO_NEXT_STATUS: CONTINUE</code> line.
+<code>DONE</code>, <code>BLOCKED</code>, missing status, errors, and the turn cap stop it. It does not
+start another ticket or change backend permissions, model, or reasoning effort.
+It is separate from interactive BlindPilot turns. Inner check:
+<code>python -m unittest tools/test_auto_next.py</code>.</p>
+<p>It launches the npm shims (<code>codex.cmd</code> 0.163.0, <code>commandcode.cmd</code>,
+<code>opencode.exe</code>) rather than the bare names: PATH also holds extensionless node
+shims that cannot be launched directly, and a bare <code>codex</code> would find the
+desktop copy (0.162.x) with the broken Windows sandbox helper.</p>
+<h2 id="cross-cli-handoffs">Cross-CLI handoffs</h2>
+<p>Codex, OpenCode, and CommandCode load the same <code>agent_interop</code> MCP server from
+<code>tools/agent-interop/server.mjs</code>, with their own CLI name as its argument. The
+server exposes <code>agent_route_preview</code>, <code>agent_handoff_start</code>, and
+<code>agent_handoff_status</code>. Give it the target CLI, task, working directory,
+complexity (<code>auto</code>, <code>quick</code>, <code>standard</code>, or <code>deep</code>), and mode (<code>read</code> or <code>edit</code>).
+It selects the target model and reasoning effort through <code>agent-task.ps1</code>.
+Start returns a job ID; poll status for the result. This keeps nested CLI runs
+out of the parent turn&#39;s synchronous call.</p>
+<p>An edit handoff creates a detached Git worktree from <code>HEAD</code> and leaves it for
+the caller to inspect and integrate. Uncommitted and ignored files from the
+source checkout are absent. Read handoffs run in the supplied directory.
+OpenCode read handoffs use the <code>interop_read</code> agent, which permits only file
+reading, search, and LSP inspection; it denies shell, edits, subagents, and
+MCP tools even though normal OpenCode sessions retain their existing permissions.
+OpenCode edit handoffs use <code>interop_edit</code>, which allows worktree edits and
+commands while setting <code>external_directory</code>, subagent, and MCP permissions to
+deny. This is a CLI permission boundary, not an OS sandbox for shell commands.
+The bridge rejects same-CLI and recursive handoffs, runs at most two jobs per
+MCP server process, and ends a running job after 30 minutes. Closing the MCP
+server stops its active jobs; job IDs exist only for that server session. Its
+worktree is isolation from the source checkout, not an operating-system
+sandbox; review the result before integration. Direct <code>work</code> inside BlindPilot
+remains unsupported.</p>
+<p>Inner check: <code>npm test --prefix tools/agent-interop</code>. Gate: that check plus
+<code>sync-agent-instructions.ps1 -Check</code>, <code>codex mcp list</code>, <code>opencode mcp list</code>,
+and <code>cmd mcp list</code> from a new shell. Restart existing CLI sessions to load
+their new MCP settings.</p>
+<h2 id="tools-and-where-their-config-lives">Tools and where their config lives</h2>
+<div class="tw"><table><caption class="sr-only">Tools and where their config lives</caption><thead><tr><th scope="col">Tool</th>
+<th scope="col">Global instructions</th>
+<th scope="col">Settings</th>
+</tr></thead><tbody><tr><td>Codex</td>
+<td><code>~/.codex/AGENTS.md</code></td>
+<td><code>~/.codex/config.toml</code></td>
+</tr><tr><td>OpenCode</td>
+<td><code>~/.config/opencode/AGENTS.md</code></td>
+<td><code>~/.config/opencode/opencode.jsonc</code></td>
+</tr><tr><td>CommandCode</td>
+<td><code>~/.commandcode/AGENTS.md</code></td>
+<td><code>~/.commandcode/settings.json</code></td>
+</tr></tbody></table></div>
+<p>Project-level <code>AGENTS.md</code> files live in each repository and add to — never
+duplicate — the global policy.</p>
+<h2 id="scaffolding-a-project">Scaffolding a project</h2>
+<p>The global policy says to write the inner loop and the gate into the project&#39;s
+AGENTS.md so the next session does not rediscover the trap.
+<code>tools/init-project.ps1</code> does the mechanical half of that.</p>
+<pre><code class="language-powershell">tools/init-project.ps1 -Repo C:\path\to\repo
+tools/init-project.ps1 -Repo C:\path\to\repo -Check</code></pre>
+<p>It detects the ecosystem from the build manifest, treats a CI workflow as the
+authority for the gate, and writes an <code>AGENTS.md</code> in the house format
+(<code>## Inner loop</code> and <code>## Gate</code>). Commands it cannot verify are marked as
+proposed. It never overwrites an existing AGENTS.md without <code>-Force</code>.</p>
+<p><strong>PowerShell parsing trap.</strong> A bare <code>Has &#39;x&#39; -or Has &#39;y&#39;</code> is parsed as ONE call
+to <code>Has</code> with the arguments <code>(&#39;x&#39;, &#39;-or&#39;, &#39;Has&#39;, &#39;y&#39;)</code> - the operator is never
+applied. Every call in a condition must be wrapped in parentheses. This broke a
+real detection chain before it was caught.</p>
+<h2 id="one-command-to-route-a-task">One command to route a task</h2>
+<p>The canonical PowerShell profile exposes <code>work</code> as the short name for
+<code>agent-task</code>. From the repository, examples are:</p>
+<pre><code class="language-powershell">work 'Fix the broken focus return after Back'
+work 'Find the setting that controls focus return' -Preview
+work 'Review the release candidate' -Complexity deep -ReadOnly
+work 'Fix the small typo' -Agent commandcode -Complexity standard</code></pre>
+<p>The command announces the selected CLI backend, model, effort, and mode in one line.
+<code>-Preview</code> shows the full route (with an estimated cost) without contacting a
+model. Selection has two layers, both in <code>tools/agent-route.ps1</code>:</p>
+<ol>
+<li><strong>Capability tier</strong> — a text heuristic on the task string: short lookups and
+small text/label edits are <code>quick</code>; anything matching
+security/accessibility/migration/release/refactor/etc. is <code>deep</code>; the rest is
+<code>standard</code>.</li>
+<li><strong>Model within the tier</strong> — for Command Code, the <strong>cheapest eligible model</strong>
+is chosen from <code>tools/model-prices.json</code>, so a price change or a new deal is
+picked up without editing code. Candidates per tier are a capability
+shortlist (a human judgement); only the price ranking is automatic.</li>
+</ol>
+<p>Cost is blended over a typical request (~800 input, ~160 output, ~50K cache
+read), so <strong>cache-read price dominates</strong> — as it does in a real long session.
+DeepSeek&#39;s peak/off-peak window (Mon–Fri 01–04 &amp; 06–10 UTC) is applied when in
+effect, and plan-restricted models are filtered out (this account is Go-tier, so
+<code>gpt-6.1-sol</code>/<code>gpt-6-astra</code>/Claude/Gemini are skipped). Free models are included
+by default; <code>-NoFree</code> excludes them, <code>-Static</code> uses the hand-picked table, and a
+model whose upstream may train on your prompts is always excluded. Effort is
+derived per model from the catalog, because several cheap models accept no effort
+at all.</p>
+<p>Auto backend choice uses recent outcomes and backend health, so quick and read-only
+tasks do not always go to Command Code. The tier then selects a model for that
+backend. <code>-Preview</code> shows the current choice; <code>-WorkDir</code> selects another directory.</p>
+<p>Regenerate prices after a CLI upgrade or a pricing change (it reads the CLI&#39;s own
+bundled catalog, which matches the pricing page):</p>
+<pre><code class="language-powershell">~/Documents/Codex/tools/refresh-model-prices.ps1</code></pre>
+<p><strong>Fallback order.</strong> If the chosen agent fails with an infrastructure signature
+(usage/rate limit, plan restriction, auth, <code>403</code>/<code>MODEL_NOT_IN_PLAN</code>, unreachable,
+missing binary), the router first retries the same backend once on a free model
+(<code>tools/free-models.json</code>; disable with <code>-NoFreeFallback</code>), then re-runs the same
+task once with another CLI, using that backend&#39;s tier model (disable the
+cross-backend step with <code>-NoFallback</code>). If every step fails it throws and reports
+the log paths. An explicit <code>-Model</code>/<code>-Effort</code> applies only to the primary agent,
+never a fallback.</p>
+<p><strong>Usage and budget.</strong> Command Code credits are <strong>not readable headlessly</strong> — the
+docs say the plan cannot be read from disk and <code>/usage</code> is interactive-only. Read
+the live number with <code>/usage</code> in a session, or at <a href="https://commandcode.ai/usage">https://commandcode.ai/usage</a>.
+The router still reacts to usage: when a run hits the 5-hour limit, its reset
+time is recorded in <code>agent-usage.json</code> and <strong>paid Command Code models are withheld
+until it passes</strong> (a free model is selected, and the task reroutes to another
+backend only if no free model fits). Codex subscription usage is <strong>not</strong>
+readable headlessly either. <code>tools/agent-usage.ps1</code> prints all
+of this: Command Code/OpenCode cooldown state, OpenCode spend from its local
+DB (<code>-Json</code>), and <code>-ClearCooldown</code>. <code>-Refresh</code> is a no-op; live Command Code
+numbers come from <code>/usage</code> or the usage page.</p>
+<p><strong>Free-vs-paid rule.</strong> The <code>quick</code> tier takes the cheapest eligible model, which
+may be a free one; <code>standard</code> and <code>deep</code> take the cheapest eligible paid model.
+A free model is otherwise used only as a fallback when no paid model is available
+(the usage window has closed, the model is plan-restricted, or the run was
+rejected), and never from an upstream that may train on your prompts. The order is
+paid -&gt; free on the same backend -&gt; another backend. Regenerate the free list
+after a CLI upgrade with <code>tools/refresh-free-models.ps1</code> (writes
+<code>tools/free-models.json</code> from each CLI&#39;s own catalog).</p>
+<p>Normal Command Code edits open its interactive terminal. The MCP bridge uses
+<code>-Headless</code>, which runs Command Code with <code>--accept-edits -p</code>; commands still
+follow its permission rules and may be denied. Codex bridge tasks explicitly
+use <code>read-only</code> or <code>workspace-write</code> sandbox mode, while normal edits inherit
+the configured sandbox. Both CLIs can exit successfully after reporting that
+an attempted write failed, so verify the requested result and Git diff.</p>
+<p>The script is <code>~/Documents/Codex/tools/agent-task.ps1</code>. If the profile is not
+loaded yet, invoke that path directly. Use <code>reload</code> in an existing PowerShell
+window after a profile change. Backends are <code>codex</code>, <code>commandcode</code>, and
+<code>opencode</code> (<code>-Agent opencode</code> runs <code>opencode run</code>, paid model by default with the
+same free-model fallback).</p>
+<h2 id="agents-the-roster">Agents (the roster)</h2>
+<p>The static roster is <strong>scout</strong> (read-only research/locate), <strong>builder</strong> (sole
+writer), <strong>verifier</strong> (read-only review + checks), and <strong>debugger</strong> (root-cause a
+failure, then the smallest fix). <code>work</code> routes one CLI task; it does not launch a
+named roster agent. The main agent dispatches named roles separately when the
+task calls for them. The chain stops after verification, before a commit unless
+the user explicitly requested one.</p>
+<p>For a meaningful change, record the builder&#39;s <strong>actual backend and resolved
+model</strong>, including any fallback. Before dispatching the verifier, compare model
+families, not just CLI names, and pass those builder details to the verifier.
+A DeepSeek builder on OpenCode or Command Code can use the Codex Terra verifier;
+a Codex Sol builder can use the OpenCode DeepSeek verifier or Codex Terra. Check
+the actual verifier model after dispatch too. If a different family is
+unavailable, report that review gap rather than claiming cross-model review.</p>
+<p>An agent may <strong>call on another agent or CLI when the task required it</strong> — a
+read-only agent that needs a writer, a writer that needs independent
+verification, or a backend that has hit its usage limit or lacks a capability
+handing the task to Codex, CommandCode, or OpenCode, and the reverse. A hand-off
+stays in scope, states its reason, and never recurses past what the task needs.</p>
+<p><code>~/Documents/Codex/workflows/agents.toml</code> is the single source of truth. Render it
+to each CLI&#39;s native form:</p>
+<pre><code class="language-powershell">~/Documents/Codex/tools/sync-agents.ps1          # write ~/.codex/agents/*.toml + ~/.config/opencode/agents/*.md + ~/.commandcode/agents/*.md
+~/Documents/Codex/tools/sync-agents.ps1 -Check   # report drift, exit 2 if any</code></pre>
+<p>CommandCode loads subagents from <code>~/.commandcode/agents/</code> as Markdown files,
+reached through its built-in <code>agent</code> tool (which a headless <code>-p</code> turn keeps, so
+the BlindPilot Command Code tab can delegate to the roster). A read-only roster
+agent renders with <code>tools: read_file, read_directory, grep, glob, shell_command</code>
+and <code>disallowedTools: edit_file, write_file</code>: CommandCode has no per-command
+shell allow-list, so a write through <code>shell_command</code> is the residual risk.
+CommandCode also reads the roster section of the global <code>AGENTS.md</code>. Edit
+<code>agents.toml</code> and re-render — never hand-edit the rendered files.
+Codex custom agent files inherit the parent sandbox and approval settings;
+their read-only instructions do not create a read-only sandbox.</p>
+<h2 id="superpowers-in-the-routed-agents">Superpowers in the routed agents</h2>
+<p><code>agent-task</code> selects a CLI backend and model, then that agent follows its own skills
+and the shared <code>AGENTS.md</code>.</p>
+<p><strong>Installed and active in all three CLIs (as of 2026-10-19).</strong></p>
+<p>Superpowers 6.4.2 (obra/superpowers, MIT) lives in the canonical skill set, so
+<code>tools/sync-skills.ps1</code> pushes it to every CLI:</p>
+<pre><code>~/.agents/skills/                 &lt;- canonical, 86 skills (71 + 15 Superpowers)
+~/.codex/skills/                  &lt;- rendered
+~/.config/opencode/skills/        &lt;- rendered
+~/.commandcode/skills/            &lt;- rendered</code></pre>
+<p>The 15 skills: brainstorming, diagnosing-superpowers, dispatching-parallel-agents,
+executing-plans, finishing-a-development-branch, receiving-code-review,
+requesting-code-review, subagent-driven-development, systematic-debugging,
+test-driven-development, using-git-worktrees, using-superpowers,
+verification-before-completion, writing-plans, writing-skills.</p>
+<p><strong>Why the canonical set and not the Codex plugin.</strong> The plugin copy is still cached at
+<code>~/.codex/plugins/cache/openai-curated-remote/superpowers/6.4.2/</code>, but it is not
+registered in <code>config.toml</code> — no <code>[plugins.&quot;superpowers@openai-curated-remote&quot;]</code>
+block and no <code>[marketplaces.openai-curated-remote&quot;]</code> block — so it never loads.
+Putting the skills in <code>~/.agents/skills</code> instead reaches all three CLIs from one
+source, survives plugin-cache pruning, and needs no <code>config.toml</code> edit.</p>
+<p><strong>Command Code bootstrap.</strong> <code>~/.commandcode/hooks/superpowers-bootstrap.mjs</code> is
+registered as a <code>SessionStart</code> hook. It reads
+<code>~/.commandcode/skills/using-superpowers/SKILL.md</code>, strips the YAML frontmatter and
+injects the instructions as session context. It no-ops safely when the skill is
+missing, so it can stay registered unconditionally.</p>
+<h2 id="running-without-superpowers-or-rtk">Running without Superpowers or RTK</h2>
+<p>Neither is a dependency of the workflow engine. Grepping every script in
+<code>tools/*.ps1</code> returns <strong>zero</strong> references to <code>rtk</code> or <code>superpowers</code>.</p>
+<h3 id="what-keeps-working">What keeps working</h3>
+<p>Everything mechanical, because it is plain PowerShell plus the CLIs themselves:</p>
+<div class="tw"><table><caption class="sr-only">What keeps working</caption><thead><tr><th scope="col">Component</th>
+<th scope="col">Needs</th>
+<th scope="col">Without the optional tool</th>
+</tr></thead><tbody><tr><td>Nightly self-repair (10 steps, snapshot + rollback)</td>
+<td>PowerShell, the CLIs, git</td>
+<td>unchanged</td>
+</tr><tr><td>Router and <code>work</code> (<code>agent-task.ps1</code>, <code>agent-route.ps1</code>)</td>
+<td>PowerShell, model catalogs</td>
+<td>unchanged</td>
+</tr><tr><td>Agent roster (scout / builder / verifier / debugger)</td>
+<td><code>workflows/agents.toml</code> + <code>sync-agents.ps1</code></td>
+<td>unchanged</td>
+</tr><tr><td>Worktrees, release gate, guard hook, all sync scripts</td>
+<td>PowerShell, git</td>
+<td>unchanged</td>
+</tr><tr><td>Skill distribution (<code>sync-skills.ps1</code>)</td>
+<td><code>~/.agents/skills</code></td>
+<td>unchanged</td>
+</tr><tr><td>Memory and taste pipeline</td>
+<td>rollout summaries</td>
+<td>unchanged</td>
+</tr></tbody></table></div>
+<h3 id="what-degrades">What degrades</h3>
+<p><strong>Superpowers.</strong> The four task cues in the global <code>AGENTS.md</code> name Superpowers
+skills (<code>design:</code> → brainstorming, <code>fix:</code> → systematic-debugging, <code>execute:</code> →
+executing-plans / subagent-driven-development, <code>review:</code> → requesting-code-review /
+verification-before-completion). With the plugin absent those skills cannot load.</p>
+<p>The cues still work, because the workflow each one describes is written out in
+prose in the global <code>AGENTS.md</code>: reproduce before editing, rank hypotheses, fix the
+root cause, add a focused regression check, delegate with disjoint file ownership,
+separate code review from tests actually run. Quality drops from <em>guided</em> to
+<em>informed</em>, not to <em>broken</em>. Nothing in the repair engine notices.</p>
+<p>To drop Superpowers cleanly, remove the 15 skill folders from <code>~/.agents/skills/</code>
+and re-run <code>tools/sync-skills.ps1</code> (it prunes what is no longer canonical), then
+delete the &quot;Superpowers task cues&quot; section from the global <code>AGENTS.md</code> - otherwise
+it advertises four skills that cannot load. The Command Code bootstrap hook
+no-ops on its own when the skill is gone.</p>
+<p><strong>RTK.</strong> The global <code>AGENTS.md</code> says &quot;run commands through <code>rtk</code>&quot;. That is an
+instruction, not a dependency. The fallback clause was added on 2026-10-19:</p>
+<blockquote>
+<p>On this Windows setup, run commands through <code>rtk</code> <strong>when it is on PATH</strong>; if
+<code>rtk &lt;cmd&gt;</code> fails with &quot;program not found&quot;, run the command directly. Skip rtk
+for shell builtins (<code>echo</code>, <code>cd</code>, <code>set</code>) and for output a later step parses.</p>
+</blockquote>
+<p>So with rtk absent the agent has a written way to recover instead of guessing.</p>
+<h3 id="installing-on-a-new-machine">Installing on a new machine</h3>
+<p><code>tools/setup.ps1</code> does the whole thing in one command:</p>
+<pre><code class="language-powershell">cd ~/Documents/Codex/tools
+powershell -NoProfile -ExecutionPolicy Bypass -File ./setup.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File ./setup.ps1 -Check   # dry run</code></pre>
+<p>It installs, idempotently: the PowerShell profile loader, the global
+<code>AGENTS.md</code> from <code>workflow/AGENTS.template.md</code>, the starter taste, the agent
+roster, the skill set, the guard hook, the Command Code permission rules, the
+model catalogs, the nightly scheduled task, and finally the smoke checks.</p>
+<p><code>-Check</code> reports what it would do and writes nothing (every sync script is
+called with its own <code>-Check</code>). It exits 2 when anything is missing.</p>
+<p><strong>What setup.ps1 deliberately does not install:</strong></p>
+<ul>
+<li><strong>Audio (Claudio) hooks.</strong> A hook pointing at a missing binary fails on every
+lifecycle event, so audio stays an opt-in add-on. The installed <code>hooks.json</code>
+and <code>settings.json</code> contain <strong>zero</strong> Claudio references.</li>
+<li><strong>Anything needing administrator rights, a license, or credentials.</strong></li>
+<li><strong>Vendor agent tooling.</strong> The workflow is self-contained.</li>
+</ul>
+<p><strong>Portability rules for the scripts.</strong> No script may contain a hardcoded user
+path. Every path is derived from <code>$env:USERPROFILE</code>, <code>$PSScriptRoot</code>, or a
+parameter. <code>tools/verify.ps1</code> fails the run if a hardcoded path reappears, so
+the guarantee cannot rot.</p>
+<div class="tw"><table><caption class="sr-only">Installing on a new machine</caption><thead><tr><th scope="col">Script</th>
+<th scope="col">Derives its paths from</th>
+</tr></thead><tbody><tr><td><code>sync-agents.ps1</code></td>
+<td><code>$env:USERPROFILE</code></td>
+</tr><tr><td><code>sync-agent-instructions.ps1</code></td>
+<td><code>$env:USERPROFILE</code></td>
+</tr><tr><td><code>sync-skills.ps1</code>, <code>sync-taste.ps1</code></td>
+<td><code>$HOME</code> / <code>$PSScriptRoot</code></td>
+</tr><tr><td><code>profile.ps1</code></td>
+<td><code>$PSScriptRoot</code> (it is dot-sourced, so this is the tools dir)</td>
+</tr><tr><td><code>agent-task.ps1</code>, <code>new-worktree.ps1</code></td>
+<td><code>$PSScriptRoot</code> and its parent (the workspace root)</td>
+</tr><tr><td><code>self-repair.ps1</code></td>
+<td><code>$PSScriptRoot</code> and <code>$env:USERPROFILE</code></td>
+</tr></tbody></table></div>
+<p><strong>The distributable payload</strong> lives in <code>workflow/</code>:</p>
+<div class="tw"><table><caption class="sr-only">Installing on a new machine</caption><thead><tr><th scope="col">File</th>
+<th scope="col">Purpose</th>
+</tr></thead><tbody><tr><td><code>AGENTS.template.md</code></td>
+<td>The global policy, with the generated taste block removed. A frozen snapshot of the canonical file, refreshed with <code>setup.ps1 -RefreshTemplate</code>.</td>
+</tr><tr><td><code>taste-starter/taste.md</code></td>
+<td>The baseline preferences a new user starts with. Installed only when the user has no taste file yet.</td>
+</tr><tr><td><code>commandcode-settings.template.json</code></td>
+<td>The permission rules. No audio hooks. <code>__WORKSPACE__</code> is substituted at install time.</td>
+</tr><tr><td><code>commandcode-hooks/superpowers-bootstrap.mjs</code></td>
+<td>The Command Code SessionStart hook that injects the Superpowers entry point. Uses <code>homedir()</code>, so it is portable.</td>
+</tr></tbody></table></div>
+<p>Optional extras: install rtk (<code>cargo install rtk</code>), and copy the Superpowers
+skill folders into <code>~/.agents/skills/</code> then run <code>tools/sync-skills.ps1</code>.</p>
+<h2 id="one-canonical-instruction-file">One canonical instruction file</h2>
+<p>All three global <code>AGENTS.md</code> files are byte-identical. Edit the canonical one
+(<code>~/.codex/AGENTS.md</code>) and propagate:</p>
+<pre><code class="language-powershell">~/Documents/Codex/tools/sync-agent-instructions.ps1        # push canonical to the other two
+~/Documents/Codex/tools/sync-agent-instructions.ps1 -Check # report drift, exit 2 if any</code></pre>
+<p>Do not hand-edit two copies — that is how they diverged before.</p>
+<h2 id="rtk-rust-token-killer">RTK (Rust Token Killer)</h2>
+<p><code>rtk</code> (~/.cargo/bin/rtk.exe, v1.0.1) condenses command output to save tokens.
+It is an <strong>executable proxy</strong>, not a shell wrapper:</p>
+<ul>
+<li>Safe: <code>rtk git status</code>, <code>rtk cargo test</code>, <code>rtk npm run build</code> — real binaries.</li>
+<li><strong>Not</strong> safe for shell builtins (<code>echo</code>, <code>cd</code>, <code>set</code>, <code>dir</code> on some shells):
+they are not on PATH, so RTK fails with <code>[rtk: program not found]</code>.</li>
+<li><strong>Not</strong> safe when a later step parses the output: condensed text can be
+misread by a pipe, regex, or capture.</li>
+<li><code>rtk proxy &lt;cmd&gt;</code> runs one command unfiltered — but in v1.0.1 it does <strong>not</strong>
+rescue a builtin either: <code>rtk proxy echo hi</code> fails the same way as
+<code>rtk echo hi</code>, because the builtin still has to be resolved on PATH.
+<code>RTK_DISABLED=1</code> skips RTK.</li>
+</ul>
+<p>RTK is optional. See &quot;Running without Superpowers or RTK&quot; below.</p>
+<h2 id="approval-and-sandbox-reality">Approval and sandbox reality</h2>
+<p>The global policy asks for approval before commits, pushes, releases, and
+destructive actions. The runtimes do <strong>not fully</strong> enforce it:</p>
+<ul>
+<li>Codex: <code>approval_policy = &quot;never&quot;</code>, <code>sandbox_mode = &quot;danger-full-access&quot;</code>,
+network on (<code>~/.codex/config.toml</code>).</li>
+<li>CommandCode: <code>defaultMode = &quot;yolo&quot;</code> with the permission rules restored
+(2026-10-19). <code>~/.commandcode/settings.json</code> carries 33 <code>allow</code>, 33 <code>ask</code>
+and 9 <code>deny</code> entries again, plus <code>additionalDirectories</code> and the lifecycle
+hooks. The rules were briefly dropped entirely; they are back.
+<code>defaultMode</code> stays <code>&quot;yolo&quot;</code> on purpose: plain <code>git</code> is not in the allow
+list, so under <code>&quot;default&quot;</code> every git command would ask. Explicit ask and deny
+rules survive yolo/bypass mode, so the protections still bite.</li>
+<li>OpenCode v1: global <code>permission</code> allows every tool, including Bash and
+<code>external_directory</code>. Read-only roster agents keep <code>edit: deny</code> but no longer
+add a Bash <code>ask</code> rule, so only the edit block can stop them.</li>
+</ul>
+<p>The deny rules cover only those matching commands; the rest of the policy is
+required agent behavior. State plainly when approval was assumed.</p>
+<h2 id="feedback-loop-the-rule-that-bit-us">Feedback loop (the rule that bit us)</h2>
+<p>Keep two speeds: a fast inner loop (one config, filtered to the change) and the
+full gate, run once before done and in CI — never as the inner loop. Full detail
+is the <code>## Feedback loop</code> section of the global <code>AGENTS.md</code>.</p>
+<h2 id="configtoml-is-app-managed">config.toml is app-managed</h2>
+<p>Codex rewrites <code>~/.codex/config.toml</code>. Hand edits (e.g. pruning stale
+<code>[projects.*]</code> trust entries) are safe only while Codex is closed, and may be
+rewritten on next launch. Back it up first:
+<code>config.toml.trustclean-&lt;timestamp&gt;</code> holds the last pre-clean copy.</p>
+<h2 id="taste-learned-preferences">Taste (learned preferences)</h2>
+<p>Command Code learns preferences into <code>.commandcode/taste/</code> -- global at
+<code>~/.commandcode/taste/</code>, per project at <code>&lt;project&gt;/.commandcode/taste/</code>. No other agent
+reads that location, so <code>tools/sync-taste.ps1</code> renders it into a generated, delimited
+<code>TASTE:BEGIN</code>/<code>TASTE:END</code> block and injects it where each agent looks:</p>
+<ul>
+<li>global: <code>~/.codex/AGENTS.md</code> (canonical; <code>sync-agent-instructions.ps1</code> then copies it to
+<code>~/.config/opencode/AGENTS.md</code> and <code>~/.commandcode/AGENTS.md</code>), <code>~/.claude/CLAUDE.md</code>,
+<code>~/.gemini/GEMINI.md</code>.</li>
+<li>per project: <code>&lt;project&gt;/AGENTS.md</code>, run with <code>-Project &lt;dir&gt;</code>.</li>
+</ul>
+<p>The block is generated -- edit the taste files (or let Command Code learn), never the block.
+Re-running is idempotent; <code>-Check</code> reports drift and exits 2.</p>
+<pre><code class="language-powershell">~/Documents/Codex/tools/sync-taste.ps1                   # global -&gt; all agents
+~/Documents/Codex/tools/sync-taste.ps1 -Check
+~/Documents/Codex/tools/sync-taste.ps1 -Project &lt;dir&gt;    # one project</code></pre>
+<p>The shell profile runs the global sync at most once a day and exposes <code>taste-sync</code> on demand.</p>
+<h2 id="blindpilot-the-screen-reader-gui-front-end">BlindPilot (the screen-reader GUI front-end)</h2>
+<p>BlindPilot (<code>serrebidev/BlindPilot</code>) is not another CLI to route to — it is a wxPython window
+over the same CLIs, one per tab, in Bypass permissions mode. It drives Command Code as
+<code>command-code -p --output-format json …</code> with <strong>one process per turn</strong>, resumed by session id.</p>
+<p><strong>The boundary that bit us.</strong> <code>work</code>/<code>agent-task</code> is a <em>terminal launcher that starts another
+CLI</em>. Inside a BlindPilot turn it nests CLIs; even a headless nested turn can outlive
+BlindPilot&#39;s one-shot process. Dev servers are long-running by design.
+Any of those leaves the turn&#39;s one-shot <code>-p</code> process without a final <code>result</code> frame, so
+BlindPilot&#39;s worker kills it and says <strong>&quot;Command Code stopped before the turn completed (exit
+code 1).&quot;</strong> — that string is BlindPilot&#39;s (<code>commandcode_worker.py::_finish()</code>), meaning the
+process exited with a code outside its documented set and no <code>result</code> arrived; the real cause is
+in the stderr tail it appends after it.</p>
+<p>So: <strong>never run <code>work</code>/<code>agent-task</code> or a dev server/watcher inside a BlindPilot turn.</strong>
+Run those from a normal PowerShell window. BlindPilot and <code>work</code> are two entry points that
+replace each other, they do not compose.</p>
+<p><strong>Per-project model/effort without the router.</strong> BlindPilot&#39;s <em>Profiles</em> are Chat-mode only
+(&quot;Chat mode starts on this profile&quot;; the Chat menu works only when the Mode box is Chat) — there
+is no per-project agent profile. A tab carries its own Backend + Model/Effort + Permission Mode.
+For any tier, set the tab&#39;s Backend, Model, and Effort from the current
+<code>work &#39;&lt;task&gt;&#39; -Preview</code> route.</p>
+<p>Read the route with <code>work &#39;&lt;task&gt;&#39; -Preview</code> — it prints backend, model and effort
+without contacting a model — then set the tab from it (Ctrl+Shift+E). A direct
+Command Code tab currently defaults to <code>poolside/laguna-s-2.1-free</code> from
+<code>~/.commandcode/config.json</code>; no reasoning effort is pinned for that model.
+BlindPilot&#39;s picker reads the <code>model</code> and <code>reasoningEffort</code> keys. Backups:
+<code>config.json.bak-&lt;timestamp&gt;</code>.</p>
+<p><strong>Permissions under bypass.</strong> A Bypass/headless run <em>stops</em> the moment a <code>permissions.ask</code> rule
+matches (measured: <code>stopReason: permission_denied</code>, exit 0 - a partial answer, not a crash), so
+ask rules are what end an unattended turn early.</p>
+<p>The rule set is restored (2026-10-19): 33 <code>allow</code>, 33 <code>ask</code>, 9 <code>deny</code> entries.</p>
+<ul>
+<li><strong><code>deny</code> (9 entries)</strong> - the destructive git operations only, each in plain, <code>rtk</code> and
+<code>rtk proxy</code> form: <code>git push --force</code>, <code>git reset --hard</code>, <code>git clean</code>.</li>
+<li><strong><code>ask</code> (33 entries)</strong> - the VCS history and remote group (<code>git push</code>, <code>merge</code>, <code>rebase</code>,
+<code>branch -D</code>, <code>remote add|remove|set-url</code>, <code>gh pr create</code>, each in three forms) plus the
+system/admin ops (<code>setx</code>, <code>reg add</code>, <code>reg delete</code>, <code>netsh</code>, <code>bcdedit</code>, <code>sc config</code>,
+<code>dism</code>, <code>Set-ExecutionPolicy</code>, <code>winget --scope machine</code>, <code>choco install</code>, <code>choco upgrade</code>).
+An earlier version of this file called the system ops <code>deny</code>; they are <code>ask</code>.</li>
+</ul>
+<p>So an unattended turn stops on a push or a system-op instead of performing it, and the
+destructive git operations are refused outright.</p>
+<p>USEFUL LATER: the bare <code>&quot;powershell&quot;</code> allow grants the whole PowerShell tool with no argument
+constraint, so it can carry a denied op (<code>powershell -Command &quot;Set-ExecutionPolicy …&quot;</code>) past the
+deny rules. It is load-bearing for this workflow (adb, <code>$</code>-heavy commands, file edits), so it was
+left alone; tighten it only after a decision on which PowerShell verbs must stay reachable.</p>
+
+<p class="nextlink">Generated from the Markdown source. Edit the <code>.md</code> file and re-run the converter.</p>
+</article>
+</main>
+</div>
+<div id="sr-status" class="sr-only" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  var root=document.documentElement;
+  var status=document.getElementById('sr-status');
+  function say(msg){ if(status){ status.textContent=''; setTimeout(function(){ status.textContent=msg; },40); } }
+
+  /* ---- theme: auto -> light -> dark ---- */
+  var MODES=['auto','light','dark'];
+  var btn=document.getElementById('theme');
+  function current(){ return localStorage.getItem('doc-theme')||'auto'; }
+  function apply(m){
+    if(m==='auto'){ root.removeAttribute('data-theme'); }
+    else { root.setAttribute('data-theme',m); }
+    localStorage.setItem('doc-theme',m);
+    if(btn){
+      btn.textContent='Theme: '+m;
+      btn.setAttribute('aria-label','Colour theme: '+m+'. Activate to change.');
+    }
+  }
+  apply(current());
+  if(btn){
+    btn.addEventListener('click',function(){
+      var next=MODES[(MODES.indexOf(current())+1)%MODES.length];
+      apply(next);
+      say('Colour theme set to '+next);
+    });
+  }
+
+  /* ---- copy buttons ---- */
+  document.querySelectorAll('pre').forEach(function(pre){
+    if(pre.getAttribute('role')==='img') return;
+    var b=document.createElement('button');
+    b.className='copy'; b.type='button'; b.textContent='copy';
+    b.setAttribute('aria-label','Copy code block to clipboard');
+    b.addEventListener('click',function(){
+      var code=pre.querySelector('code');
+      var text=code?code.innerText:pre.innerText;
+      var done=function(){ b.textContent='copied'; b.classList.add('done'); say('Code copied to clipboard');
+        setTimeout(function(){ b.textContent='copy'; b.classList.remove('done'); },1800); };
+      if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done).catch(function(){}); }
+      else { say('Copy failed: clipboard unavailable'); }
+    });
+    pre.appendChild(b);
+  });
+
+  /* ---- scrollable tables become focusable regions only when they overflow ---- */
+  function markOverflow(){
+    document.querySelectorAll('.tw').forEach(function(w){
+      if(w.scrollWidth>w.clientWidth+2){
+        w.setAttribute('tabindex','0');
+        w.setAttribute('role','region');
+        if(!w.getAttribute('aria-label')) w.setAttribute('aria-label','Scrollable table');
+      } else {
+        w.removeAttribute('tabindex'); w.removeAttribute('role');
+      }
+    });
+  }
+  markOverflow();
+  window.addEventListener('resize',markOverflow);
+
+  /* ---- toc: collapsible on narrow screens, open on wide ---- */
+  var box=document.getElementById('tocbox');
+  function sizeToc(){ if(box) box.open = window.innerWidth>=920; }
+  sizeToc(); window.addEventListener('resize',sizeToc);
+
+  /* ---- scroll spy ---- */
+  var links={};
+  document.querySelectorAll('nav.toc a').forEach(function(a){ links[a.getAttribute('href').slice(1)]=a; });
+  var heads=Array.prototype.slice.call(document.querySelectorAll('main h2[id],main h3[id]'));
+  if(heads.length && 'IntersectionObserver' in window){
+    var visible={};
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ visible[e.target.id]=e.isIntersecting; });
+      var active=null;
+      for(var i=0;i<heads.length;i++){ if(visible[heads[i].id]){ active=heads[i].id; break; } }
+      if(!active){
+        for(var j=heads.length-1;j>=0;j--){
+          if(heads[j].getBoundingClientRect().top<130){ active=heads[j].id; break; }
+        }
+      }
+      Object.keys(links).forEach(function(k){ links[k].classList.remove('active'); });
+      if(active&&links[active]) links[active].classList.add('active');
+    },{rootMargin:'0px 0px -70% 0px',threshold:0});
+    heads.forEach(function(h){ io.observe(h); });
+  }
+})();
+</script>
+</body>
+</html>

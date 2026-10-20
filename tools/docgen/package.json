@@ -1,0 +1,14 @@
+{
+  "name": "workflow-docgen",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Generates the HTML documentation set from the Markdown sources in Documents/Codex.",
+  "scripts": {
+    "build": "node convert-docs.mjs",
+    "verify": "node verify-html.mjs"
+  },
+  "dependencies": {
+    "marked": "^18.1.1"
+  }
+}

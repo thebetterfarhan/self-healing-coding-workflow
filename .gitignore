@@ -1,0 +1,64 @@
+# This workspace holds two different things:
+#   - the workflow configuration (tracked here): the policy, the docs, the
+#     canonical config in workflows/, the install payload in workflow/, and the
+#     scripts in tools/ that make it work.
+#   - the projects it works on (ignored): each one keeps its own history.
+
+# --- project repositories, worktrees and archives ---------------------------
+/2026-09-13/
+/2026-09-22/
+/2026-10-11/
+/Accessible-IPTV-Client/
+/NuvioTV/
+/NuvioTV-worktrees/
+/backtalk/
+/beluga/
+/BlindPilot/
+/gitdock/
+/kde-connect-a11y/
+/kodi-accessibility/
+/kodi-core/
+/kodi-screenreader/
+/localsend/
+/newsback/
+/tv-launcher/
+/.worktrees/
+/.codegraph/
+/.git-config-backups/
+/backups/
+/gradle-8.9/
+*.zip
+
+# --- the workflow editor is its own project with its own remote -------------
+/tools/workflow-config-editor/
+
+# --- build output and caches ------------------------------------------------
+**/node_modules/
+**/__pycache__/
+**/.ruff_cache/
+**/.pytest_cache/
+**/build/
+**/dist/
+*.pyc
+
+# --- nightly state, logs and generated catalogs -----------------------------
+/tools/.commandcode/
+/tools/self-repair-backups/
+/tools/*.log
+/tools/*.bak-*
+/tools/agent-backend-health.json
+/tools/agent-usage.json
+/tools/agent-tier-outcomes.jsonl
+/tools/agent-route-feedback.jsonl
+/tools/agent-tier-thresholds.json
+/tools/free-models.json
+/tools/model-prices.json
+/tools/taste-candidates.md
+
+# --- old workflow snapshots -------------------------------------------------
+/workflows/*.bak-*
+/workflows/workflow-2026*.md
+/workflows/workflow-2026*.toml
+
+# --- broken copies kept by the config repair --------------------------------
+*.broken-*

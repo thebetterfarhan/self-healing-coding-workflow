@@ -1,0 +1,24 @@
+[workflow]
+task_scope = "tight"
+
+[continuation]
+max_turns = 5
+
+[dependencies]
+warnings = "fix-on-sight"
+
+[agents]
+roster = ["scout", "builder", "verifier", "debugger"]
+source = "workflows/agents.toml"
+renderer = "tools/sync-agents.ps1"
+select_by = "task-complexity"   # quick / standard / deep, cheapest eligible model per tier
+dispatch = "main"               # the main agent dispatches
+cross_call = "on-requirement"   # an agent may call another agent or CLI when the task needs it
+stop_before = "commit"          # autonomous up to a commit, then stop
+
+[models]
+selection = "paid-first"   # tier -> cheapest eligible paid model
+fallback = ["paid", "free-same-backend", "other-backend"]
+free_list = "tools/free-models.json"
+refresher = "tools/refresh-free-models.ps1"
+

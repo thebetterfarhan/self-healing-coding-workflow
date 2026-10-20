@@ -1,0 +1,74 @@
+workflow-kit manifest
+built:      2026-10-20 13:55:19
+source:     (not recorded - the bundle is machine independent)
+files:      60
+skills:     
+policy sha: vpXS5JBgB9yq/ZocV9hdLjBbeDS7/xeVHo7Y63/kAW8=
+
+contents:
+  .gitignore
+  AGENTS-compat.md
+  html\agents-compat.html
+  html\agent-setup.html
+  html\dev-setup.html
+  html\index.html
+  html\self-healing-workflow.html
+  html\start-here.html
+  html\workflow-usage.html
+  LICENSE
+  SELF-HEALING-WORKFLOW.md
+  START-HERE.md
+  tools\agent-interop\package.json
+  tools\agent-interop\package-lock.json
+  tools\agent-interop\server.mjs
+  tools\agent-route.ps1
+  tools\AGENT-SETUP.md
+  tools\agent-task.ps1
+  tools\agent-usage.ps1
+  tools\auto-next.py
+  tools\config_check.py
+  tools\credit-check.ps1
+  tools\DEV-SETUP.md
+  tools\dev-setup.ps1
+  tools\docgen\convert-docs.mjs
+  tools\docgen\package.json
+  tools\docgen\package-lock.json
+  tools\docgen\verify-html.mjs
+  tools\free-models.json
+  tools\guard-hook.ps1
+  tools\init-project.ps1
+  tools\memory-consolidate.ps1
+  tools\memory-curate.ps1
+  tools\model-prices.json
+  tools\new-worktree.ps1
+  tools\package.ps1
+  tools\profile.ps1
+  tools\refresh-free-models.ps1
+  tools\refresh-model-prices.ps1
+  tools\release-gate.ps1
+  tools\repair-config.ps1
+  tools\self-repair.ps1
+  tools\setup.ps1
+  tools\status.ps1
+  tools\sync-agent-instructions.ps1
+  tools\sync-agents.ps1
+  tools\sync-skills.ps1
+  tools\sync-taste.ps1
+  tools\taste-promote.ps1
+  tools\test_auto_next.py
+  tools\tier-adapt.ps1
+  tools\verify.ps1
+  workflow\AGENTS.template.md
+  workflow\commandcode-hooks\superpowers-bootstrap.mjs
+  workflow\commandcode-settings.template.json
+  workflow\taste-starter\taste.md
+  workflows\agents.toml
+  workflows\workflow.md
+  workflows\workflow.toml
+  WORKFLOW-USAGE.md
+  README.md
+  (no skills - the public release ships without them)
+
+excluded by design: .worktrees\, project repositories, *.bak*,
+  self-repair-backups\, *.log, live state json, docgen\node_modules,
+  the workspace AGENTS.md and HANDOVER (setup.ps1 generates those)

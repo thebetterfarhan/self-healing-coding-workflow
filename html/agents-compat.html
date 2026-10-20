@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>AGENTS-compat.md</title>
+<meta name="generator" content="marked 18.1.1">
+<style>
+:root{
+  --bg:#ffffff; --bg-soft:#f6f7f9; --bg-code:#f2f3f5; --fg:#1a1d21; --fg-dim:#5b6470;
+  --fg-faint:#7b838d; --accent:#0b5fbf; --accent-soft:#e8f0fc; --border:#dfe3e8;
+  --mark:#fff3c4; --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.06);
+  --code:#24292f; --focus:#0b5fbf;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#111418; --bg-soft:#171b21; --bg-code:#1b2027; --fg:#dfe3e8; --fg-dim:#a5aeba;
+    --fg-faint:#7c8794; --accent:#79bcff; --accent-soft:#16273d; --border:#2b323b;
+    --mark:#4a3f14; --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.35);
+    --code:#e6edf3; --focus:#8ec5ff;
+  }
+}
+html[data-theme=light]{ color-scheme:light; }
+html[data-theme=dark]{
+  color-scheme:dark;
+  --bg:#111418; --bg-soft:#171b21; --bg-code:#1b2027; --fg:#dfe3e8; --fg-dim:#a5aeba;
+  --fg-faint:#7c8794; --accent:#79bcff; --accent-soft:#16273d; --border:#2b323b;
+  --mark:#4a3f14; --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.35);
+  --code:#e6edf3; --focus:#8ec5ff;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{animation-duration:.01ms!important; transition-duration:.01ms!important}
+}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font:17px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent); text-decoration:underline; text-underline-offset:2px}
+a:hover{text-decoration-thickness:2px}
+code,pre,kbd,samp{font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace}
+
+/* ---- focus: always visible, never removed ---- */
+:focus-visible{outline:3px solid var(--focus); outline-offset:2px; border-radius:4px}
+.skip{
+  position:absolute; left:12px; top:-100px; z-index:200;
+  background:var(--accent); color:#fff; padding:12px 20px; border-radius:0 0 10px 10px;
+  font-weight:650; text-decoration:none; transition:top .15s;
+}
+.skip:focus{top:0}
+
+/* ---- landmarks ---- */
+.topbar{
+  position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:14px;
+  padding:10px 20px; background:var(--bg); border-bottom:1px solid var(--border);
+}
+.topbar .brand{font-weight:650; letter-spacing:-.01em; font-size:15px; color:var(--fg)}
+.topbar .spacer{flex:1}
+.btn{
+  border:1px solid var(--border); background:var(--bg-soft); color:var(--fg-dim);
+  border-radius:8px; padding:6px 12px; font-size:13px; cursor:pointer; font-family:inherit;
+}
+.btn:hover{color:var(--fg); border-color:var(--fg-faint)}
+.wrap{display:grid; grid-template-columns:300px minmax(0,1fr); gap:44px; max-width:1400px; margin:0 auto; padding:0 24px}
+.tocbox{position:sticky; top:56px; align-self:start; max-height:calc(100vh - 76px); display:flex; flex-direction:column}
+.tocbox > summary{
+  cursor:pointer; padding:12px 4px; font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--fg-faint); font-weight:650; list-style:none;
+}
+.tocbox > summary::-webkit-details-marker{display:none}
+.tocbox > summary::before{content:"\25B8 "}
+.tocbox[open] > summary::before{content:"\25BE "}
+nav.toc{
+  overflow-y:auto; padding:0 4px 40px 0; font-size:13.5px; line-height:1.5;
+  border-left:1px solid var(--border); padding-left:0;
+}
+nav.toc ol{list-style:none; margin:0; padding:0}
+nav.toc li{margin:0}
+nav.toc a{
+  display:block; padding:5px 10px 5px 12px; color:var(--fg-dim);
+  border-left:3px solid transparent; margin-left:-1px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+nav.toc a:hover{color:var(--fg); text-decoration:none; background:var(--bg-soft)}
+nav.toc a.active{color:var(--accent); border-left-color:var(--accent); font-weight:600}
+nav.toc .d2{padding-left:26px; font-size:12.8px}
+nav.toc .d3{padding-left:42px; font-size:12.4px; color:var(--fg-faint)}
+nav.toc .d4{padding-left:58px; font-size:12px; color:var(--fg-faint)}
+main{padding:34px 0 100px; min-width:0}
+main > article{max-width:920px}
+
+/* ---- content ---- */
+h1,h2,h3,h4{line-height:1.25; letter-spacing:-.015em; scroll-margin-top:72px}
+h1{font-size:2.1rem; margin:0 0 .5em; padding-bottom:.35em; border-bottom:1px solid var(--border)}
+h2{font-size:1.45rem; margin:2.3em 0 .7em; padding-bottom:.25em; border-bottom:1px solid var(--border)}
+h3{font-size:1.15rem; margin:1.8em 0 .55em}
+h4{font-size:1.02rem; margin:1.5em 0 .5em; color:var(--fg-dim)}
+p{margin:0 0 1.1em}
+ul,ol{margin:0 0 1.1em; padding-left:1.5em}
+li{margin:.3em 0}
+li > ul,li > ol{margin:.3em 0}
+hr{border:0; border-top:1px solid var(--border); margin:2.6em 0}
+blockquote{
+  margin:1.2em 0; padding:.8em 1.15em; border-left:4px solid var(--accent);
+  background:var(--accent-soft); border-radius:0 8px 8px 0;
+}
+blockquote > :last-child{margin-bottom:0}
+.tw{overflow-x:auto; margin:1.3em 0; border:1px solid var(--border); border-radius:10px}
+.tw:focus-visible{outline-offset:-1px}
+table{border-collapse:collapse; width:100%; font-size:.93em; background:var(--bg)}
+caption{caption-side:top; text-align:left; padding:10px 12px; color:var(--fg-dim); font-size:.9em}
+th,td{border-bottom:1px solid var(--border); border-right:1px solid var(--border); padding:9px 12px; text-align:left; vertical-align:top}
+th{background:var(--bg-soft); font-weight:650; white-space:nowrap}
+tr:last-child td{border-bottom:0}
+th:last-child,td:last-child{border-right:0}
+tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--bg-soft) 55%,transparent)}
+img{max-width:100%}
+mark{background:var(--mark); color:inherit; padding:0 .15em; border-radius:3px}
+:not(pre) > code{
+  background:var(--bg-code); padding:.16em .38em; border-radius:5px; font-size:.875em;
+  border:1px solid var(--border); word-break:break-word;
+}
+pre{
+  background:var(--bg-code); border:1px solid var(--border); border-radius:10px;
+  padding:14px 16px; overflow-x:auto; margin:1.25em 0; position:relative; line-height:1.55;
+}
+pre code{background:none; border:0; padding:0; font-size:.845em; color:var(--code)}
+pre[role=img]{white-space:pre}
+.copy{
+  position:absolute; top:8px; right:8px; opacity:.6; transition:opacity .15s;
+  border:1px solid var(--border); background:var(--bg); color:var(--fg-dim);
+  border-radius:6px; padding:4px 10px; font-size:12px; cursor:pointer; font-family:inherit;
+}
+pre:hover .copy,.copy:focus-visible{opacity:1}
+.copy.done{color:#1a7f37; border-color:#1a7f37; opacity:1}
+.subtitle{color:var(--fg-dim); font-size:1.04rem; margin:0 0 2em}
+.meta{color:var(--fg-faint); font-size:13px; margin:0 0 2.4em; padding-bottom:1.2em; border-bottom:1px solid var(--border)}
+.nextlink{margin-top:3.5em; padding-top:1.2em; border-top:1px solid var(--border); font-size:.94rem}
+.sr-only{
+  position:absolute!important; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+/* ---- print ---- */
+@media print{
+  .topbar,nav.toc,.tocbox > summary,.copy,.skip{display:none!important}
+  .wrap{display:block; padding:0}
+  main{padding:0}
+  body{font-size:11pt; background:#fff; color:#000}
+  h2,h3{page-break-after:avoid}
+  pre,.tw,table,blockquote{page-break-inside:avoid}
+  a{color:inherit}
+}
+@media (max-width:920px){
+  .wrap{grid-template-columns:1fr; gap:0; padding:0 18px}
+  .tocbox{position:static; max-height:none}
+  main{padding-top:22px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Skip to main content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">&#8592; Documentation index</a>
+  <span class="spacer"></span>
+  <button class="btn" id="theme" type="button">Theme: auto</button>
+</header>
+<div class="wrap">
+<details class="tocbox" id="tocbox" open>
+  <summary>Contents</summary>
+  <nav class="toc" aria-label="Contents">
+<ol>
+<li class="d2"><a href="#risk-triggered-review-checklist">Risk-triggered review checklist</a></li>
+<li class="d2"><a href="#legacy-compatibility-failure">Legacy / compatibility failure</a></li>
+<li class="d2"><a href="#compatibility-baseline">Compatibility baseline</a></li>
+<li class="d2"><a href="#compatibility-first-procedure">Compatibility-first procedure</a></li>
+<li class="d2"><a href="#repair-versus-modernization">Repair versus modernization</a></li>
+<li class="d2"><a href="#dependencies-and-old-libraries">Dependencies and old libraries</a></li>
+<li class="d2"><a href="#generated-vendored-and-native-code">Generated, vendored, and native code</a></li>
+<li class="d2"><a href="#accessibility-and-security-during-compatibility-work">Accessibility and security during compatibility work</a></li>
+</ol>
+  </nav>
+</details>
+<main id="content" tabindex="-1" aria-label="AGENTS-compat.md">
+<article>
+<h1 id="doc-title">AGENTS-compat.md</h1>
+
+<p class="meta">Source <code>AGENTS-compat.md</code> &middot; 7,478 bytes &middot; updated 2026-09-25</p>
+<p>Appendix to <code>AGENTS.md</code>: the full risk-review checklist and the legacy, compatibility, and dependency procedure. Read it before compatibility work or a broad review. Every restriction in <code>AGENTS.md</code> still applies.</p>
+<h2 id="risk-triggered-review-checklist">Risk-triggered review checklist</h2>
+<p>Add only the reviews the change actually triggers — normal work does not require every check.</p>
+<ul>
+<li><strong>UI, navigation, focus, input:</strong> interaction, accessibility, regression behavior.</li>
+<li><strong>Accessibility:</strong> authoritative research, semantics, focus/navigation, announcements, real assistive-technology behavior.</li>
+<li><strong>API, networking:</strong> contracts, callers, errors, cancellation, timeouts, integration, external assumptions, security.</li>
+<li><strong>State, persistence, database:</strong> ownership, restoration, partial failure, migrations, compatibility, user data, privacy, security.</li>
+<li><strong>Async, threading, concurrency:</strong> ownership, cancellation, races, deadlocks, stale results, lifecycle, responsiveness.</li>
+<li><strong>Resource management:</strong> allocation, lifetime, cleanup, leaks, unbounded growth, background activity.</li>
+<li><strong>Performance:</strong> measurements, user-visible latency, CPU, memory, I/O, blocking, accessibility responsiveness.</li>
+<li><strong>Dependencies:</strong> necessity, provenance, supply-chain risk, compatibility, licensing, build impact.</li>
+<li><strong>Build configuration:</strong> environment, toolchain, reproducibility, variants, packaging, release implications.</li>
+<li><strong>Security-sensitive behavior:</strong> authentication, authorization, secrets, permissions, storage, network boundaries, logging, user data.</li>
+<li><strong>Release work:</strong> release build, tests, static analysis, packaging, signing, versioning, permissions, dependencies, accessibility, security/privacy, exposure, documentation.</li>
+</ul>
+<h2 id="legacy-compatibility-failure">Legacy / compatibility failure</h2>
+<p>Trigger when an old project will not build or run, dependencies no longer resolve, SDK or toolchain versions conflict, APIs were removed or deprecated, native binaries are incompatible, or upgrading one component breaks another. Desired order:</p>
+<p>REPRODUCE CURRENT FAILURE -&gt; IDENTIFY COMPATIBILITY BOUNDARY -&gt; RESTORE OR ESTABLISH BASELINE -&gt; MINIMUM NECESSARY CHANGE -&gt; BUILD AND TEST -&gt; MODERNIZE FURTHER ONLY WHEN NEEDED</p>
+<h2 id="compatibility-baseline">Compatibility baseline</h2>
+<p>Do not assume an old project should be upgraded immediately. Before changing dependencies, SDKs, compilers, runtimes, build tools, package managers, or language versions, establish the compatibility baseline: language, runtime, and compiler versions; SDK, platform, build-tool, and package-manager versions; direct and transitive dependencies and lockfiles; target OS and API levels; CPU architectures and ABIs; deprecated or removed APIs; generated code and tooling; native libraries; external services or APIs; known project constraints; the last known working environment.</p>
+<p>Distinguish a source-code defect from environment or toolchain problems, dependency incompatibility, platform or API incompatibility, abandoned dependencies, native binary incompatibility, and machine-specific configuration. Do not modify application code merely to hide an environment failure.</p>
+<h2 id="compatibility-first-procedure">Compatibility-first procedure</h2>
+<p>When a project fails to build or run:</p>
+<ol>
+<li>Inspect declared versions, lockfiles, project instructions, and known-good records.</li>
+<li>Reproduce the failure before upgrading components when practical.</li>
+<li>Identify the smallest incompatible component or version boundary.</li>
+<li>Research current official compatibility, release, breaking-change, and migration documentation.</li>
+<li>Prefer restoring a safe, reproducible compatible environment before changing source.</li>
+<li>Upgrade only what is necessary.</li>
+<li>Change one compatibility layer at a time when practical.</li>
+<li>Update tightly coupled components as the minimum required compatible set.</li>
+<li>Build and run targeted tests after each meaningful change.</li>
+<li>Record durable compatibility decisions and remaining limits.</li>
+</ol>
+<p>Do not broadly upgrade because newer versions exist — newer is not automatically more compatible. Do not assume semantic versioning guarantees compatibility. Do not downgrade a security-sensitive dependency to make a build pass without evaluating and reporting the risk.</p>
+<h2 id="repair-versus-modernization">Repair versus modernization</h2>
+<p>Decide the objective first: build as-is, repair, modernize, port, or replace a dead dependency. Unless modernization is requested or unavoidable, restore the project with the smallest reasonable compatibility changes and preserve behavior. Do not change architecture, language version, build system, SDK, major dependencies, and persisted-data formats at once unless inseparable — broad simultaneous upgrades obscure the first failing boundary. Modernization is separate work, not a side effect of making something build; when needed, stage it: restore a baseline, remove blockers, update the toolchain, update dependencies in controlled groups, migrate removed APIs, validate behavior, run accessibility regressions, review security/privacy, update docs.</p>
+<h2 id="dependencies-and-old-libraries">Dependencies and old libraries</h2>
+<p>Before replacing a dependency, determine why it fails and how the project uses it: runtime, compiler, SDK, build tool, coordinates, transitive dependencies, architecture, native binaries, artifact availability, TLS or certificate changes, removed APIs, OS compatibility, abandonment. Inspect dependency trees and resolution output when useful. Prefer documented migration paths. Do not swap a library for a superficially similar one without checking API, behavior, data, accessibility, licensing, and security differences.</p>
+<p>Classify version changes as patch, minor, major, toolchain, or platform; the last three need broader validation. Reason about versions as one compatibility set — LANGUAGE &lt;-&gt; COMPILER &lt;-&gt; RUNTIME &lt;-&gt; BUILD TOOL &lt;-&gt; SDK &lt;-&gt; FRAMEWORK &lt;-&gt; LIBRARIES &lt;-&gt; OS &lt;-&gt; ARCHITECTURE — and prefer a known-compatible set over the newest version of every component.</p>
+<h2 id="generated-vendored-and-native-code">Generated, vendored, and native code</h2>
+<p>Determine whether problematic code is project source, generated, vendored, third-party, or compiled output. Fix the generator rather than the generated output where appropriate; do not modify vendored dependencies unless that is intentionally safest. For native components, verify CPU architecture, ABI, compiler/runtime ABI, calling conventions, binary format, minimum OS or API level, page-size requirements, dynamic libraries, symbols, and packaging; never assume a binary working on one architecture or OS version works on another.</p>
+<h2 id="accessibility-and-security-during-compatibility-work">Accessibility and security during compatibility work</h2>
+<p>When updating a UI framework, platform API, accessibility library, or input/navigation framework, research current official documentation for the target version and re-check semantics, accessibility APIs, screen-reader behavior, focus, keyboard, D-pad, announcements, and deprecated mechanisms. Do not carry an obsolete accessibility workaround forward when a supported mechanism exists.</p>
+<p>Never solve compatibility by disabling certificate or signature verification, authentication, sandboxing, or security controls; weakening TLS; running everything elevated; using untrusted repositories; downloading random binaries; or exposing credentials. If old software requires an unsafe environment, report the conflict and investigate a safer migration path.</p>
+<p>When reporting compatibility work, state what was incompatible and why, the expected environment, what changed, what now builds or runs, what remains unverified, and whether further modernization is recommended. Compilation alone does not prove the project is fixed.</p>
+
+<p class="nextlink">Generated from the Markdown source. Edit the <code>.md</code> file and re-run the converter.</p>
+</article>
+</main>
+</div>
+<div id="sr-status" class="sr-only" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  var root=document.documentElement;
+  var status=document.getElementById('sr-status');
+  function say(msg){ if(status){ status.textContent=''; setTimeout(function(){ status.textContent=msg; },40); } }
+
+  /* ---- theme: auto -> light -> dark ---- */
+  var MODES=['auto','light','dark'];
+  var btn=document.getElementById('theme');
+  function current(){ return localStorage.getItem('doc-theme')||'auto'; }
+  function apply(m){
+    if(m==='auto'){ root.removeAttribute('data-theme'); }
+    else { root.setAttribute('data-theme',m); }
+    localStorage.setItem('doc-theme',m);
+    if(btn){
+      btn.textContent='Theme: '+m;
+      btn.setAttribute('aria-label','Colour theme: '+m+'. Activate to change.');
+    }
+  }
+  apply(current());
+  if(btn){
+    btn.addEventListener('click',function(){
+      var next=MODES[(MODES.indexOf(current())+1)%MODES.length];
+      apply(next);
+      say('Colour theme set to '+next);
+    });
+  }
+
+  /* ---- copy buttons ---- */
+  document.querySelectorAll('pre').forEach(function(pre){
+    if(pre.getAttribute('role')==='img') return;
+    var b=document.createElement('button');
+    b.className='copy'; b.type='button'; b.textContent='copy';
+    b.setAttribute('aria-label','Copy code block to clipboard');
+    b.addEventListener('click',function(){
+      var code=pre.querySelector('code');
+      var text=code?code.innerText:pre.innerText;
+      var done=function(){ b.textContent='copied'; b.classList.add('done'); say('Code copied to clipboard');
+        setTimeout(function(){ b.textContent='copy'; b.classList.remove('done'); },1800); };
+      if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done).catch(function(){}); }
+      else { say('Copy failed: clipboard unavailable'); }
+    });
+    pre.appendChild(b);
+  });
+
+  /* ---- scrollable tables become focusable regions only when they overflow ---- */
+  function markOverflow(){
+    document.querySelectorAll('.tw').forEach(function(w){
+      if(w.scrollWidth>w.clientWidth+2){
+        w.setAttribute('tabindex','0');
+        w.setAttribute('role','region');
+        if(!w.getAttribute('aria-label')) w.setAttribute('aria-label','Scrollable table');
+      } else {
+        w.removeAttribute('tabindex'); w.removeAttribute('role');
+      }
+    });
+  }
+  markOverflow();
+  window.addEventListener('resize',markOverflow);
+
+  /* ---- toc: collapsible on narrow screens, open on wide ---- */
+  var box=document.getElementById('tocbox');
+  function sizeToc(){ if(box) box.open = window.innerWidth>=920; }
+  sizeToc(); window.addEventListener('resize',sizeToc);
+
+  /* ---- scroll spy ---- */
+  var links={};
+  document.querySelectorAll('nav.toc a').forEach(function(a){ links[a.getAttribute('href').slice(1)]=a; });
+  var heads=Array.prototype.slice.call(document.querySelectorAll('main h2[id],main h3[id]'));
+  if(heads.length && 'IntersectionObserver' in window){
+    var visible={};
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ visible[e.target.id]=e.isIntersecting; });
+      var active=null;
+      for(var i=0;i<heads.length;i++){ if(visible[heads[i].id]){ active=heads[i].id; break; } }
+      if(!active){
+        for(var j=heads.length-1;j>=0;j--){
+          if(heads[j].getBoundingClientRect().top<130){ active=heads[j].id; break; }
+        }
+      }
+      Object.keys(links).forEach(function(k){ links[k].classList.remove('active'); });
+      if(active&&links[active]) links[active].classList.add('active');
+    },{rootMargin:'0px 0px -70% 0px',threshold:0});
+    heads.forEach(function(h){ io.observe(h); });
+  }
+})();
+</script>
+</body>
+</html>
