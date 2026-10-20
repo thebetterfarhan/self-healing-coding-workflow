@@ -41,7 +41,7 @@ $Root  = Split-Path $Tools -Parent
 
 # Everything this repo owns. The project repositories are not in the list.
 $managed = @(
-    '.gitignore', 'AGENTS.md', 'AGENTS-compat.md', 'START-HERE.md',
+    '.gitignore', 'AGENTS.md', 'AGENTS-compat.md', 'START-HERE.md', 'LICENSE',
     'SELF-HEALING-WORKFLOW.md', 'WORKFLOW-USAGE.md',
     'WORKFLOW-AUDIT-2026-10-14.md', 'WORKFLOW-AUDIT-2026-10-18.md',
     'workflows', 'workflow', 'tools', 'html'

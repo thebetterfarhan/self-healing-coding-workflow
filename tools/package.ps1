@@ -158,6 +158,33 @@ foreach ($rel in ($files + $htmlFiles)) {
     $copied++
 }
 
+# The policy in the bundle is the live canonical one with the generated taste
+# block removed: taste is per-user and is injected after installation. This way
+# the release always carries the current policy - no refresh step to forget.
+$livePolicy = Join-Path $env:USERPROFILE '.codex\AGENTS.md'
+$stagedTemplate = Join-Path (Join-Path $Stage $Name) 'workflow\AGENTS.template.md'
+if (Test-Path $livePolicy) {
+    $text = [System.IO.File]::ReadAllText($livePolicy)
+    $begin = '<!-- TASTE:BEGIN'; $end = '<!-- TASTE:END -->'
+    $a = $text.IndexOf($begin); $b = $text.IndexOf($end)
+    if ($a -ge 0 -and $b -gt $a) { $text = $text.Substring(0, $a).TrimEnd() + "`n" }
+    $header = @(
+        '<!--'
+        '  AGENTS.template.md - the global policy, distributable.'
+        ''
+        '  A frozen snapshot of the canonical ~/.codex/AGENTS.md with the generated'
+        '  taste block removed. Taste is per-user and is injected by'
+        '  tools/sync-taste.ps1 after installation.'
+        ''
+        '  Refresh with:  ~/Documents/Codex/tools/setup.ps1 -RefreshTemplate'
+        '-->'
+        ''
+        ''
+    ) -join "`n"
+    [System.IO.File]::WriteAllText($stagedTemplate, $header + $text, (New-Object System.Text.UTF8Encoding($false)))
+    Write-Host '    policy refreshed from the live canonical AGENTS.md' -ForegroundColor DarkGray
+}
+
 # ---------------------------------------------------------------------------
 # Bundle README
 # ---------------------------------------------------------------------------

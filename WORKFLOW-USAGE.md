@@ -42,6 +42,46 @@ Type the cue as the first word of a request so the matching skill or agent runs:
 4. The agent stops before commit. Merge, push, PR, and release need your
    explicit approval.
 
+## Public release
+
+The kit is published at
+**https://github.com/thebetterfarhan/self-healing-coding-workflow** (MIT,
+public). The release asset is the same bundle `tools/package.ps1` builds, with
+the canonical skill set left out - the skill set is not ours to redistribute,
+and the workflow runs without it.
+
+`tools/package.ps1 -NoSkills` builds exactly that public bundle; without the
+switch it also bundles `~/.agents/skills` for local use.
+
+## Change something
+
+One source per thing. Edit the source, run one command, done. The copies are
+generated - never edit them.
+
+| What you want to change | Edit this one file | What the nightly does with it |
+| --- | --- | --- |
+| The rules every agent follows | `~/.codex/AGENTS.md` | copies it to the OpenCode and Command Code copies, and the taste block into the Claude and Gemini ones |
+| Your own preferences | `~/.commandcode/taste/taste.md` | renders them into the taste block of every instruction file |
+| The agent roster (scout, builder, ...) | `~/Documents/Codex/workflows/agents.toml` | renders each agent into all three CLIs |
+| A skill | `~/.agents/skills/<name>/` | copies it into all three CLIs |
+| Routing, models, the turn cap | `~/Documents/Codex/workflows/workflow.toml` | the tools read it directly |
+| The engine (the scripts) | `~/Documents/Codex/tools/` | the nightly runs them |
+| The documentation | `~/Documents/Codex/*.md` | `node tools/docgen/convert-docs.mjs` rebuilds `html/` |
+
+After editing, one command applies and records everything:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File ~/Documents/Codex/tools/self-repair.ps1
+```
+
+It syncs every layer, refreshes the model catalogs, restores a broken file
+from the configuration repository, and commits the change. The nightly runs the
+same thing at 03:00, so editing and waiting also works.
+
+Publishing is a separate, occasional step: `tools/package.ps1 -NoSkills` builds
+the public bundle with the current policy, scripts and docs - and without the
+skills.
+
 ## The configuration repo
 
 `~/Documents/Codex` is a git repository holding the workflow configuration

@@ -176,6 +176,8 @@ pre:hover .copy,.copy:focus-visible{opacity:1}
 <li class="d2"><a href="#health-check">Health check</a></li>
 <li class="d2"><a href="#cue-vocabulary">Cue vocabulary</a></li>
 <li class="d2"><a href="#the-loop">The loop</a></li>
+<li class="d2"><a href="#public-release">Public release</a></li>
+<li class="d2"><a href="#change-something">Change something</a></li>
 <li class="d2"><a href="#the-configuration-repo">The configuration repo</a></li>
 <li class="d2"><a href="#automatic-continuation">Automatic continuation</a></li>
 <li class="d2"><a href="#worktrees-one-per-task">Worktrees (one per task)</a></li>
@@ -200,7 +202,7 @@ pre:hover .copy,.copy:focus-visible{opacity:1}
 <article>
 <h1 id="doc-title">Workflow Usage Guide</h1>
 
-<p class="meta">Source <code>WORKFLOW-USAGE.md</code> &middot; 11,329 bytes &middot; updated 2026-10-20</p>
+<p class="meta">Source <code>WORKFLOW-USAGE.md</code> &middot; 13,333 bytes &middot; updated 2026-10-20</p>
 <p><strong>Author:</strong> Farhan Khan (<a href="https://github.com/thebetterfarhan">@thebetterfarhan</a>)</p>
 <p>How to drive this Codex / OpenCode / CommandCode setup day to day. The
 authoritative rules live in the global <code>~/.codex/AGENTS.md</code> and each project&#39;s
@@ -237,6 +239,50 @@ commit time it runs the <strong>gate</strong>. Both commands live in the project
 <li>The agent stops before commit. Merge, push, PR, and release need your
 explicit approval.</li>
 </ol>
+<h2 id="public-release">Public release</h2>
+<p>The kit is published at
+<strong><a href="https://github.com/thebetterfarhan/self-healing-coding-workflow">https://github.com/thebetterfarhan/self-healing-coding-workflow</a></strong> (MIT,
+public). The release asset is the same bundle <code>tools/package.ps1</code> builds, with
+the canonical skill set left out - the skill set is not ours to redistribute,
+and the workflow runs without it.</p>
+<p><code>tools/package.ps1 -NoSkills</code> builds exactly that public bundle; without the
+switch it also bundles <code>~/.agents/skills</code> for local use.</p>
+<h2 id="change-something">Change something</h2>
+<p>One source per thing. Edit the source, run one command, done. The copies are
+generated - never edit them.</p>
+<div class="tw"><table><caption class="sr-only">Change something</caption><thead><tr><th scope="col">What you want to change</th>
+<th scope="col">Edit this one file</th>
+<th scope="col">What the nightly does with it</th>
+</tr></thead><tbody><tr><td>The rules every agent follows</td>
+<td><code>~/.codex/AGENTS.md</code></td>
+<td>copies it to the OpenCode and Command Code copies, and the taste block into the Claude and Gemini ones</td>
+</tr><tr><td>Your own preferences</td>
+<td><code>~/.commandcode/taste/taste.md</code></td>
+<td>renders them into the taste block of every instruction file</td>
+</tr><tr><td>The agent roster (scout, builder, ...)</td>
+<td><code>~/Documents/Codex/workflows/agents.toml</code></td>
+<td>renders each agent into all three CLIs</td>
+</tr><tr><td>A skill</td>
+<td><code>~/.agents/skills/&lt;name&gt;/</code></td>
+<td>copies it into all three CLIs</td>
+</tr><tr><td>Routing, models, the turn cap</td>
+<td><code>~/Documents/Codex/workflows/workflow.toml</code></td>
+<td>the tools read it directly</td>
+</tr><tr><td>The engine (the scripts)</td>
+<td><code>~/Documents/Codex/tools/</code></td>
+<td>the nightly runs them</td>
+</tr><tr><td>The documentation</td>
+<td><code>~/Documents/Codex/*.md</code></td>
+<td><code>node tools/docgen/convert-docs.mjs</code> rebuilds <code>html/</code></td>
+</tr></tbody></table></div>
+<p>After editing, one command applies and records everything:</p>
+<pre><code class="language-powershell">powershell -NoProfile -ExecutionPolicy Bypass -File ~/Documents/Codex/tools/self-repair.ps1</code></pre>
+<p>It syncs every layer, refreshes the model catalogs, restores a broken file
+from the configuration repository, and commits the change. The nightly runs the
+same thing at 03:00, so editing and waiting also works.</p>
+<p>Publishing is a separate, occasional step: <code>tools/package.ps1 -NoSkills</code> builds
+the public bundle with the current policy, scripts and docs - and without the
+skills.</p>
 <h2 id="the-configuration-repo">The configuration repo</h2>
 <p><code>~/Documents/Codex</code> is a git repository holding the workflow configuration
 only: the policy, the docs, <code>workflows/</code>, <code>workflow/</code>, <code>tools/</code> and the
