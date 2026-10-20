@@ -164,6 +164,8 @@ foreach ($rel in ($files + $htmlFiles)) {
 $livePolicy = Join-Path $env:USERPROFILE '.codex\AGENTS.md'
 $stagedTemplate = Join-Path (Join-Path $Stage $Name) 'workflow\AGENTS.template.md'
 if (Test-Path $livePolicy) {
+    $stagedDir = Split-Path $stagedTemplate -Parent
+    if (-not (Test-Path -LiteralPath $stagedDir)) { New-Item -ItemType Directory -Force -Path $stagedDir | Out-Null }
     $text = [System.IO.File]::ReadAllText($livePolicy)
     $begin = '<!-- TASTE:BEGIN'; $end = '<!-- TASTE:END -->'
     $a = $text.IndexOf($begin); $b = $text.IndexOf($end)
@@ -183,6 +185,56 @@ if (Test-Path $livePolicy) {
     ) -join "`n"
     [System.IO.File]::WriteAllText($stagedTemplate, $header + $text, (New-Object System.Text.UTF8Encoding($false)))
     Write-Host '    policy refreshed from the live canonical AGENTS.md' -ForegroundColor DarkGray
+}
+
+# ---------------------------------------------------------------------------
+# Refuse to ship a taste block, a credential or a machine path.
+#
+# The bundle is public. The learned taste is per-user and must never travel
+# with it, and a credential or a personal path in a public release is a leak
+# that cannot be undone by deleting the file later.
+# ---------------------------------------------------------------------------
+function Get-StagedLeaks {
+    param([string]$StageRoot)
+
+    $leaks = @()
+    $text = @('.md', '.ps1', '.py', '.mjs', '.js', '.json', '.toml', '.txt', '.html', '.yml', '.yaml')
+    $patterns = @(
+        @{ Name = 'private key';   Pattern = '-----BEGIN [A-Z ]*PRIVATE KEY-----' },
+        @{ Name = 'aws key';       Pattern = '\bAKIA[0-9A-Z]{16}\b' },
+        @{ Name = 'github token';  Pattern = '\bgh[pousr]_[A-Za-z0-9]{20,}\b' },
+        @{ Name = 'github pat';    Pattern = '\bgithub_pat_[A-Za-z0-9_]{20,}\b' },
+        @{ Name = 'slack token';   Pattern = '\bxox[baprs]-[A-Za-z0-9-]{10,}\b' },
+        @{ Name = 'google api key'; Pattern = '\bAIza[0-9A-Za-z_-]{35}\b' },
+        @{ Name = 'jwt';           Pattern = '\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{8,}' },
+        @{ Name = 'user email';    Pattern = 'user\@example\.invalid' },
+        @{ Name = 'machine path';  Pattern = '[A-Za-z]:\\Users\\' }
+    )
+    foreach ($file in Get-ChildItem -LiteralPath $StageRoot -Recurse -File) {
+        if ($file.Extension -notin $text) { continue }
+        $content = Get-Content -LiteralPath $file.FullName -Raw -ErrorAction SilentlyContinue
+        if (-not $content) { continue }
+        $rel = $file.FullName.Substring($StageRoot.Length).TrimStart('\', '/')
+        # A real taste block: the BEGIN/END markers with taste bullets between
+        # them. A script that merely mentions the markers is not one.
+        $a = $content.IndexOf('<!-- TASTE:BEGIN'); $b = $content.IndexOf('<!-- TASTE:END -->')
+        if ($a -ge 0 -and $b -gt $a) {
+            $body = $content.Substring($a, $b - $a)
+            if ($body -match '(?m)^-\s+.*Confidence:\s*0\.') { $leaks += "$rel : a generated taste block" }
+        }
+        foreach ($p in $patterns) {
+            if ($content -match $p.Pattern) { $leaks += ("{0} : {1}" -f $rel, $p.Name) }
+        }
+    }
+    return $leaks
+}
+
+$leaks = @(Get-StagedLeaks -StageRoot (Join-Path $Stage $Name))
+if ($leaks.Count -gt 0) {
+    Write-Host '    REFUSING TO SHIP - the bundle contains things that must stay private:' -ForegroundColor Red
+    $leaks | ForEach-Object { Write-Host "      $_" -ForegroundColor Red }
+    Remove-Item $Stage -Recurse -Force
+    exit 1
 }
 
 # ---------------------------------------------------------------------------
