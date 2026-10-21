@@ -176,6 +176,7 @@ pre:hover .copy,.copy:focus-visible{opacity:1}
 <li class="d2"><a href="#start-here">Start here</a></li>
 <li class="d2"><a href="#cross-cli-handoffs">Cross-CLI handoffs</a></li>
 <li class="d2"><a href="#tools-and-where-their-config-lives">Tools and where their config lives</a></li>
+<li class="d2"><a href="#keeping-something-private-out-of-a-bundle">Keeping something private out of a bundle</a></li>
 <li class="d2"><a href="#scaffolding-a-project">Scaffolding a project</a></li>
 <li class="d2"><a href="#one-command-to-route-a-task">One command to route a task</a></li>
 <li class="d2"><a href="#agents-the-roster">Agents (the roster)</a></li>
@@ -198,7 +199,7 @@ pre:hover .copy,.copy:focus-visible{opacity:1}
 <article>
 <h1 id="doc-title">Agent setup — workflow reference</h1>
 
-<p class="meta">Source <code>tools/AGENT-SETUP.md</code> &middot; 28,049 bytes &middot; updated 2026-10-20</p>
+<p class="meta">Source <code>tools/AGENT-SETUP.md</code> &middot; 28,712 bytes &middot; updated 2026-10-21</p>
 <p>How the three coding CLIs on this machine are wired. Read this before changing
 any of their config, so the three stay coherent.</p>
 <p>The whole configuration - the policy, the docs, <code>workflows/</code>, <code>workflow/</code>,
@@ -276,6 +277,20 @@ their new MCP settings.</p>
 </tr></tbody></table></div>
 <p>Project-level <code>AGENTS.md</code> files live in each repository and add to — never
 duplicate — the global policy.</p>
+<h2 id="keeping-something-private-out-of-a-bundle">Keeping something private out of a bundle</h2>
+<p><code>tools/package.ps1</code> refuses to build a bundle that contains a private key, a
+token, a machine path, a generated taste block, or anything in the built-in
+leak patterns. Personal patterns — your own addresses, anything else you would
+not want published — go in <code>tools/leak-patterns.local.json</code>, which is
+git-ignored and never shipped:</p>
+<pre><code class="language-json">{
+  "patterns": [
+    { "name": "user email", "pattern": "me@example\\.com" }
+  ]
+}</code></pre>
+<p>Write the pattern there, not into <code>package.ps1</code>. A pattern in the script ships
+in every bundle anyone downloads, which is the opposite of what the guard is
+for.</p>
 <h2 id="scaffolding-a-project">Scaffolding a project</h2>
 <p>The global policy says to write the inner loop and the gate into the project&#39;s
 AGENTS.md so the next session does not rediscover the trap.
