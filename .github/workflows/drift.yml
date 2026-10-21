@@ -19,17 +19,25 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: No tracked file carries a secret, a machine path or a taste block
+        # Only the published repository is scanned. The private one holds
+        # machine-specific documents on purpose - the tools handover names this
+        # machine - and what must not be published is the bundle, which the
+        # release workflow scans before it ships.
         if: github.repository == 'thebetterfarhan/self-healing-coding-workflow'
         shell: pwsh
         run: powershell -NoProfile -ExecutionPolicy Bypass -File tools/leak-scan.ps1 -Repo .
 
       - name: The generated documentation matches its sources
-        if: github.repository == 'thebetterfarhan/codex-workflow-config'
         shell: pwsh
         run: |
           cd tools\docgen
           npm ci --silent
+          if ($LASTEXITCODE -ne 0) { throw "npm ci failed with $LASTEXITCODE" }
           cd ../..
           node tools/docgen/convert-docs.mjs
-          git diff --exit-code -- html
-          if ($LASTEXITCODE -ne 0) { throw 'the committed HTML differs from a fresh regeneration - run tools/docgen/convert-docs.mjs' }
+          if ($LASTEXITCODE -ne 0) { throw "the converter failed with $LASTEXITCODE" }
+          # git status, not git diff: a page that is new and untracked is a
+          # difference too, and git diff cannot see it. Without this, a
+          # converter that fails silently leaves the check green.
+          $stale = git status --porcelain -- html
+          if ($stale) { $stale | Write-Host; throw 'the committed HTML differs from a fresh regeneration - run tools/docgen/convert-docs.mjs' }

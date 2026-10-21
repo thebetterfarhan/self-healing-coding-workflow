@@ -24,7 +24,11 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 
-$source = Join-Path $HOME '.agents\skills'
+# $env:USERPROFILE, not $HOME: Windows PowerShell sets $HOME once, when it
+# starts, and it does not follow a changed $env:USERPROFILE. The install check
+# points USERPROFILE at an empty profile, so $HOME would still point at the
+# real one and the install would write outside the profile it is testing.
+$source = Join-Path $env:USERPROFILE '.agents\skills'
 if (-not (Test-Path -LiteralPath $source)) {
     # No canonical set on this machine, so there is nothing to share out. That
     # is not an error: the public bundle ships without skills and the workflow
@@ -35,9 +39,9 @@ if (-not (Test-Path -LiteralPath $source)) {
 }
 
 $dests = @(
-    (Join-Path $HOME '.codex\skills'),
-    (Join-Path $HOME '.config\opencode\skills'),
-    (Join-Path $HOME '.commandcode\skills')
+    (Join-Path $env:USERPROFILE '.codex\skills'),
+    (Join-Path $env:USERPROFILE '.config\opencode\skills'),
+    (Join-Path $env:USERPROFILE '.commandcode\skills')
 )
 
 $skip = @('.system')

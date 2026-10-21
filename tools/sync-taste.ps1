@@ -77,11 +77,15 @@ if ($Project) {
     $targets   = @( (Join-Path $Project 'AGENTS.md') )
     $doSync    = $false
 } else {
-    $tasteRoot = Join-Path $HOME '.commandcode\taste'
+    # $env:USERPROFILE, not $HOME: Windows PowerShell sets $HOME once, when it
+    # starts, and it does not follow a changed $env:USERPROFILE. The install
+    # check points USERPROFILE at an empty profile, so $HOME would still point
+    # at the real one and the taste block would land in the real files.
+    $tasteRoot = Join-Path $env:USERPROFILE '.commandcode\taste'
     $targets   = @(
-        (Join-Path $HOME '.codex\AGENTS.md'),
-        (Join-Path $HOME '.claude\CLAUDE.md'),
-        (Join-Path $HOME '.gemini\GEMINI.md')
+        (Join-Path $env:USERPROFILE '.codex\AGENTS.md'),
+        (Join-Path $env:USERPROFILE '.claude\CLAUDE.md'),
+        (Join-Path $env:USERPROFILE '.gemini\GEMINI.md')
     )
     $doSync = $true
 }

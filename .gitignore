@@ -53,6 +53,7 @@
 /tools/agent-tier-thresholds.json
 /tools/free-models.json
 /tools/model-prices.json
+/tools/ci-repos.local.json
 /tools/taste-candidates.md
 /tools/leak-patterns.local.json
 

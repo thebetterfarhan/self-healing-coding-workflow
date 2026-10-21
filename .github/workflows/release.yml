@@ -31,6 +31,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path $env:USERPROFILE | Out-Null
           cd tools\docgen
           npm ci --silent
+          if ($LASTEXITCODE -ne 0) { throw "npm ci failed with $LASTEXITCODE" }
           cd ../..
           powershell -NoProfile -ExecutionPolicy Bypass -File tools\package.ps1 -Out "${{ runner.temp }}\bundle.zip" -NoSkills
           if ($LASTEXITCODE -ne 0) { throw "package.ps1 failed with $LASTEXITCODE" }
@@ -44,12 +45,19 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'the bundle carries something private' }
 
       - name: The documentation in the bundle is the documentation in the repository
-        if: github.repository == 'thebetterfarhan/self-healing-coding-workflow'
         shell: pwsh
         run: |
           $root = "${{ runner.temp }}\unpacked\workflow-kit"
-          $diff = Compare-Object (Get-ChildItem html -File | ForEach-Object { "$($_.Name) $((Get-FileHash $_.FullName -Algorithm SHA256).Hash)" }) `
-                                 (Get-ChildItem "$root\html" -File | ForEach-Object { "$($_.Name) $((Get-FileHash $_.FullName -Algorithm SHA256).Hash)" })
+          # The bundle ships the public subset of the documents, so the
+          # comparison is over the pages the bundle actually has. Comparing the
+          # whole directory would report every page the bundle leaves out.
+          $pages = Get-ChildItem "$root\html" -File
+          $diff = Compare-Object ($pages | ForEach-Object { "$($_.Name) $((Get-FileHash $_.FullName -Algorithm SHA256).Hash)" }) `
+                                 ($pages | ForEach-Object {
+                                     $inRepo = Join-Path 'html' $_.Name
+                                     if (Test-Path $inRepo) { "$($_.Name) $((Get-FileHash $inRepo -Algorithm SHA256).Hash)" }
+                                     else { "$($_.Name) MISSING FROM THE REPOSITORY" }
+                                 })
           if ($diff) { $diff | Format-Table | Out-String | Write-Host; throw 'the committed documentation differs from the generated one' }
 
       - name: Publish the bundle and its checksum
@@ -63,5 +71,15 @@ jobs:
           Copy-Item $zip $staged -Force
           $hash = (Get-FileHash $staged -Algorithm SHA256).Hash.ToLower()
           [System.IO.File]::WriteAllText("${{ runner.temp }}\SHA256SUMS.txt", "$hash  $(Split-Path $staged -Leaf)`n", (New-Object System.Text.UTF8Encoding($false)))
-          gh release create $env:TAG $staged "${{ runner.temp }}\SHA256SUMS.txt" --title $env:TAG --generate-notes
-          if ($LASTEXITCODE -ne 0) { throw "gh release create failed with $LASTEXITCODE" }
+          # A release that exists is updated, not refused: a failed run must
+          # not make the tag unpublishable.
+          gh release view $env:TAG 2>&1 | Out-Null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $env:TAG $staged "${{ runner.temp }}\SHA256SUMS.txt" --clobber
+            if ($LASTEXITCODE -ne 0) { throw "gh release upload failed with $LASTEXITCODE" }
+            gh release edit $env:TAG --title $env:TAG
+            if ($LASTEXITCODE -ne 0) { throw "gh release edit failed with $LASTEXITCODE" }
+          } else {
+            gh release create $env:TAG $staged "${{ runner.temp }}\SHA256SUMS.txt" --title $env:TAG --generate-notes
+            if ($LASTEXITCODE -ne 0) { throw "gh release create failed with $LASTEXITCODE" }
+          }

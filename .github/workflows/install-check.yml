@@ -26,6 +26,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path $env:USERPROFILE | Out-Null
           cd tools\docgen
           npm ci --silent
+          if ($LASTEXITCODE -ne 0) { throw "npm ci failed with $LASTEXITCODE" }
           cd ../..
           powershell -NoProfile -ExecutionPolicy Bypass -File tools\package.ps1 -Out "${{ runner.temp }}\bundle.zip" -NoSkills
           if ($LASTEXITCODE -ne 0) { throw "package.ps1 failed with $LASTEXITCODE" }
