@@ -3,6 +3,11 @@
 The public releases of **self-healing-coding-workflow**. `vX.Y.Z` is the tag,
 the release and the asset name.
 
+## v0.1.9
+
+- The verification badge sits at the top of the README. It points at the
+  workflow that runs on every push on Windows.
+
 ## v0.1.8
 
 - The README shows what the thing looks like: a real `work -Preview` route and
