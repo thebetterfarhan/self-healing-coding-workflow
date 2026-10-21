@@ -36,8 +36,12 @@ jobs:
           cd ../..
           node tools/docgen/convert-docs.mjs
           if ($LASTEXITCODE -ne 0) { throw "the converter failed with $LASTEXITCODE" }
-          # git status, not git diff: a page that is new and untracked is a
-          # difference too, and git diff cannot see it. Without this, a
-          # converter that fails silently leaves the check green.
-          $stale = git status --porcelain -- html
-          if ($stale) { $stale | Write-Host; throw 'the committed HTML differs from a fresh regeneration - run tools/docgen/convert-docs.mjs' }
+          # The comparison is on the content, not on the line endings: a
+          # checkout on Windows and a checkout on Linux hold the same pages
+          # with different endings, and that is not a difference. git diff is
+          # the comparison that knows that. A page that is new and not
+          # tracked yet is a difference too, and git diff cannot see it.
+          $diff = git diff --exit-code -- html
+          if ($LASTEXITCODE -ne 0) { $diff | Write-Host; throw 'the committed HTML differs from a fresh regeneration - run tools/docgen/convert-docs.mjs' }
+          $untracked = git ls-files --others --exclude-standard -- html
+          if ($untracked) { $untracked | Write-Host; throw 'a generated page is not tracked - add it to the repository' }
