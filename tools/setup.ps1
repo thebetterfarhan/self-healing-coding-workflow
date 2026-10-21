@@ -352,7 +352,7 @@ else {
 Step 'Smoke checks'
 $verify = Join-Path $Tools 'verify.ps1'
 if (-not (Test-Path $verify)) { Note 'verify.ps1 not present' }
-elseif ($Check) { Warn 'would run the smoke checks (tools/verify.ps1)' }
+elseif ($Check) { Note 'would run the smoke checks (tools/verify.ps1) - run them separately' }
 else {
     $out = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $verify 2>&1 | Out-String
     $last = ($out.Trim() -split "`r?`n" | Where-Object { $_.Trim() } | Select-Object -Last 1)
