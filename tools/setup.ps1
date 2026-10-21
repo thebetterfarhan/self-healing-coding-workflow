@@ -354,7 +354,9 @@ if (-not (Test-Path $repair)) { Note 'repair-config.ps1 not present' }
 elseif (Test-Path (Join-Path $Root '.git')) { Ok "configuration repository present: $Root" }
 elseif ($Check) { Warn "would create the configuration repository in $Root" }
 else {
+    $ErrorActionPreference = 'Continue'
     $out = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $repair 2>&1 | Out-String
+    $ErrorActionPreference = 'Stop'
     $last = ($out.Trim() -split "`r?`n" | Where-Object { $_.Trim() } | Select-Object -Last 1)
     if ($LASTEXITCODE -eq 0) { Ok "configuration repository -> $last" } else { Die "configuration repository failed: $last" }
 }
@@ -367,7 +369,9 @@ $verify = Join-Path $Tools 'verify.ps1'
 if (-not (Test-Path $verify)) { Note 'verify.ps1 not present' }
 elseif ($Check) { Note 'would run the smoke checks (tools/verify.ps1) - run them separately' }
 else {
+    $ErrorActionPreference = 'Continue'
     $out = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $verify 2>&1 | Out-String
+    $ErrorActionPreference = 'Stop'
     $last = ($out.Trim() -split "`r?`n" | Where-Object { $_.Trim() } | Select-Object -Last 1)
     if ($LASTEXITCODE -eq 0) { Ok "verify -> $last" } else { Die "verify failed: $last" }
 }

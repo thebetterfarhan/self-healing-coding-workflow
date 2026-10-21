@@ -164,6 +164,13 @@ if (-not (Test-Path -LiteralPath (Join-Path $Root '.git'))) {
     }
     Write-Output 'config repo missing - creating it from the current configuration'
     & git -C $Root init -q -b main | Out-Null
+    # A machine with no global git identity cannot commit, and a fresh CI
+    # runner has none. Give the repository it just created a local identity
+    # so the first commit works.
+    if (-not (& git -C $Root config user.email 2>$null)) {
+        & git -C $Root config user.name 'workflow' | Out-Null
+        & git -C $Root config user.email 'workflow@localhost' | Out-Null
+    }
     if ($managedPaths.Count -gt 0) {
         & git -C $Root add -A -- $managedPaths | Out-Null
         $staged = Invoke-Git @('diff', '--cached', '--quiet')

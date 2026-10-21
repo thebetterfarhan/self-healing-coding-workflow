@@ -1,5 +1,5 @@
 workflow-kit manifest
-built:      2026-10-20 23:26:04
+built:      2026-10-20 23:36:10
 source:     (not recorded - the bundle is machine independent)
 files:      71
 skills:     
