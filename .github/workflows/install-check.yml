@@ -1,0 +1,71 @@
+name: install-check
+
+# The kit's claim is that it installs and then looks after itself. This proves
+# the first half: the bundle installs into an empty profile, the policy lands
+# in all three CLIs byte-identically, and the guard hook is wired.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: The bundle installs into an empty machine
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the bundle
+        shell: pwsh
+        run: |
+          $env:USERPROFILE = "${{ runner.temp }}\build"
+          New-Item -ItemType Directory -Force -Path $env:USERPROFILE | Out-Null
+          cd tools\docgen
+          npm ci --silent
+          cd ../..
+          powershell -NoProfile -ExecutionPolicy Bypass -File tools\package.ps1 -Out "${{ runner.temp }}\bundle.zip" -NoSkills
+          if ($LASTEXITCODE -ne 0) { throw "package.ps1 failed with $LASTEXITCODE" }
+
+      - name: Install it into an empty profile
+        shell: pwsh
+        run: |
+          Expand-Archive -Path "${{ runner.temp }}\bundle.zip" -DestinationPath "${{ runner.temp }}\unpacked" -Force
+          $root = "${{ runner.temp }}\unpacked\workflow-kit"
+          $env:USERPROFILE = "${{ runner.temp }}\profile"
+          New-Item -ItemType Directory -Force -Path $env:USERPROFILE | Out-Null
+          Set-Location "$root\tools"
+          powershell -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1 -SkipTask -SkipProfile
+          if ($LASTEXITCODE -ne 0) { throw "setup.ps1 failed with $LASTEXITCODE" }
+
+      - name: The install is complete and consistent
+        shell: pwsh
+        run: |
+          $profile = "${{ runner.temp }}\profile"
+          $missing = @()
+          foreach ($f in @(
+            '.codex\AGENTS.md',
+            '.config\opencode\AGENTS.md',
+            '.commandcode\AGENTS.md',
+            '.codex\agents\scout.toml',
+            '.config\opencode\agents\scout.md',
+            '.commandcode\agents\scout.md',
+            '.codex\hooks.json',
+            '.commandcode\taste\taste.md')) {
+            if (-not (Test-Path (Join-Path $profile $f))) { $missing += $f }
+          }
+          if ($missing) { throw "not installed: $($missing -join ', ')" }
+
+          $hooks = Get-Content (Join-Path $profile '.codex\hooks.json') -Raw
+          if ($hooks -notmatch 'guard-hook\.ps1') { throw 'the guard hook was not wired' }
+
+          $hashes = @(
+            (Get-FileHash (Join-Path $profile '.codex\AGENTS.md') -Algorithm SHA256).Hash,
+            (Get-FileHash (Join-Path $profile '.config\opencode\AGENTS.md') -Algorithm SHA256).Hash,
+            (Get-FileHash (Join-Path $profile '.commandcode\AGENTS.md') -Algorithm SHA256).Hash)
+          if (($hashes | Sort-Object -Unique).Count -ne 1) { throw 'the policy was not copied byte-identically to all three CLIs' }
+
+          Write-Host 'install check: the policy is in all three CLIs, the roster is rendered, the guard hook is wired'

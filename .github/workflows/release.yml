@@ -1,0 +1,67 @@
+name: release
+
+# A release is built from a tag, not from a machine. Push a v* tag and this
+# builds the bundle, checks it, and publishes it with its checksum.
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The tag to build and publish
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build, check and publish the bundle
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+
+      - name: Build the bundle
+        shell: pwsh
+        run: |
+          $env:USERPROFILE = "${{ runner.temp }}\build"
+          New-Item -ItemType Directory -Force -Path $env:USERPROFILE | Out-Null
+          cd tools\docgen
+          npm ci --silent
+          cd ../..
+          powershell -NoProfile -ExecutionPolicy Bypass -File tools\package.ps1 -Out "${{ runner.temp }}\bundle.zip" -NoSkills
+          if ($LASTEXITCODE -ne 0) { throw "package.ps1 failed with $LASTEXITCODE" }
+
+      - name: The bundle carries nothing private
+        shell: pwsh
+        run: |
+          Expand-Archive -Path "${{ runner.temp }}\bundle.zip" -DestinationPath "${{ runner.temp }}\unpacked" -Force
+          $root = "${{ runner.temp }}\unpacked\workflow-kit"
+          powershell -NoProfile -ExecutionPolicy Bypass -File "$root\tools\leak-scan.ps1" -Path $root
+          if ($LASTEXITCODE -ne 0) { throw 'the bundle carries something private' }
+
+      - name: The documentation in the bundle is the documentation in the repository
+        if: github.repository == 'thebetterfarhan/self-healing-coding-workflow'
+        shell: pwsh
+        run: |
+          $root = "${{ runner.temp }}\unpacked\workflow-kit"
+          $diff = Compare-Object (Get-ChildItem html -File | ForEach-Object { "$($_.Name) $((Get-FileHash $_.FullName -Algorithm SHA256).Hash)" }) `
+                                 (Get-ChildItem "$root\html" -File | ForEach-Object { "$($_.Name) $((Get-FileHash $_.FullName -Algorithm SHA256).Hash)" })
+          if ($diff) { $diff | Format-Table | Out-String | Write-Host; throw 'the committed documentation differs from the generated one' }
+
+      - name: Publish the bundle and its checksum
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.inputs.tag || github.ref_name }}
+        run: |
+          $zip = "${{ runner.temp }}\bundle.zip"
+          $staged = "${{ runner.temp }}\self-healing-coding-workflow-$env:TAG.zip"
+          Copy-Item $zip $staged -Force
+          $hash = (Get-FileHash $staged -Algorithm SHA256).Hash.ToLower()
+          [System.IO.File]::WriteAllText("${{ runner.temp }}\SHA256SUMS.txt", "$hash  $(Split-Path $staged -Leaf)`n", (New-Object System.Text.UTF8Encoding($false)))
+          gh release create $env:TAG $staged "${{ runner.temp }}\SHA256SUMS.txt" --title $env:TAG --generate-notes
+          if ($LASTEXITCODE -ne 0) { throw "gh release create failed with $LASTEXITCODE" }

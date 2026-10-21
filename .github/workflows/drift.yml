@@ -1,0 +1,35 @@
+name: drift
+
+# Two things must never happen silently: something private landing in a
+# tracked file, and the generated documentation drifting from its sources.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    name: Nothing private, no stale documentation
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: No tracked file carries a secret, a machine path or a taste block
+        if: github.repository == 'thebetterfarhan/self-healing-coding-workflow'
+        shell: pwsh
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File tools/leak-scan.ps1 -Repo .
+
+      - name: The generated documentation matches its sources
+        if: github.repository == 'thebetterfarhan/codex-workflow-config'
+        shell: pwsh
+        run: |
+          cd tools\docgen
+          npm ci --silent
+          cd ../..
+          node tools/docgen/convert-docs.mjs
+          git diff --exit-code -- html
+          if ($LASTEXITCODE -ne 0) { throw 'the committed HTML differs from a fresh regeneration - run tools/docgen/convert-docs.mjs' }

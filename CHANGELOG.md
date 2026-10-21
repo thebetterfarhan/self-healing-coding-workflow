@@ -3,6 +3,27 @@
 The public releases of **self-healing-coding-workflow**. `vX.Y.Z` is the tag,
 the release and the asset name.
 
+## v0.1.10
+
+- Three workflows, so the repository proves itself instead of asking to be
+  believed. A release is built from a tag, checked and published with its
+  checksum. A drift check fails when a tracked file carries something private
+  or when the generated documentation no longer matches its sources. An
+  install check builds the bundle, installs it into an empty profile and
+  asserts the policy landed in all three CLIs byte-identically.
+- The leak scanner is `tools/leak-scan.ps1` now, shared by the packer and the
+  workflow, so the bundle and the repository are checked by the same code.
+- Three bugs the new checks found, all fixed:
+  - the packer's leak scan ran before the README was written, so the README
+    was never scanned;
+  - `sync-skills.ps1` threw when there was no canonical skill set, which made
+    the whole install fail on a clean machine - the public kit could not be
+    installed at all;
+  - `verify.ps1` asserted that the whole machine was healthy, so it failed
+    on exactly the clean machine the install check creates.
+- The README template now ships in the bundle, so the unpacked kit can
+  repackage itself.
+
 ## v0.1.9
 
 - The verification badge sits at the top of the README. It points at the
