@@ -191,9 +191,23 @@ function Get-StagedLeaks {
         @{ Name = 'slack token';   Pattern = '\bxox[baprs]-[A-Za-z0-9-]{10,}\b' },
         @{ Name = 'google api key'; Pattern = '\bAIza[0-9A-Za-z_-]{35}\b' },
         @{ Name = 'jwt';           Pattern = '\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{8,}' },
-        @{ Name = 'user email';    Pattern = 'user\@example\.invalid' },
         @{ Name = 'machine path';  Pattern = '[A-Za-z]:\\Users\\' }
     )
+    # Personal patterns - your own addresses, anything you would not want in a
+    # public bundle - live in tools/leak-patterns.local.json, which is
+    # git-ignored and never shipped. Writing one into this file would put it
+    # in every bundle anyone downloads.
+    $localPatterns = Join-Path $PSScriptRoot 'leak-patterns.local.json'
+    if (Test-Path -LiteralPath $localPatterns) {
+        try {
+            $local = Get-Content -LiteralPath $localPatterns -Raw | ConvertFrom-Json
+            foreach ($p in @($local.patterns)) {
+                if ($p -and $p.pattern) { $patterns += @{ Name = $p.name; Pattern = $p.pattern } }
+            }
+        } catch {
+            Write-Host "    note could not read $localPatterns - personal leak patterns were not applied" -ForegroundColor Gray
+        }
+    }
     foreach ($file in Get-ChildItem -LiteralPath $StageRoot -Recurse -File) {
         if ($file.Extension -notin $text) { continue }
         $content = Get-Content -LiteralPath $file.FullName -Raw -ErrorAction SilentlyContinue

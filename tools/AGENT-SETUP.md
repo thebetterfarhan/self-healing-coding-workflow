@@ -91,6 +91,26 @@ their new MCP settings.
 Project-level `AGENTS.md` files live in each repository and add to — never
 duplicate — the global policy.
 
+## Keeping something private out of a bundle
+
+`tools/package.ps1` refuses to build a bundle that contains a private key, a
+token, a machine path, a generated taste block, or anything in the built-in
+leak patterns. Personal patterns — your own addresses, anything else you would
+not want published — go in `tools/leak-patterns.local.json`, which is
+git-ignored and never shipped:
+
+```json
+{
+  "patterns": [
+    { "name": "user email", "pattern": "me@example\\.com" }
+  ]
+}
+```
+
+Write the pattern there, not into `package.ps1`. A pattern in the script ships
+in every bundle anyone downloads, which is the opposite of what the guard is
+for.
+
 ## Scaffolding a project
 
 The global policy says to write the inner loop and the gate into the project's

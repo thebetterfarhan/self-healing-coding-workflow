@@ -54,6 +54,7 @@
 /tools/free-models.json
 /tools/model-prices.json
 /tools/taste-candidates.md
+/tools/leak-patterns.local.json
 
 # --- old workflow snapshots -------------------------------------------------
 /workflows/*.bak-*
