@@ -21,6 +21,7 @@
 /kodi-screenreader/
 /localsend/
 /newsback/
+/self-healing-coding-workflow/
 /tv-launcher/
 /.worktrees/
 /.codegraph/
@@ -56,6 +57,7 @@
 /tools/ci-repos.local.json
 /tools/taste-candidates.md
 /tools/leak-patterns.local.json
+/tools/leak-allow.local.json
 
 # --- old workflow snapshots -------------------------------------------------
 /workflows/*.bak-*

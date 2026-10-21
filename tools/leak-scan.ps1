@@ -15,6 +15,10 @@
     4. Your own patterns, from tools/leak-patterns.local.json. That file is
        git-ignored and never packaged, so a personal address can be blocked
        without being written into a bundle anyone downloads.
+    5. Strings that are public and may be written down, from
+       tools/leak-allow.local.json. The YouTube web-client key is one: a
+       thousand projects quote it, and quoting it is not leaking it. The file
+       is git-ignored and never packaged, so the list stays on this machine.
 
   -SecretsOnly leaves out the machine path. A private document is allowed to
   name this machine - the tools handover does exactly that - and it is the
@@ -64,11 +68,38 @@ function Get-LeakPatterns {
   return $patterns
 }
 
+function Get-LeakAllow {
+  <#  Strings that are public and may be written down.  #>
+  $allow = @()
+  $local = Join-Path $PSScriptRoot 'leak-allow.local.json'
+  if (Test-Path -LiteralPath $local) {
+    try {
+      $doc = Get-Content -LiteralPath $local -Raw | ConvertFrom-Json
+      foreach ($a in @($doc.allow)) { if ($a) { $allow += [string]$a } }
+    } catch {
+      Write-Warning "could not read $local - the allowed strings were not applied"
+    }
+  }
+  return $allow
+}
+
+function Remove-Allowed {
+  <#  Takes the allowed strings out of the text before it is scanned.  #>
+  param(
+    [string]$Content,
+    [string[]]$Allow
+  )
+  if (-not $Allow) { return $Content }
+  foreach ($a in $Allow) { $Content = $Content.Replace($a, '') }
+  return $Content
+}
+
 function Get-StagedLeaks {
   <#  Returns one string per leak found under $StageRoot. #>
   param(
     [Parameter(Mandatory)][string]$StageRoot,
-    $Patterns
+    $Patterns,
+    [string[]]$Allow
   )
   if (-not $Patterns) { $Patterns = Get-LeakPatterns }
   $leaks = @()
@@ -85,8 +116,9 @@ function Get-StagedLeaks {
       $body = $content.Substring($a, $b - $a)
       if ($body -match '(?m)^-\s+.*Confidence:\s*0\.') { $leaks += "$rel : a generated taste block" }
     }
+    $scanned = Remove-Allowed -Content $content -Allow $Allow
     foreach ($p in $Patterns) {
-      if ($content -match $p.Pattern) { $leaks += ("{0} : {1}" -f $rel, $p.Name) }
+      if ($scanned -match $p.Pattern) { $leaks += ("{0} : {1}" -f $rel, $p.Name) }
     }
   }
   return $leaks
@@ -96,7 +128,8 @@ function Get-RepoLeaks {
   <#  Scans the tracked files of a repository, working-tree copies. #>
   param(
     [Parameter(Mandatory)][string]$RepoPath,
-    $Patterns
+    $Patterns,
+    [string[]]$Allow
   )
   if (-not $Patterns) { $Patterns = Get-LeakPatterns }
   $leaks = @()
@@ -113,8 +146,9 @@ function Get-RepoLeaks {
       $body = $content.Substring($a, $b - $a)
       if ($body -match '(?m)^-\s+.*Confidence:\s*0\.') { $leaks += "$rel : a generated taste block" }
     }
+    $scanned = Remove-Allowed -Content $content -Allow $Allow
     foreach ($p in $Patterns) {
-      if ($content -match $p.Pattern) { $leaks += ("{0} : {1}" -f $rel, $p.Name) }
+      if ($scanned -match $p.Pattern) { $leaks += ("{0} : {1}" -f $rel, $p.Name) }
     }
   }
   return $leaks
@@ -124,7 +158,8 @@ function Get-RepoLeaks {
 if ($Path -or $Repo) {
     $patterns = @(Get-LeakPatterns)
     if ($SecretsOnly) { $patterns = @($patterns | Where-Object { $_.Name -ne 'machine path' }) }
-    $leaks = if ($Path) { @(Get-StagedLeaks -StageRoot $Path -Patterns $patterns) } else { @(Get-RepoLeaks -RepoPath $Repo -Patterns $patterns) }
+    $allow = @(Get-LeakAllow)
+    $leaks = if ($Path) { @(Get-StagedLeaks -StageRoot $Path -Patterns $patterns -Allow $allow) } else { @(Get-RepoLeaks -RepoPath $Repo -Patterns $patterns -Allow $allow) }
   if ($leaks.Count -gt 0) {
     if (-not $Quiet) {
       Write-Host 'LEAK FOUND - these must not be published:' -ForegroundColor Red

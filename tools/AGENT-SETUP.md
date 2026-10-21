@@ -111,6 +111,24 @@ Write the pattern there, not into `package.ps1`. A pattern in the script ships
 in every bundle anyone downloads, which is the opposite of what the guard is
 for.
 
+A string that is public and may be written down goes in
+`tools/leak-allow.local.json`, which is git-ignored and never shipped either.
+The YouTube web-client key is the one that comes up: a thousand projects
+quote it, and quoting it is not leaking it.
+
+```json
+{
+  "allow": [
+    "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+  ]
+}
+```
+
+The list is on this machine only, so a tracked file that quotes an allowed
+string still trips the scan on the runner, where the list does not exist.
+Quote a public key in a tracked file only if the scan is run with the same
+list.
+
 ## Scaffolding a project
 
 The global policy says to write the inner loop and the gate into the project's

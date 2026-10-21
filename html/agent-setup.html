@@ -291,6 +291,19 @@ git-ignored and never shipped:</p>
 <p>Write the pattern there, not into <code>package.ps1</code>. A pattern in the script ships
 in every bundle anyone downloads, which is the opposite of what the guard is
 for.</p>
+<p>A string that is public and may be written down goes in
+<code>tools/leak-allow.local.json</code>, which is git-ignored and never shipped either.
+The YouTube web-client key is the one that comes up: a thousand projects
+quote it, and quoting it is not leaking it.</p>
+<pre><code class="language-json">{
+  "allow": [
+    "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+  ]
+}</code></pre>
+<p>The list is on this machine only, so a tracked file that quotes an allowed
+string still trips the scan on the runner, where the list does not exist.
+Quote a public key in a tracked file only if the scan is run with the same
+list.</p>
 <h2 id="scaffolding-a-project">Scaffolding a project</h2>
 <p>The global policy says to write the inner loop and the gate into the project&#39;s
 AGENTS.md so the next session does not rediscover the trap.
