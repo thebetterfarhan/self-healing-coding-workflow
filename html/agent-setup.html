@@ -297,13 +297,12 @@ The YouTube web-client key is the one that comes up: a thousand projects
 quote it, and quoting it is not leaking it.</p>
 <pre><code class="language-json">{
   "allow": [
-    "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+    "the exact string, copied from where it is public"
   ]
 }</code></pre>
-<p>The list is on this machine only, so a tracked file that quotes an allowed
-string still trips the scan on the runner, where the list does not exist.
-Quote a public key in a tracked file only if the scan is run with the same
-list.</p>
+<p>Write the value itself into that file, not into this document: the file is
+git-ignored, and this one is not. A tracked file that quotes the string
+trips the scan on the runner, where the list does not exist.</p>
 <h2 id="scaffolding-a-project">Scaffolding a project</h2>
 <p>The global policy says to write the inner loop and the gate into the project&#39;s
 AGENTS.md so the next session does not rediscover the trap.

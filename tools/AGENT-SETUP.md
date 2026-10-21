@@ -119,15 +119,14 @@ quote it, and quoting it is not leaking it.
 ```json
 {
   "allow": [
-    "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+    "the exact string, copied from where it is public"
   ]
 }
 ```
 
-The list is on this machine only, so a tracked file that quotes an allowed
-string still trips the scan on the runner, where the list does not exist.
-Quote a public key in a tracked file only if the scan is run with the same
-list.
+Write the value itself into that file, not into this document: the file is
+git-ignored, and this one is not. A tracked file that quotes the string
+trips the scan on the runner, where the list does not exist.
 
 ## Scaffolding a project
 
