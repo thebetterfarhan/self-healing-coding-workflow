@@ -22,9 +22,13 @@ Get-ChildItem -LiteralPath $tools -Filter *.ps1 | ForEach-Object {
 try {
     . (Join-Path $tools 'agent-route.ps1')
     $p = Get-RoutePenalties
-    $r = Select-CheapModel -Tier quick
-    if (-not $r -or -not $r.Id) { throw 'Select-CheapModel returned no model' }
-    Write-Output ("route smoke OK: quick=" + $r.Id)
+    # Get-AgentRoute is the whole decision, static table included. The price
+    # catalog it prefers is a convenience: on a machine without the Command
+    # Code CLI there is no catalog, and the static table is the answer. Asking
+    # the price picker alone made this check fail on a clean runner.
+    $r = Get-AgentRoute -Task 'find the setting that controls focus return' -Complexity 'quick' -Backend 'commandcode'
+    if (-not $r -or -not $r.Model) { throw 'Get-AgentRoute returned no model' }
+    Write-Output ("route smoke OK: quick=" + $r.Model)
     $ranking = Get-BackendRanking
     Write-Output ("backend ranking: " + ($ranking -join ' > '))
 } catch {
@@ -75,6 +79,10 @@ if ((Test-Path $liveAgents) -and (Test-Path $template)) {
     $tpl = [System.IO.File]::ReadAllText($template)
     $t = $tpl.IndexOf('-->')
     if ($t -ge 0) { $tpl = $tpl.Substring($t + 3).Trim() }
+    # Compare with the line endings normalised: a fresh install writes the
+    # policy with the platform's endings, and that is not a stale template.
+    $live = ($live -replace "`r`n", "`n")
+    $tpl = ($tpl -replace "`r`n", "`n")
     if ($live -eq $tpl) { Write-Output 'template in sync with the live AGENTS.md' }
     else { Write-Output 'TEMPLATE STALE: run tools/setup.ps1 -RefreshTemplate before sharing' }
 } else {
