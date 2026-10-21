@@ -46,6 +46,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+
+. (Join-Path $PSScriptRoot 'leak-scan.ps1')
 $Tools    = $PSScriptRoot
 $Root     = Split-Path $Tools -Parent
 $Name     = 'workflow-kit'
@@ -85,6 +87,7 @@ $files = @(
     'workflow\commandcode-hooks\superpowers-bootstrap.mjs'
     'tools\AGENT-SETUP.md'
     'tools\DEV-SETUP.md'
+    'tools\README.template.md'
     'tools\model-prices.json'
     'tools\free-models.json'
     'tools\agent-interop\server.mjs'
@@ -180,64 +183,9 @@ if (Test-Path $livePolicy) {
 #
 # The bundle is public. The learned taste is per-user and must never travel
 # with it, and a credential or a personal path in a public release is a leak
-# that cannot be undone by deleting the file later.
+# that cannot be undone by deleting the file later. The scan runs at the end
+# of this script, after every file is written.
 # ---------------------------------------------------------------------------
-function Get-StagedLeaks {
-    param([string]$StageRoot)
-
-    $leaks = @()
-    $text = @('.md', '.ps1', '.py', '.mjs', '.js', '.json', '.toml', '.txt', '.html', '.yml', '.yaml')
-    $patterns = @(
-        @{ Name = 'private key';   Pattern = '-----BEGIN [A-Z ]*PRIVATE KEY-----' },
-        @{ Name = 'aws key';       Pattern = '\bAKIA[0-9A-Z]{16}\b' },
-        @{ Name = 'github token';  Pattern = '\bgh[pousr]_[A-Za-z0-9]{20,}\b' },
-        @{ Name = 'github pat';    Pattern = '\bgithub_pat_[A-Za-z0-9_]{20,}\b' },
-        @{ Name = 'slack token';   Pattern = '\bxox[baprs]-[A-Za-z0-9-]{10,}\b' },
-        @{ Name = 'google api key'; Pattern = '\bAIza[0-9A-Za-z_-]{35}\b' },
-        @{ Name = 'jwt';           Pattern = '\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{8,}' },
-        @{ Name = 'machine path';  Pattern = '[A-Za-z]:\\Users\\' }
-    )
-    # Personal patterns - your own addresses, anything you would not want in a
-    # public bundle - live in tools/leak-patterns.local.json, which is
-    # git-ignored and never shipped. Writing one into this file would put it
-    # in every bundle anyone downloads.
-    $localPatterns = Join-Path $PSScriptRoot 'leak-patterns.local.json'
-    if (Test-Path -LiteralPath $localPatterns) {
-        try {
-            $local = Get-Content -LiteralPath $localPatterns -Raw | ConvertFrom-Json
-            foreach ($p in @($local.patterns)) {
-                if ($p -and $p.pattern) { $patterns += @{ Name = $p.name; Pattern = $p.pattern } }
-            }
-        } catch {
-            Write-Host "    note could not read $localPatterns - personal leak patterns were not applied" -ForegroundColor Gray
-        }
-    }
-    foreach ($file in Get-ChildItem -LiteralPath $StageRoot -Recurse -File) {
-        if ($file.Extension -notin $text) { continue }
-        $content = Get-Content -LiteralPath $file.FullName -Raw -ErrorAction SilentlyContinue
-        if (-not $content) { continue }
-        $rel = $file.FullName.Substring($StageRoot.Length).TrimStart('\', '/')
-        # A real taste block: the BEGIN/END markers with taste bullets between
-        # them. A script that merely mentions the markers is not one.
-        $a = $content.IndexOf('<!-- TASTE:BEGIN'); $b = $content.IndexOf('<!-- TASTE:END -->')
-        if ($a -ge 0 -and $b -gt $a) {
-            $body = $content.Substring($a, $b - $a)
-            if ($body -match '(?m)^-\s+.*Confidence:\s*0\.') { $leaks += "$rel : a generated taste block" }
-        }
-        foreach ($p in $patterns) {
-            if ($content -match $p.Pattern) { $leaks += ("{0} : {1}" -f $rel, $p.Name) }
-        }
-    }
-    return $leaks
-}
-
-$leaks = @(Get-StagedLeaks -StageRoot (Join-Path $Stage $Name))
-if ($leaks.Count -gt 0) {
-    Write-Host '    REFUSING TO SHIP - the bundle contains things that must stay private:' -ForegroundColor Red
-    $leaks | ForEach-Object { Write-Host "      $_" -ForegroundColor Red }
-    Remove-Item $Stage -Recurse -Force
-    exit 1
-}
 
 # ---------------------------------------------------------------------------
 # Bundle README
@@ -253,6 +201,22 @@ if (-not (Test-Path -LiteralPath $readmeTemplate)) { throw "README template miss
 $readme = [System.IO.File]::ReadAllText($readmeTemplate, [System.Text.Encoding]::UTF8)
 $readme = $readme.Replace('{{SKILLS_NOTE}}', $skillsNote)
 [System.IO.File]::WriteAllText((Join-Path (Join-Path $Stage $Name) 'README.md'), $readme, (New-Object System.Text.UTF8Encoding($false)))
+
+# ---------------------------------------------------------------------------
+# Refuse to ship a taste block, a credential, a machine path or anything in
+# the personal leak patterns. Every file is written by now, the README
+# included, so nothing can slip in behind the scan.
+#
+# The scanner lives in tools/leak-scan.ps1, shared with the CI workflow that
+# scans this repository's tracked files.
+# ---------------------------------------------------------------------------
+$leaks = @(Get-StagedLeaks -StageRoot (Join-Path $Stage $Name))
+if ($leaks.Count -gt 0) {
+    Write-Host '    REFUSING TO SHIP - the bundle contains things that must stay private:' -ForegroundColor Red
+    $leaks | ForEach-Object { Write-Host "      $_" -ForegroundColor Red }
+    Remove-Item $Stage -Recurse -Force
+    exit 1
+}
 
 # ---------------------------------------------------------------------------
 # Manifest

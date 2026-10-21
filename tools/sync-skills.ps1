@@ -25,7 +25,14 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $source = Join-Path $HOME '.agents\skills'
-if (-not (Test-Path -LiteralPath $source)) { throw "canonical skill set missing: $source" }
+if (-not (Test-Path -LiteralPath $source)) {
+    # No canonical set on this machine, so there is nothing to share out. That
+    # is not an error: the public bundle ships without skills and the workflow
+    # runs without them. It used to throw, which made the whole install fail
+    # on a clean machine.
+    Write-Output 'sync-skills: no canonical skill set - nothing to sync'
+    exit 0
+}
 
 $dests = @(
     (Join-Path $HOME '.codex\skills'),

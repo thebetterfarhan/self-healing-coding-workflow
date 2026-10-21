@@ -66,7 +66,7 @@ Tier     : quick
 Model    : opencode/deepseek-v4.1-flash-free
 Effort   : (none)
 EstCost  : n/a (static table)
-WorkDir  : C:\Users\you\Documents\Codex
+WorkDir  : ~/Documents/Codex
 ReadOnly : True
 Mode     : read-only
 Fallback : codex (gpt-6-luna)

@@ -1,7 +1,7 @@
 workflow-kit manifest
-built:      2026-10-20 22:42:54
+built:      2026-10-20 23:17:26
 source:     (not recorded - the bundle is machine independent)
-files:      66
+files:      68
 skills:     
 policy sha: jG8WbtgOWzbSPxeXwkoJ2ViIt7QL5onUqV03zVxaejE=
 
@@ -41,6 +41,7 @@ contents:
   tools\free-models.json
   tools\guard-hook.ps1
   tools\init-project.ps1
+  tools\leak-scan.ps1
   tools\memory-consolidate.ps1
   tools\memory-curate.ps1
   tools\model-prices.json
@@ -48,6 +49,7 @@ contents:
   tools\package.ps1
   tools\policy_template.ps1
   tools\profile.ps1
+  tools\README.template.md
   tools\refresh-free-models.ps1
   tools\refresh-model-prices.ps1
   tools\release-gate.ps1
