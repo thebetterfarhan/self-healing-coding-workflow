@@ -1,104 +1,160 @@
 # Self-Healing Coding Workflow
 
-A self-healing, self-repairing workflow for Codex, OpenCode and Command Code.
+**One configuration for Codex, OpenCode and Command Code that repairs itself, remembers what it learned, and picks the right model for the job.**
 
-**Author:** Farhan Khan ([@thebetterfarhan](https://github.com/thebetterfarhan))
-**License:** MIT
+MIT · Windows 10/11 with PowerShell 5.1 · Author: [Farhan Khan (@thebetterfarhan)](https://github.com/thebetterfarhan)
+
+---
+
+## The problem
+
+Three coding CLIs, three configuration folders, one policy that drifts the
+moment you edit a single copy. A model pinned in two places that disagree. A
+file somebody truncated at 03:00 and nobody notices until Monday.
+
+## What this is
+
+A single configuration, held in a git repository, that:
+
+- **holds one policy** and copies it byte-identically into all three CLIs, with
+  a check that fails on drift;
+- **picks the model in one place** - per role, per task tier, per backend -
+  with a free-model fallback and a demotion when a backend keeps failing;
+- **repairs itself at 03:00** - validates every tracked file, restores a broken
+  one from the last good commit, and rolls back any step that fails;
+- **remembers** what it learned, as a taste file that reaches every agent;
+- **guards** the dangerous paths, refusing patches that touch signing keys or
+  carry secret-shaped text.
+
+## How it works
+
+```mermaid
+flowchart TD
+    A["work 'find the setting that controls focus return'"] --> B{"how hard is this?"}
+    B -->|quick| C["cheap model, cheap backend"]
+    B -->|standard| D["capable model"]
+    B -->|deep| E["strongest model"]
+    C --> F{"backend healthy?"}
+    D --> F
+    E --> F
+    F -->|no| G["fall back to a free model"]
+    G --> F
+    F -->|yes| H["result"]
+    H --> I["03:00 nightly job"]
+    I --> J{"every tracked file valid?"}
+    J -->|broken| K["restore from the last good commit"]
+    J -->|fine| L["record the validated state"]
+    K --> L
+    L --> M["workflow-status"]
+```
 
 ## Install
 
-`
-# 1. Unzip anywhere, e.g. ~/Documents/Codex
-# 2. Install
+Unzip anywhere, for example `~/Documents/Codex`, then:
+
+```powershell
 cd tools
 powershell -NoProfile -ExecutionPolicy Bypass -File ./setup.ps1
-`
+```
 
-\setup.ps1 -Check\ reports what it would do and writes nothing.
+`setup.ps1 -Check` reports what it would do and writes nothing - look before
+you leap.
 
-Open a new PowerShell window afterwards, then run:
+Open a **new** PowerShell window afterwards (the profile loads at start) and:
 
-`
+```powershell
 work 'Find the setting that controls focus return' -Preview
-`
+```
 
-Read \START-HERE.md\ next. It is the shortest path to "useful".
+`-Preview` shows the route - backend, model, reasoning effort - without
+spending a token on the run. Then read
+**[START-HERE.md](START-HERE.md)**: it is the shortest path from "installed"
+to "useful".
 
-## Requirements
+## One policy, three agents, one model table
 
-- Windows 10/11 with PowerShell 5.1 (any modern Windows).
-- git.
-- At least one coding CLI (Codex, OpenCode or Command Code). The workflow
-  degrades gracefully if one is missing.
+| Piece | Where | What it does |
+| --- | --- | --- |
+| Policy | `~/.codex/AGENTS.md` | The rules every agent follows: how to work, what needs approval, how to verify, how to report. Copied byte-identical into Codex, OpenCode and Command Code. |
+| Roster | `workflows/agents.toml` | scout, builder, verifier, debugger - and the model each one runs on, for every backend. |
+| Router | `tools/agent-route.ps1` | Reads the request, grades it quick, standard or deep, and picks the model and the backend. |
+| Taste | `~/.commandcode/taste/taste.md` | Your preferences. One edit reaches all three CLIs. |
+| Guard | `tools/guard-hook.ps1` | Denies patches that touch signing keys or carry secret-shaped text. |
+| Status | `tools/status.ps1` | One screen: install state, drift per layer, backend health, spend. |
 
-## Optional
+## The model table, in one file
 
-- **rtk** - token-saving command wrapper. Without it, commands run normally.
-- **Superpowers skills** - guided workflows for the four task cues. Without
-  them, the cues still work as prose instructions.
-- **Audio feedback** - never installed by default.
+`workflows/agents.toml` is the only place a model is chosen. The role pins and
+the tier table live together, so they cannot drift apart.
+
+| Role | Codex | OpenCode | Command Code |
+| --- | --- | --- | --- |
+| scout - finds code, never edits | `gpt-6-luna` / low | `opencode/deepseek-v4.1-flash-free` / low | `poolside/laguna-s-2.1-free` / low |
+| builder - the only one that writes | `gpt-6-sol` / high | `opencode/deepseek-v4-pro` / high | `deepseek/deepseek-v4-pro` / high |
+| verifier - reviews and runs the checks | `gpt-5.6-terra` / medium | `opencode/deepseek-v4.1-flash` / medium | `gpt-6-luna` / medium |
+| debugger - root cause, then the fix | `gpt-6-astra` / high | `opencode/gpt-5.3-codex` / high | `deepseek/deepseek-v4-pro` / high |
+
+The task tier is a second axis: `quick` takes the cheap end, `deep` the strong
+end. When a backend is plan-restricted, over its usage window, or simply
+broken, the router falls back to a free model instead of failing.
+
+## What stays on your machine
+
+- **Your taste.** The bundle ships a starter; your own preferences live in
+  `~/.commandcode/taste/` and are git-ignored.
+- **Your addresses.** Personal leak patterns live in
+  `tools/leak-patterns.local.json`, which is git-ignored and never packaged.
+- **Your machine paths.** The packer refuses to ship a bundle containing one.
+- **A remote.** The configuration repository is local. Nothing is pushed
+  unless you push it.
+
+## The skill set
 
 The canonical skill set is **not** bundled. The workflow works without it: the task cues run as prose instructions.
 
-## What is in here
+## Requirements
 
-| Path | What |
+- Windows 10/11 with PowerShell 5.1.
+- git.
+- At least one coding CLI - Codex, OpenCode or Command Code. The workflow
+  degrades gracefully when one is missing.
+
+Optional: **rtk**, a token-saving command wrapper - without it, commands run
+normally. The **Superpowers skills**, guided workflows for the four task cues.
+And **audio feedback**, which is never installed by default.
+
+## Commands worth knowing
+
+| Command | What it does |
 | --- | --- |
-| \START-HERE.md\ | Read this first. |
-| \SELF-HEALING-WORKFLOW.md\ | The complete reference, basics to advanced. |
-| \WORKFLOW-USAGE.md\ | Operator quick reference. |
-| \workflows/\ | Canonical config: the agent roster. |
-| \workflow/\ | Install payload: the policy template, the starter taste, the permission template. |
-| \	ools/\ | Every script. Plain PowerShell with a header comment each. |
-| \html/\ | This documentation, published for a screen reader. |
-| \LICENSE\ | MIT. |
-
-## Check it any time
-
-\\\
-workflow-status
-\\\
-
-One screen: install state, the nightly job and its last result, drift per
-layer, backend health, and spend. Exit 0 means healthy.
-
-## The one thing to edit
-
-\~/.commandcode/taste/taste.md\ - your preferences. It ships with a baseline
-that you correct once. The nightly job renders it into every agent's
-instruction file, so one edit applies to all three.
-
-## The configuration repository
-
-The workspace is a git repository that holds the configuration only - the
-policy, the docs, \workflows/\, \workflow/\, \	ools/\ and the HTML. The
-project repositories in the same folder are ignored.
-
-\	ools/repair-config.ps1\ is the first step of the nightly job: it validates
-every tracked file, restores a broken one from the last good commit and
-records the validated state. It creates the repository if it is missing, so a
-fresh install heals itself from the first run. There is no remote - nothing is
-pushed.
-
+| `work '<request>'` | Route a task to the right backend and model. `-Preview` shows the route first. |
+| `workflow-status` | One screen: install state, nightly job, drift, backend health, spend. Exit 0 means healthy. |
+| `worktree '<name>'` | An isolated git worktree for risky work. |
+| `reload` | Re-read the PowerShell profile after editing it. |
+| `taste-sync` | Re-render your preferences into every agent's instruction file. |
 
 ## The nightly job
 
 At 03:00 a scheduled task re-syncs the configuration, refreshes the model
-catalogs, distils the day's sessions into memory, and rolls back any step
-that fails. Log: \	ools/self-repair.log\.
+catalogs, distils the day's sessions into memory, and rolls back any step that
+fails. Log: `tools/self-repair.log`.
 
 Turn it off:
-\\\
-Unregister-ScheduledTask CodexWorkflowSelfHeal -Confirm:\False
-\\\
 
-## Rebuilding the HTML
+```powershell
+Unregister-ScheduledTask CodexWorkflowSelfHeal -Confirm:$false
+```
 
-\\\
-cd tools/docgen
-npm install
-node convert-docs.mjs
-node verify-html.mjs
-\\\
+## Documentation
 
-Built with marked 18.1.1 (MIT).
+| Document | What is in it |
+| --- | --- |
+| [START-HERE.md](START-HERE.md) | The shortest path from "installed" to "useful". |
+| [SELF-HEALING-WORKFLOW.md](SELF-HEALING-WORKFLOW.md) | The complete reference, basics to advanced. |
+| [WORKFLOW-USAGE.md](WORKFLOW-USAGE.md) | Operator quick reference. |
+| [tools/AGENT-SETUP.md](tools/AGENT-SETUP.md) | The agent roster, the router, the cross-CLI handoffs. |
+| [html/](html/) | The same documentation as HTML, built for a screen reader. |
+
+## License
+
+MIT. See [LICENSE](LICENSE).
