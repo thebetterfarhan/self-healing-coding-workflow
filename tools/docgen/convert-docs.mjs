@@ -524,6 +524,11 @@ for (const d of DOCS) {
   let md;
   try { md = readFileSync(src, 'utf8'); }
   catch { console.log(`SKIP (missing): ${d.src}`); continue; }
+  // Normalise the line endings: a Windows checkout has CRLF and a Linux one
+  // has LF, and the difference would otherwise end up inside the rendered
+  // code blocks, so the same source would produce different HTML on the
+  // machine that wrote it and the machine that published it.
+  md = md.replace(/\r\n/g, '\n');
 
   const { title, body, toc } = renderDoc(md, d.title);
 
