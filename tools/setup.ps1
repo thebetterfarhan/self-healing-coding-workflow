@@ -373,7 +373,12 @@ else {
     $out = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $verify 2>&1 | Out-String
     $ErrorActionPreference = 'Stop'
     $last = ($out.Trim() -split "`r?`n" | Where-Object { $_.Trim() } | Select-Object -Last 1)
-    if ($LASTEXITCODE -eq 0) { Ok "verify -> $last" } else { Die "verify failed: $last" }
+    if ($LASTEXITCODE -eq 0) { Ok "verify -> $last" }
+    else {
+        # Show which check failed, not just the summary line.
+        ($out -split "`r?`n" | Where-Object { $_ -match 'FAIL' } | Select-Object -First 5) | ForEach-Object { Write-Host "      $_" -ForegroundColor Red }
+        Die "verify failed: $last"
+    }
 }
 
 # ---------------------------------------------------------------------------
