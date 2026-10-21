@@ -8,7 +8,7 @@
 //   - ASCII schematics are exposed as role="img" with a written description
 //   - visible focus ring, honours prefers-reduced-motion and prefers-color-scheme
 //   - copy button and theme button carry explicit accessible names
-import { readFileSync, writeFileSync, mkdirSync, statSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Marked } from 'marked';
@@ -532,11 +532,13 @@ for (const d of DOCS) {
 
   const { title, body, toc } = renderDoc(md, d.title);
 
-  const bytes = statSync(src).size;
-  // No modification date and no byte count here: a checkout stamps every file
-  // with the time it was cloned, and the line endings differ between Windows
-  // and Linux, so either would make the output differ on every machine and
-  // the committed HTML could never be compared with a fresh render.
+  // The size is measured on the normalised text, not on the file: a CRLF
+  // checkout is one byte larger per line, and the count that lands on the
+  // index page must not depend on which machine rendered it.
+  const bytes = Buffer.byteLength(md, 'utf8');
+  // No modification date here: a checkout stamps every file with the time it
+  // was cloned, so a date would differ on every machine and the committed
+  // HTML could never be compared with a fresh render.
   const meta = `Source <code>${escapeHtml(d.src)}</code>`;
 
   const html = page({ title, body, toc, meta,

@@ -233,6 +233,12 @@ if ($failed.Count -gt 0) {
 }
 
 # Record the validated state, so the next run has something to restore from.
+# The documentation is rendered from the Markdown sources, so it is rendered
+# here too: a repaired source file would otherwise leave the committed HTML
+# stale, and the drift check on the other side would fail on every push.
+if ($node -and (Test-Path (Join-Path $Root 'tools\docgen\node_modules\marked'))) {
+    & $node.Source (Join-Path $Root 'tools\docgen\convert-docs.mjs') | Out-Null
+}
 if ($managedPaths.Count -gt 0) {
     & git -C $Root add -A -- $managedPaths | Out-Null
 }
