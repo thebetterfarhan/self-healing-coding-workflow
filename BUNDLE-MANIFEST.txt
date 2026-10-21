@@ -1,13 +1,16 @@
 workflow-kit manifest
-built:      2026-10-20 22:32:11
+built:      2026-10-20 22:40:14
 source:     (not recorded - the bundle is machine independent)
-files:      62
+files:      66
 skills:     
 policy sha: jG8WbtgOWzbSPxeXwkoJ2ViIt7QL5onUqV03zVxaejE=
 
 contents:
+  .github\workflows\verify.yml
   .gitignore
   AGENTS-compat.md
+  CHANGELOG.md
+  CONTRIBUTING.md
   html\agents-compat.html
   html\agent-setup.html
   html\dev-setup.html
@@ -16,6 +19,7 @@ contents:
   html\start-here.html
   html\workflow-usage.html
   LICENSE
+  SECURITY.md
   SELF-HEALING-WORKFLOW.md
   START-HERE.md
   tools\agent-interop\package.json

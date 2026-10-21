@@ -1,0 +1,33 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Unit tests, documentation and roster rendering
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Continuation runner tests
+        shell: pwsh
+        run: python -m unittest tools/test_auto_next.py
+
+      - name: Documentation structure and accessibility checks
+        shell: pwsh
+        run: node tools/docgen/verify-html.mjs
+
+      - name: The roster renders for all three CLIs
+        shell: pwsh
+        env:
+          USERPROFILE: ${{ runner.temp }}\profile
+        run: |
+          New-Item -ItemType Directory -Force -Path $env:USERPROFILE | Out-Null
+          powershell -NoProfile -ExecutionPolicy Bypass -File tools/sync-agents.ps1

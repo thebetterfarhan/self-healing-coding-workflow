@@ -48,6 +48,64 @@ flowchart TD
     L --> M["workflow-status"]
 ```
 
+## What it looks like
+
+One command, and the route it picked:
+
+```powershell
+work 'Find the setting that controls focus return' -Preview
+```
+
+````text
+  (backend ranking: opencode(ok) > codex(ok) > commandcode(ok))
+
+Agent    : opencode
+Tier     : quick
+Model    : opencode/deepseek-v4.1-flash-free
+Effort   : (none)
+EstCost  : n/a (static table)
+WorkDir  : C:\Users\you\Documents\Codex
+ReadOnly : True
+Mode     : read-only
+Fallback : codex (gpt-6-luna)
+````
+
+And the state of the whole thing, on demand:
+
+```powershell
+workflow-status
+```
+
+````text
+Workflow status
+
+Install
+  policy                  in sync across 3 CLIs (61E071FD)
+  skills                  76 canonical, rendered into all three CLIs
+  roster                  4 agents rendered
+  taste                   35 entries (edit to make them yours)
+  guard hook              wired (PreToolUse)
+
+Configuration repo
+  files                   clean - f37470b workflow: record the validated configuration
+
+Nightly repair
+  task                    Ready (2026-10-17T03:00:00-05:00)
+  last run                10/20/2026 10:45:45   result 0
+  next run                10/21/2026 3:00:00
+  last steps              run complete ok=12 failed=0
+  last failure            none recorded
+
+Drift
+  sync-agents             in sync
+  sync-agent-instructions in sync
+  sync-skills             in sync
+  sync-taste              in sync
+````
+
+Both screens are captured from a live install. The path and the commit hash
+are the only things changed.
+
 ## Install
 
 Unzip anywhere, for example `~/Documents/Codex`, then:
@@ -144,6 +202,20 @@ Turn it off:
 ```powershell
 Unregister-ScheduledTask CodexWorkflowSelfHeal -Confirm:$false
 ```
+
+## Verify the download
+
+Every release ships a `SHA256SUMS.txt` beside the zip. After downloading it:
+
+```powershell
+Get-FileHash .\self-healing-coding-workflow-vX.Y.Z.zip -Algorithm SHA256
+```
+
+Compare the value with the line for the same file in `SHA256SUMS.txt`.
+
+The packer refuses to build a bundle that contains a private key, a token, a
+machine path, a generated taste block, or anything matching your personal leak
+patterns - so the zip you download is the one that was checked.
 
 ## Documentation
 
