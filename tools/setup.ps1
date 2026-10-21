@@ -89,26 +89,9 @@ function Die($m)  { Write-Host "    XX   $m" -ForegroundColor Red; $script:drift
 # ---------------------------------------------------------------------------
 if ($RefreshTemplate) {
     $live = Join-Path $Codex 'AGENTS.md'
-    if (-not (Test-Path $live)) { throw "No live AGENTS.md at $live" }
-    $text = [System.IO.File]::ReadAllText($live)
-    $begin = '<!-- TASTE:BEGIN'; $end = '<!-- TASTE:END -->'
-    $a = $text.IndexOf($begin); $b = $text.IndexOf($end)
-    if ($a -ge 0 -and $b -gt $a) { $text = $text.Substring(0, $a).TrimEnd() + "`n" }
-    $header = @(
-        '<!--'
-        '  AGENTS.template.md - the global policy, distributable.'
-        ''
-        '  A frozen snapshot of the canonical ~/.codex/AGENTS.md with the generated'
-        '  taste block removed. Taste is per-user and is injected by'
-        '  tools/sync-taste.ps1 after installation.'
-        ''
-        '  Refresh with:  ~/Documents/Codex/tools/setup.ps1 -RefreshTemplate'
-        '-->'
-        ''
-        ''
-    ) -join "`n"
     $out = Join-Path $Payload 'AGENTS.template.md'
-    [System.IO.File]::WriteAllText($out, $header + $text, $Utf8)
+    . (Join-Path $PSScriptRoot 'policy_template.ps1')
+    [System.IO.File]::WriteAllText($out, (Get-PolicyTemplateText -LivePath $live), $Utf8)
     Write-Host "refreshed $out ($((Get-Item $out).Length) bytes)" -ForegroundColor Green
     exit 0
 }

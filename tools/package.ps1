@@ -166,24 +166,8 @@ $stagedTemplate = Join-Path (Join-Path $Stage $Name) 'workflow\AGENTS.template.m
 if (Test-Path $livePolicy) {
     $stagedDir = Split-Path $stagedTemplate -Parent
     if (-not (Test-Path -LiteralPath $stagedDir)) { New-Item -ItemType Directory -Force -Path $stagedDir | Out-Null }
-    $text = [System.IO.File]::ReadAllText($livePolicy)
-    $begin = '<!-- TASTE:BEGIN'; $end = '<!-- TASTE:END -->'
-    $a = $text.IndexOf($begin); $b = $text.IndexOf($end)
-    if ($a -ge 0 -and $b -gt $a) { $text = $text.Substring(0, $a).TrimEnd() + "`n" }
-    $header = @(
-        '<!--'
-        '  AGENTS.template.md - the global policy, distributable.'
-        ''
-        '  A frozen snapshot of the canonical ~/.codex/AGENTS.md with the generated'
-        '  taste block removed. Taste is per-user and is injected by'
-        '  tools/sync-taste.ps1 after installation.'
-        ''
-        '  Refresh with:  ~/Documents/Codex/tools/setup.ps1 -RefreshTemplate'
-        '-->'
-        ''
-        ''
-    ) -join "`n"
-    [System.IO.File]::WriteAllText($stagedTemplate, $header + $text, (New-Object System.Text.UTF8Encoding($false)))
+    . (Join-Path $PSScriptRoot 'policy_template.ps1')
+    [System.IO.File]::WriteAllText($stagedTemplate, (Get-PolicyTemplateText -LivePath $livePolicy), (New-Object System.Text.UTF8Encoding($false)))
     Write-Host '    policy refreshed from the live canonical AGENTS.md' -ForegroundColor DarkGray
 }
 
