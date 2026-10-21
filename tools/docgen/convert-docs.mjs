@@ -528,14 +528,16 @@ for (const d of DOCS) {
   const { title, body, toc } = renderDoc(md, d.title);
 
   const bytes = statSync(src).size;
-  const mtime = new Date(statSync(src).mtimeMs).toISOString().slice(0, 10);
-  const meta = `Source <code>${escapeHtml(d.src)}</code> &middot; ${bytes.toLocaleString()} bytes &middot; updated ${mtime}`;
+  // No modification date here: a checkout stamps every file with the time it
+  // was cloned, so a date would make the output differ on every machine and
+  // the committed HTML could never be compared with a fresh render.
+  const meta = `Source <code>${escapeHtml(d.src)}</code> &middot; ${bytes.toLocaleString()} bytes`;
 
   const html = page({ title, body, toc, meta,
     footer: `<p class="nextlink">Generated from the Markdown source. Edit the <code>.md</code> file and re-run the converter.</p>` });
 
   writeFileSync(`${OUTDIR}/${d.out}`, html, 'utf8');
-  rendered.push({ ...d, bytes, mtime, out: d.out });
+  rendered.push({ ...d, bytes, out: d.out });
   console.log(`OK  ${d.src} -> html/${d.out}  (${(html.length / 1024).toFixed(1)} KB html)`);
 }
 
