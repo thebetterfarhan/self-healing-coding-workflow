@@ -1,5 +1,7 @@
 # Self-Healing Coding Workflow
 
+![verify](https://github.com/thebetterfarhan/self-healing-coding-workflow/actions/workflows/verify.yml/badge.svg)
+
 **One configuration for Codex, OpenCode and Command Code that repairs itself, remembers what it learned, and picks the right model for the job.**
 
 MIT · Windows 10/11 with PowerShell 5.1 · Author: [Farhan Khan (@thebetterfarhan)](https://github.com/thebetterfarhan)
