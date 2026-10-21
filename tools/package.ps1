@@ -159,7 +159,10 @@ if (-not $NoHtml) {
 
 $copied = 0; $missing = @()
 New-Item -ItemType Directory -Force -Path (Join-Path $Stage $Name) | Out-Null
-foreach ($rel in ($files + $htmlFiles)) {
+# The generated HTML is already in the stage: the public subset, rendered
+# fresh. Copying the repository's html/ over it would put back the pages the
+# bundle does not ship, and an index that links to them.
+foreach ($rel in $files) {
     $src = Join-Path $Root $rel
     if (-not (Test-Path -LiteralPath $src)) { $missing += $rel; continue }
     $dst = Join-Path (Join-Path $Stage $Name) $rel

@@ -221,6 +221,8 @@ patterns - so the zip you download is the one that was checked.
 
 ## Documentation
 
+**[Read it in a browser](https://thebetterfarhan.github.io/self-healing-coding-workflow/)** - the same documentation, rendered for a screen reader and published as a site.
+
 | Document | What is in it |
 | --- | --- |
 | [START-HERE.md](START-HERE.md) | The shortest path from "installed" to "useful". |

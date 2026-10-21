@@ -1,7 +1,7 @@
 workflow-kit manifest
-built:      2026-10-21 07:35:42
+built:      2026-10-21 07:40:18
 source:     (not recorded - the bundle is machine independent)
-files:      72
+files:      65
 skills:     
 policy sha: jG8WbtgOWzbSPxeXwkoJ2ViIt7QL5onUqV03zVxaejE=
 

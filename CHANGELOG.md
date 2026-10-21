@@ -3,6 +3,18 @@
 The public releases of **self-healing-coding-workflow**. `vX.Y.Z` is the tag,
 the release and the asset name.
 
+## v0.1.12
+
+- The documentation is published as a GitHub Pages site:
+  **https://thebetterfarhan.github.io/self-healing-coding-workflow/** - the
+  screen-reader build, readable in a browser and not only inside the
+  downloaded bundle. A workflow deploys it on every push to main.
+- The bundle's index no longer links to pages the bundle does not ship. The
+  packer was copying the repository's committed HTML over the freshly
+  rendered public subset, which put back the workspace instructions, the
+  tools handover and the dated audits in the index - four dead links, and the
+  names of the machine-specific documents in public view.
+
 ## v0.1.11
 
 - Three workflows, so the repository proves itself instead of asking to be
