@@ -51,11 +51,23 @@ jobs:
           # The bundle ships the public subset of the documents, so the
           # comparison is over the pages the bundle actually has. Comparing the
           # whole directory would report every page the bundle leaves out.
+          #
+          # The comparison is on the content with the line endings normalised.
+          # A checkout on Windows writes the pages with CRLF and the converter
+          # writes them with LF, and the same page in two spellings is the same
+          # page: the raw bytes of the checkout and the raw bytes of a fresh
+          # render never match.
+          function Get-NormalisedHash {
+            param([string]$Path)
+            $text = ([System.IO.File]::ReadAllText($Path) -replace "`r`n", "`n")
+            $sha = [System.Security.Cryptography.SHA256]::Create()
+            return [System.BitConverter]::ToString($sha.ComputeHash([System.Text.Encoding]::UTF8.GetBytes($text))).Replace('-', '')
+          }
           $pages = Get-ChildItem "$root\html" -File
-          $diff = Compare-Object ($pages | ForEach-Object { "$($_.Name) $((Get-FileHash $_.FullName -Algorithm SHA256).Hash)" }) `
+          $diff = Compare-Object ($pages | ForEach-Object { "$($_.Name) $(Get-NormalisedHash $_.FullName)" }) `
                                  ($pages | ForEach-Object {
                                      $inRepo = Join-Path 'html' $_.Name
-                                     if (Test-Path $inRepo) { "$($_.Name) $((Get-FileHash $inRepo -Algorithm SHA256).Hash)" }
+                                     if (Test-Path $inRepo) { "$($_.Name) $(Get-NormalisedHash $inRepo)" }
                                      else { "$($_.Name) MISSING FROM THE REPOSITORY" }
                                  })
           if ($diff) { $diff | Format-Table | Out-String | Write-Host; throw 'the committed documentation differs from the generated one' }
