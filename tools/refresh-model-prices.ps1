@@ -28,7 +28,14 @@ if (-not $Source) {
 if (-not $OutFile) {
     $OutFile = Join-Path $PSScriptRoot 'model-prices.json'
 }
-if (-not (Test-Path -LiteralPath $Source)) { throw "model catalog not found: $Source" }
+if (-not (Test-Path -LiteralPath $Source)) {
+    # The catalog ships with the Command Code CLI. Without that CLI there is
+    # nothing to price, and that is not an error: the router falls back to its
+    # static table. It used to throw, which killed the install on any machine
+    # without that CLI - including a clean CI runner.
+    Write-Output "no model catalog at $Source - the router will use its static table"
+    exit 0
+}
 
 # DeepSeek V4 models bill peak rates Mon-Fri 01-04 & 06-10 UTC; the catalog lists
 # the off-peak number, so record the peak pair here.

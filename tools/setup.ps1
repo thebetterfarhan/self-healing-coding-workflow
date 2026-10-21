@@ -190,7 +190,11 @@ foreach ($s in @('sync-agents.ps1', 'sync-skills.ps1')) {
     if (-not (Test-Path $p)) { Die "missing $s"; continue }
     $args = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $p)
     if ($Check) { $args += '-Check' }
+    # A native command that writes to stderr is an error under
+    # ErrorActionPreference=Stop, and these scripts report a problem that way.
+    $ErrorActionPreference = 'Continue'
     $out = & powershell.exe @args 2>&1 | Out-String
+    $ErrorActionPreference = 'Stop'
     $code = $LASTEXITCODE
     $last = ($out.Trim() -split "`r?`n" | Where-Object { $_.Trim() } | Select-Object -Last 1)
     if ($code -eq 0) { Ok "$s -> $last" }
@@ -207,7 +211,11 @@ foreach ($s in @('sync-agent-instructions.ps1', 'sync-taste.ps1')) {
     if (-not (Test-Path $p)) { Die "missing $s"; continue }
     $args = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $p)
     if ($Check) { $args += '-Check' }
+    # A native command that writes to stderr is an error under
+    # ErrorActionPreference=Stop, and these scripts report a problem that way.
+    $ErrorActionPreference = 'Continue'
     $out = & powershell.exe @args 2>&1 | Out-String
+    $ErrorActionPreference = 'Stop'
     $code = $LASTEXITCODE
     $last = ($out.Trim() -split "`r?`n" | Where-Object { $_.Trim() } | Select-Object -Last 1)
     if ($code -eq 0) { Ok "$s -> $last" }
@@ -303,7 +311,12 @@ if ($Check) {
     foreach ($s in @('refresh-free-models.ps1', 'refresh-model-prices.ps1')) {
         $p = Join-Path $Tools $s
         if (-not (Test-Path $p)) { Note "skipped $s (not present)"; continue }
+        # A native command that writes to stderr is an error under
+        # ErrorActionPreference=Stop, and these scripts report a missing CLI
+        # that way. The catalogs are a convenience, not a requirement.
+        $ErrorActionPreference = 'Continue'
         $out = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $p 2>&1 | Out-String
+        $ErrorActionPreference = 'Stop'
         $last = ($out.Trim() -split "`r?`n" | Where-Object { $_.Trim() } | Select-Object -Last 1)
         if ($LASTEXITCODE -eq 0) { Ok "$s -> $last" } else { Note "$s failed (needs the CLI installed): $last" }
     }
