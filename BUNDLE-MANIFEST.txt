@@ -1,13 +1,14 @@
 workflow-kit manifest
-built:      2026-10-21 00:06:25
+built:      2026-10-21 07:35:42
 source:     (not recorded - the bundle is machine independent)
-files:      71
+files:      72
 skills:     
 policy sha: jG8WbtgOWzbSPxeXwkoJ2ViIt7QL5onUqV03zVxaejE=
 
 contents:
   .github\workflows\drift.yml
   .github\workflows\install-check.yml
+  .github\workflows\pages.yml
   .github\workflows\release.yml
   .github\workflows\verify.yml
   .gitignore

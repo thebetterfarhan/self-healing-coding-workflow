@@ -79,6 +79,7 @@ $files = @(
     '.github\workflows\release.yml'
     '.github\workflows\drift.yml'
     '.github\workflows\install-check.yml'
+    '.github\workflows\pages.yml'
     'LICENSE'
     '.gitignore'
     'workflows\agents.toml'

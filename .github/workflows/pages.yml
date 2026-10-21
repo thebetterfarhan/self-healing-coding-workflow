@@ -1,0 +1,39 @@
+name: pages
+
+# The documentation in html/ is published as a GitHub Pages site. It is the
+# screen-reader build of the same documents, so it is readable in a browser
+# and not only inside the downloaded bundle.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.repository == 'thebetterfarhan/self-healing-coding-workflow'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      # The artifact's root is html/, so index.html lands at the site root and
+      # the links between the pages keep working.
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: html
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
