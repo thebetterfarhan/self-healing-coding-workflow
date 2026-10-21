@@ -69,6 +69,15 @@ if (-not $Repos) {
 }
 if (-not $Repos) { throw 'no repositories to run' }
 
+# An action a workflow uses can be forbidden by the repository's own policy,
+# and the run then stops before its first step with no log to read. Those are
+# found first, so the cause is on the screen next to the failures.
+$actionChecker = Join-Path $PSScriptRoot 'check-workflow-actions.ps1'
+if (Test-Path -LiteralPath $actionChecker) {
+    & $actionChecker -Repos $Repos
+    if ($LASTEXITCODE -ne 0) { Write-Output 'a workflow uses an action its repository does not allow - see above' }
+}
+
 # --- what can be dispatched ---------------------------------------------------
 
 # Workflows that publish something, and the ones GitHub runs on its own
