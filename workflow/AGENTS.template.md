@@ -73,7 +73,7 @@ For defects: reproduce, collect evidence, identify the cause, make the smallest 
 
 ## Subagents
 
-- Delegate bounded work when independent tasks can run faster or a specialist can reduce context. Run useful independent research, implementation, and review tasks in parallel when tools allow. Otherwise continue as one agent.
+- Delegate bounded work when independent tasks can run faster or a specialist can reduce context. Use subagents for reading, locating, and checking; keep the edits in one agent, so every diff has a single author. Run useful independent research and review tasks in parallel when tools allow. Otherwise continue as one agent.
 - Parallelize independent work when it saves time; avoid running simultaneous heavyweight tasks that compete for shared CPU or memory.
 - Give each agent a precise question, file ownership, constraints, acceptance criteria, and output format. Use fresh, minimal context when possible. Permit autonomous in-scope reading, edits, and targeted tests. Agents may not commit, push, merge, create a PR, publish, deploy, or take another approval-gated action.
 - Assign disjoint files to parallel writers; allow only one writer per file. Agents must preserve other people's changes and report findings, paths, checks, and blockers. The lead integrates results, resolves conflicts, runs final checks, and owns the final answer. Avoid duplicate investigation and idle polling.

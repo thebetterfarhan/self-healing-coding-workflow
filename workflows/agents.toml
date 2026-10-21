@@ -21,12 +21,43 @@
 codex_default_model = "gpt-6-luna"
 codex_default_effort = "low"
 
+# Tier table: the task-complexity tiers the cross-CLI router picks from.
+# It lives here, beside the role pins, so the two cannot drift apart.
+# tools/agent-route.ps1 reads this table; tools/sync-agents.ps1 renders the
+# role pins into each CLI's native agent format. Effort is omitted where the
+# model takes none.
+
+[tiers.quick]
+commandcode_model = "deepseek/deepseek-v4-flash"
+commandcode_effort = "high"
+codex_model = "gpt-6-luna"
+codex_effort = "low"
+opencode_model = "opencode/deepseek-v4.1-flash-free"
+
+[tiers.standard]
+commandcode_model = "deepseek/deepseek-v4-pro"
+commandcode_effort = "high"
+codex_model = "gpt-6.1-sol"
+codex_effort = "medium"
+opencode_model = "opencode/deepseek-v4.1-flash"
+
+[tiers.deep]
+commandcode_model = "deepseek/deepseek-v4-pro"
+commandcode_effort = "max"
+codex_model = "gpt-6-astra"
+codex_effort = "high"
+opencode_model = "opencode/deepseek-v4-pro"
+
 [agents.scout]
 description = "Read-only researcher and code locator. Use to find where code lives, map a subsystem, gather evidence, or answer a question across the repo before any edit. Never edits. Returns file:line findings."
 kind = "read-only"
 codex_model = "gpt-6-luna"
 codex_effort = "low"
 opencode_model = "opencode/deepseek-v4.1-flash-free"
+opencode_effort = "low"
+opencode_steps = 25
+commandcode_model = "poolside/laguna-s-2.1-free"
+commandcode_effort = "low"
 instructions = """
 Investigate only the assigned question. Do not edit files. If the work needs an edit or a device check, name the agent to call (builder to edit, verifier to check) instead of doing it read-only.
 Read the applicable instructions, then search the relevant event, focus, semantics, speech, lifecycle, or plain code paths.
@@ -41,6 +72,10 @@ kind = "writer"
 codex_model = "gpt-6-sol"
 codex_effort = "high"
 opencode_model = "opencode/deepseek-v4-pro"
+opencode_effort = "high"
+opencode_steps = 60
+commandcode_model = "deepseek/deepseek-v4-pro"
+commandcode_effort = "high"
 instructions = """
 Edit only the assigned scope; preserve concurrent changes and established behavior. When the task requires it, call another agent or CLI — verifier to check your change, or Codex, CommandCode, or OpenCode when this backend is limited — and state the reason.
 Read applicable instructions and nearby patterns. Make the smallest complete fix, without unrelated refactors or new dependencies.
@@ -55,6 +90,10 @@ kind = "read-only"
 codex_model = "gpt-5.6-terra"
 codex_effort = "medium"
 opencode_model = "opencode/deepseek-v4.1-flash"
+opencode_effort = "medium"
+opencode_steps = 40
+commandcode_model = "gpt-6-luna"
+commandcode_effort = "medium"
 instructions = """
 Review the assigned diff and its relevant callers, and run the project's documented checks. Do not edit. If a fix is required, name the agent to make it (builder or debugger) instead of editing.
 For meaningful changes, require the builder's actual backend and resolved model from the parent. Compare its model family with your actual model before review; a different CLI alone does not prove a different family. If they match, request a different-family dispatch. If none is available, report the review gap explicitly.
@@ -70,6 +109,10 @@ kind = "writer"
 codex_model = "gpt-6-astra"
 codex_effort = "high"
 opencode_model = "opencode/gpt-5.3-codex"
+opencode_effort = "high"
+opencode_steps = 50
+commandcode_model = "deepseek/deepseek-v4-pro"
+commandcode_effort = "high"
 instructions = """
 Reproduce the failure first, then find the root cause before editing. Gather evidence from logs, test output, and history (git bisect/log). Rank hypotheses.
 Make the smallest fix at the root cause, not the symptom; keep existing error handling and validation. Add one focused regression check that fails before the fix.

@@ -1,9 +1,9 @@
 workflow-kit manifest
-built:      2026-10-20 21:28:24
+built:      2026-10-20 22:05:58
 source:     (not recorded - the bundle is machine independent)
-files:      61
-skills:     76
-policy sha: vpXS5JBgB9yq/ZocV9hdLjBbeDS7/xeVHo7Y63/kAW8=
+files:      62
+skills:     
+policy sha: jG8WbtgOWzbSPxeXwkoJ2ViIt7QL5onUqV03zVxaejE=
 
 contents:
   .gitignore
@@ -48,6 +48,7 @@ contents:
   tools\refresh-model-prices.ps1
   tools\release-gate.ps1
   tools\repair-config.ps1
+  tools\roster.ps1
   tools\self-repair.ps1
   tools\setup.ps1
   tools\status.ps1
@@ -68,7 +69,7 @@ contents:
   workflows\workflow.toml
   WORKFLOW-USAGE.md
   README.md
-  workflow\skills\  (76 canonical skills)
+  (no skills - the public release ships without them)
 
 excluded by design: .worktrees\, project repositories, *.bak*,
   self-repair-backups\, *.log, live state json, docgen\node_modules,

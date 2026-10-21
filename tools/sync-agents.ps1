@@ -33,6 +33,8 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+. (Join-Path $PSScriptRoot 'roster.ps1')
+
 # Agents this tool used to write, now replaced by the roster. Removed on render.
 $Superseded = @(
   (Join-Path $CodexDir 'accessibility_explorer.toml'),
@@ -43,49 +45,6 @@ $Superseded = @(
   (Join-Path $OpenCodeDir 'cavecrew-builder.md'),
   (Join-Path $OpenCodeDir 'cavecrew-reviewer.md')
 )
-
-function ConvertFrom-RosterToml {
-  <#  Minimal TOML reader for the roster subset: [tables], key = "string",
-      key = """multiline""", # comments. Enough for agents.toml; not general. #>
-  param([string]$Path)
-  $root = @{}
-  $cur = $root
-  $lines = [System.IO.File]::ReadAllLines($Path, [System.Text.Encoding]::UTF8)
-  for ($i = 0; $i -lt $lines.Count; $i++) {
-    $line = $lines[$i]
-    if ($line -match '^\s*$' -or $line -match '^\s*#') { continue }
-    if ($line -match '^\s*\[([^\]]+)\]\s*(#.*)?$') {
-      $cur = $root
-      foreach ($part in $matches[1].Split('.')) {
-        if (-not $cur.ContainsKey($part)) { $cur[$part] = @{} }
-        $cur = $cur[$part]
-      }
-      continue
-    }
-    if ($line -match '^\s*([A-Za-z0-9_-]+)\s*=\s*(.+)$') {
-      $key = $matches[1]
-      $val = $matches[2].Trim()
-      if ($val.StartsWith('"""')) {
-        $buf = $val.Substring(3)
-        while ($buf -notmatch '"""') {
-          $i++
-          if ($i -ge $lines.Count) { throw "unterminated multiline string for '$key'" }
-          $buf += "`n" + $lines[$i]
-        }
-        $val = $buf.Substring(0, $buf.IndexOf('"""')).Trim()
-      } elseif ($val.StartsWith('"')) {
-        $val = $val -replace '^(?s)"(.*)"\s*(#.*)?$', '$1'
-        $val = $val -replace '\\"', '"'
-      } else {
-        $val = $val -replace '\s+#.*$', ''
-      }
-      $cur[$key] = $val
-      continue
-    }
-    throw "unrecognised roster line $($i+1): $line"
-  }
-  return $root
-}
 
 function ConvertTo-TomlString { param([string]$s) return ($s -replace '\\', '\\' -replace '"', '\"') }
 function ConvertTo-YamlString { param([string]$s) return ('"' + ($s -replace '"', '\"') + '"') }
@@ -113,6 +72,8 @@ function New-OpenCodeAgent {
   [void]$sb.AppendLine("description: $(ConvertTo-YamlString $A.description)")
   [void]$sb.AppendLine('mode: subagent')
   if ($A.opencode_model) { [void]$sb.AppendLine("model: $($A.opencode_model)") }
+  if ($A.opencode_effort) { [void]$sb.AppendLine("reasoningEffort: $($A.opencode_effort)") }
+  if ($A.opencode_steps) { [void]$sb.AppendLine("steps: $($A.opencode_steps)") }
   if ($A.kind -eq 'read-only') {
     [void]$sb.AppendLine('permission:')
     [void]$sb.AppendLine('  edit: deny')
@@ -129,6 +90,11 @@ function New-CommandCodeAgent {
   [void]$sb.AppendLine('---')
   [void]$sb.AppendLine("name: $Name")
   [void]$sb.AppendLine("description: $(ConvertTo-YamlString $A.description)")
+  # CommandCode reads `model` and `reasoningEffort` from the front matter. Without
+  # a pin the agent follows the session model, which left all four roster agents
+  # on the same free model; the roster now names one per role.
+  if ($A.commandcode_model) { [void]$sb.AppendLine("model: $($A.commandcode_model)") }
+  if ($A.commandcode_effort) { [void]$sb.AppendLine("reasoningEffort: $($A.commandcode_effort)") }
   # CommandCode has no per-command shell allow-list, so a read-only agent is the
   # read/search/exec tools minus the two writers. shell_command stays because the
   # roster's read-only agents need rg and git, and a headless turn cannot answer

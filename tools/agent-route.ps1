@@ -12,7 +12,9 @@
        (see $CostProfile), so cache-read price matters most, as it does in reality.
 
   $AgentRouteTable is the static fallback and the source of the Codex ids
-  (Codex runs on a subscription, so price does not apply there).
+  (Codex runs on a subscription, so price does not apply there). It is read
+  from workflows/agents.toml, the same file that holds the per-role pins, so
+  the two cannot drift apart.
 
   Notes on this machine:
     - Command Code plan is Go-tier: gpt-6.1-sol / gpt-6-astra / Claude / Gemini
@@ -21,26 +23,9 @@
       accept no effort at all (their column is "—").
 #>
 
-$AgentRouteTable = [ordered]@{
+. (Join-Path $PSScriptRoot 'roster.ps1')
 
-    quick = @{
-        commandcode = @{ Model = 'deepseek/deepseek-v4-flash'; Effort = 'high' }
-        codex       = @{ Model = 'gpt-6-luna';                 Effort = 'low'  }  # subscription
-        opencode    = @{ Model = 'opencode/deepseek-v4.1-flash-free'; Effort = $null }
-    }
-
-    standard = @{
-        commandcode = @{ Model = 'deepseek/deepseek-v4-pro';   Effort = 'high' }
-        codex       = @{ Model = 'gpt-6.1-sol';                Effort = 'medium' } # subscription
-        opencode    = @{ Model = 'opencode/deepseek-v4.1-flash'; Effort = $null }
-    }
-
-    deep = @{
-        commandcode = @{ Model = 'deepseek/deepseek-v4-pro';   Effort = 'max' }
-        codex       = @{ Model = 'gpt-6-astra';                Effort = 'high' }  # subscription
-        opencode    = @{ Model = 'opencode/deepseek-v4-pro';   Effort = $null }
-    }
-}
+$AgentRouteTable = Get-RosterTierTable -Path (Join-Path $PSScriptRoot '..\workflows\agents.toml')
 
 # --------------------------------------------------------------------------
 # Free-model fallback catalog

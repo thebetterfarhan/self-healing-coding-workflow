@@ -38,7 +38,7 @@ Read \START-HERE.md\ next. It is the shortest path to "useful".
   them, the cues still work as prose instructions.
 - **Audio feedback** - never installed by default.
 
-The canonical skill set travels with this bundle in `workflow/skills/` (76 skills). The installer copies it into `~/.agents/skills`.
+The canonical skill set is **not** bundled. The workflow works without it: the task cues run as prose instructions.
 
 ## What is in here
 
