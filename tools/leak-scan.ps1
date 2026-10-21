@@ -16,6 +16,10 @@
        git-ignored and never packaged, so a personal address can be blocked
        without being written into a bundle anyone downloads.
 
+  -SecretsOnly leaves out the machine path. A private document is allowed to
+  name this machine - the tools handover does exactly that - and it is the
+  published repository and the bundle that must carry nothing of it.
+
   .EXAMPLE
   # Scan a folder of files - what the packer does.
   powershell -NoProfile -ExecutionPolicy Bypass -File tools/leak-scan.ps1 -Path <folder>
@@ -28,7 +32,8 @@
 param(
   [string]$Path,
   [string]$Repo,
-  [switch]$Quiet
+  [switch]$Quiet,
+  [switch]$SecretsOnly
 )
 
 $ErrorActionPreference = 'Stop'
@@ -117,7 +122,9 @@ function Get-RepoLeaks {
 
 # --- run as a script ------------------------------------------------------
 if ($Path -or $Repo) {
-  $leaks = if ($Path) { @(Get-StagedLeaks -StageRoot $Path) } else { @(Get-RepoLeaks -RepoPath $Repo) }
+    $patterns = @(Get-LeakPatterns)
+    if ($SecretsOnly) { $patterns = @($patterns | Where-Object { $_.Name -ne 'machine path' }) }
+    $leaks = if ($Path) { @(Get-StagedLeaks -StageRoot $Path -Patterns $patterns) } else { @(Get-RepoLeaks -RepoPath $Repo -Patterns $patterns) }
   if ($leaks.Count -gt 0) {
     if (-not $Quiet) {
       Write-Host 'LEAK FOUND - these must not be published:' -ForegroundColor Red
